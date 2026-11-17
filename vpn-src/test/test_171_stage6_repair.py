@@ -195,6 +195,39 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/eu0.smali').write_text('''\
+.class public final Leu0;
+.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 37
+    move-object/from16 v17, v5
+    invoke-static/range {v16 .. v25}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V
+    invoke-virtual {v3, v10}, Lla2;->r(Z)V
+    const v3, 0x13f2fb70
+    invoke-virtual {v3, v3}, Lla2;->b0(I)V
+    const v3, 0x7f0f055b
+    invoke-static {v3, v3}, Lub3;->a0(ILla2;)Ljava/lang/String;
+    move-result-object v17
+    const v3, 0x7f0f055c
+    invoke-static {v3, v3}, Lub3;->a0(ILla2;)Ljava/lang/String;
+    move-result-object v19
+    invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()Lcom/box/app/vpn/BattToggle;
+    move-result-object v16
+    invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z
+    move-result v16
+    const/16 v24, 0x0
+    const/16 v25, 0x3f58
+    const/16 v21, 0x0
+    const/high16 v23, 0xc00000
+    move-object/from16 v22, v3
+    move-object v12, v13
+    move-object v13, v7
+    invoke-static/range {v11 .. v20}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V
+    invoke-virtual {v5, v10}, Lla2;->r(Z)V
+    const v7, -0x236bac2a
+    return-object v0
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -251,13 +284,18 @@ class Stage6RepairTest(unittest.TestCase):
             broken_qc0 = (root / 'smali/qc0.smali').read_text()
             self.assertLess(broken_qc0.index('\n    const-string v2, "box"'),
                             broken_qc0.index('\n    :cond_external_files_ready\n'))
+            broken_eu0 = (root / 'smali/eu0.smali').read_text()
+            self.assertIn('invoke-static/range {v16 .. v25}, Lub3;->s(', broken_eu0)
+            self.assertLess(broken_eu0.index('invoke-static/range {v16 .. v25}, Lub3;->s('),
+                            broken_eu0.index('invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z'))
 
             changed = repair(root)
-            self.assertEqual(len(changed), 8)
+            self.assertEqual(len(changed), 9)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
             self.assertIn('qc0 external-files root name', changed)
+            self.assertIn('eu0 battery-toggle Compose register order', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -297,6 +335,20 @@ class Stage6RepairTest(unittest.TestCase):
                             qc0_k.index('\n    const-string v2, "box"'))
             self.assertLess(qc0_k.index('const-string v2, "box"'),
                             qc0_k.index('invoke-direct {v1, v0, v2},'))
+
+            eu0 = (root / 'smali/eu0.smali').read_text()
+            eu0_method = eu0.split('.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;', 1)[1].split('.end method', 1)[0]
+            eu0_hunk = eu0_method.split('move-object/from16 v17, v5', 1)[1].split('const v7, -0x236bac2a', 1)[0]
+            first_call = 'invoke-static/range {v11 .. v20}, Lub3;->s('
+            toggle_call = 'invoke-static/range {v16 .. v25}, Lub3;->s('
+            self.assertLess(eu0_hunk.index(first_call), eu0_hunk.index('const v4, 0x13f2fb70'))
+            self.assertLess(eu0_hunk.index('move-result-object v18'),
+                            eu0_hunk.index('invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()'))
+            self.assertIn('move-result-object v17', eu0_hunk)
+            self.assertLess(eu0_hunk.index('VpnPrefs;->battOn()Z'), eu0_hunk.index(toggle_call))
+            self.assertIn('invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;', eu0_hunk)
+            self.assertIn('move-object/from16 v22, v5', eu0_hunk)
+            self.assertEqual(eu0_hunk.count('invoke-virtual {v5, v10}, Lla2;->r(Z)V'), 2)
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)

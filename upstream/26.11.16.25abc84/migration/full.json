@@ -84,7 +84,7 @@
     "smali/b75.smali": "6dac45eeb5a9c10293cfb309bed7c7e3729e9baaf4b152d68b06720f2aa73d2a",
     "smali/com/box/app/AppApplication.smali": "f2b2f03b33277ba6a4c0706782df89c3cab63397bdf81b40c43453b18e3194e3",
     "smali/en6.smali": "a7820aaefb30c5925e74b199bb931057915ccfcab3fb0590ba18c45337cd8372",
-    "smali/eu0.smali": "6f0ae04046d9c7125a1ff4e919f9205519034effd09a76d15e6fe1a79acd4990",
+    "smali/eu0.smali": "4fb16b7cacb525d29def90425ab49431f8a3a4793c0aa6b740364b869a130d3f",
     "smali/fw.smali": "00913e4e3e57132fdd4b7ad14cb405abde023b286078327cacc04b87b4d60518",
     "smali/g65.smali": "4f48096815170e797e7c9b779d323c3e842f7e49abc7521bd7e70497b16f1c41",
     "smali/gc0.smali": "cab83e149268d542776dcb7e5e56dae613e77c207c992ea2d9c500686baaa9fd",
@@ -11320,11 +11320,15 @@
       {
         "name": "qc0 external-files root name on both branches",
         "detail": "Place the \"box\" child-path literal after the external/internal storage join so both paths pass a non-null String to File(File, String)."
+      },
+      {
+        "name": "eu0 battery-toggle Compose register order",
+        "detail": "Keep the upstream settings-row Compose call ahead of the custom battery row, and pass the battery toggle String, callback, composer, and flags in their typed registers."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "a4903edf01d8bf7b6bd162e73cbfe243e5151a44444f8e6ec7cf2e4102903cfa",
+  "runtimeArchiveSha256": "35b68576b09c402a81f8177de6d1e5cbaba82b54cdac90c623cc7c37c86032d4",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527145
+  "runtimeArchiveBytes": 20527108
 }

@@ -29,6 +29,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('xl4 Compose callback receiver preservation', semantic_fixes)
         self.assertIn('uu0 coroutine core-version String register', semantic_fixes)
         self.assertIn('qc0 external-files root name on both branches', semantic_fixes)
+        self.assertIn('eu0 battery-toggle Compose register order', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -73,6 +74,19 @@ class Full171MigrationTest(unittest.TestCase):
                             qc0_k.index('\n    const-string v2, "box"'))
             self.assertLess(qc0_k.index('const-string v2, "box"'),
                             qc0_k.index('invoke-direct {v1, v0, v2},'))
+
+            eu0 = (project / 'smali/eu0.smali').read_text()
+            eu0_method = eu0.split('.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;', 1)[1].split('.end method', 1)[0]
+            eu0_hunk = eu0_method.split('move-object/from16 v17, v5', 1)[1].split('const v7, -0x236bac2a', 1)[0]
+            self.assertLess(eu0_hunk.index('invoke-static/range {v11 .. v20}, Lub3;->s('),
+                            eu0_hunk.index('const v4, 0x13f2fb70'))
+            self.assertLess(eu0_hunk.index('VpnPrefs;->battOn()Z'),
+                            eu0_hunk.index('invoke-static/range {v16 .. v25}, Lub3;->s('))
+            self.assertIn('move-result-object v18', eu0_hunk)
+            self.assertIn('move-result-object v17', eu0_hunk)
+            self.assertIn('invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;', eu0_hunk)
+            self.assertIn('move-object/from16 v22, v5', eu0_hunk)
+            self.assertEqual(eu0_hunk.count('invoke-virtual {v5, v10}, Lla2;->r(Z)V'), 2)
 
             r6 = (project / 'smali/r6.smali').read_text()
             self.assertIn('if-nez v6, :boxproxy_match', r6)

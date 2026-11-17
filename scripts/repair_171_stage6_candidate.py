@@ -3,9 +3,9 @@
 
 The stage-6 smali porter works in a disposable tree. This deterministic post-pass
 protects sensitive R8/API deltas where text/register alignment is insufficient:
-the VPN enum, core registry, range-call argument, storage-directory branch,
-coroutine states, tar-entry matcher, and callback receiver preservation. It never
-edits the source decompile.
+the VPN enum, core registry, range-call argument, Compose register order,
+storage-directory branch, coroutine states, tar-entry matcher, and callback
+receiver preservation. It never edits the source decompile.
 """
 import argparse
 import re
@@ -338,6 +338,88 @@ def fix_qc0_external_root_name(text):
     return update_method(text, signature, transform)
 
 
+def fix_eu0_battery_toggle_hunk(text):
+    """Restore the battery-toggle Compose call after all of its arguments are set."""
+    signature = 'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
+    anchor = 'move-object/from16 v17, v5'
+    end_marker = 'const v7, -0x236bac2a'
+    broken = [
+        'invoke-static/range {v16 .. v25}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V',
+        'invoke-virtual {v3, v10}, Lla2;->r(Z)V',
+        'const v3, 0x13f2fb70',
+        'invoke-virtual {v3, v3}, Lla2;->b0(I)V',
+        'const v3, 0x7f0f055b',
+        'invoke-static {v3, v3}, Lub3;->a0(ILla2;)Ljava/lang/String;',
+        'move-result-object v17',
+        'const v3, 0x7f0f055c',
+        'invoke-static {v3, v3}, Lub3;->a0(ILla2;)Ljava/lang/String;',
+        'move-result-object v19',
+        'invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()Lcom/box/app/vpn/BattToggle;',
+        'move-result-object v16',
+        'invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z',
+        'move-result v16',
+        'const/16 v24, 0x0',
+        'const/16 v25, 0x3f58',
+        'const/16 v21, 0x0',
+        'const/high16 v23, 0xc00000',
+        'move-object/from16 v22, v3',
+        'move-object v12, v13',
+        'move-object v13, v7',
+        'invoke-static/range {v11 .. v20}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V',
+        'invoke-virtual {v5, v10}, Lla2;->r(Z)V',
+    ]
+    fixed = [
+        'move-object v12, v13',
+        'move-object v13, v7',
+        'invoke-static/range {v11 .. v20}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V',
+        'invoke-virtual {v5, v10}, Lla2;->r(Z)V',
+        'const v4, 0x13f2fb70',
+        'invoke-virtual {v5, v4}, Lla2;->b0(I)V',
+        'const v4, 0x7f0f055b',
+        'invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;',
+        'move-result-object v18',
+        'const v4, 0x7f0f055c',
+        'invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;',
+        'move-result-object v19',
+        'invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()Lcom/box/app/vpn/BattToggle;',
+        'move-result-object v17',
+        'invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z',
+        'move-result v16',
+        'move-object/from16 v20, v15',
+        'const/16 v24, 0x0',
+        'const/16 v25, 0x3f58',
+        'const/16 v21, 0x0',
+        'const/high16 v23, 0xc00000',
+        'move-object/from16 v22, v5',
+        'invoke-static/range {v16 .. v25}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V',
+        'invoke-virtual {v5, v10}, Lla2;->r(Z)V',
+    ]
+
+    def instructions(lines):
+        return [line.strip() for line in lines
+                if line.strip() and not line.strip().startswith(DEBUG_PREFIXES)
+                and not line.strip().startswith(('#', ':'))]
+
+    def transform(block):
+        lines = block.splitlines()
+        anchors = [i for i, line in enumerate(lines) if line.strip() == anchor]
+        ends = [i for i, line in enumerate(lines) if line.strip() == end_marker]
+        if len(anchors) != 1 or len(ends) != 1 or anchors[0] >= ends[0]:
+            raise ValueError('eu0.a no longer has the reviewed battery-toggle merge hunk')
+        start, end = anchors[0] + 1, ends[0]
+        actual = instructions(lines[start:end])
+        if actual == fixed:
+            return block
+        if actual != broken:
+            raise ValueError('eu0.a battery-toggle hunk differs from both known forms')
+        anchor_line = lines[anchors[0]]
+        indent = anchor_line[:len(anchor_line) - len(anchor_line.lstrip())]
+        lines[start:end] = [indent + line for line in fixed]
+        return chr(10).join(lines)
+
+    return update_method(text, signature, transform)
+
+
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""
     signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
@@ -642,6 +724,7 @@ def repair(root):
         (root / 'smali/xl4.smali', lambda text: fix_xl4_callback_receiver(text), 'xl4 callback receiver'),
         (root / 'smali/uu0.smali', lambda text: fix_uu0_core_version_script_register(text), 'uu0 core-version script register'),
         (root / 'smali/qc0.smali', lambda text: fix_qc0_external_root_name(text), 'qc0 external-files root name'),
+        (root / 'smali/eu0.smali', lambda text: fix_eu0_battery_toggle_hunk(text), 'eu0 battery-toggle Compose register order'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )
