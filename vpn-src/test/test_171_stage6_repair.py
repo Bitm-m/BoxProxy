@@ -9,7 +9,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import check_smali_branch_offsets as branch_offsets  # noqa: E402
 import check_smali_reference_moves as reference_moves  # noqa: E402
-from repair_171_stage6_candidate import repair  # noqa: E402
+from repair_171_stage6_candidate import (  # noqa: E402
+    fix_zu5_cfg_nav_wrapper_registers,
+    repair,
+)
 
 
 class ReferenceMoveCheckTest(unittest.TestCase):
@@ -555,6 +558,51 @@ class Stage6RepairTest(unittest.TestCase):
                        if re.search(r'\bv2\b', line)]
             self.assertEqual(v2_uses, ['move-object v8, v2'])
             self.assertEqual(repair(root), [])
+
+    def test_repairs_stage6_generated_zu5_cfg_nav_register_form(self):
+        method = '''\
+.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 33
+    iget-object v7, v0, Lzu5;->j:Lpv5;
+    new-instance v3, Lx65;
+    iget-object v7, v0, Lzu5;->p:Lsv5;
+    invoke-static {v3, v2, v7}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;
+    move-result-object v3
+    const v4, -0x7a21ea59
+    invoke-static {v4, v3, v1}, Ltj;->J(ILt92;Lla2;)Lyz0;
+    move-result-object v3
+    invoke-static {v9, v2, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;
+    move-result-object v2
+    iget-object v3, v0, Lzu5;->j:Lpv5;
+    iget-object v8, v0, Lzu5;->p:Lsv5;
+    invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;
+    move-result-object v2
+    const v4, 0x6cb9fadf
+    invoke-static {v4, v9, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;
+    move-result-object v10
+    move-object v8, v2
+    invoke-static/range {v8 .. v18}, Lzo;->c(Lyz0;Lmz3;Lyz0;Lyz0;FLue3;Lz57;Lbt4;Lla2;II)V
+    return-object v2
+.end method
+'''
+        fixed, changed = fix_zu5_cfg_nav_wrapper_registers(method)
+        self.assertTrue(changed)
+        self.assertIn('.locals 35', fixed)
+        self.assertEqual(fixed.count(
+            'invoke-static/range {v32 .. v34}, '
+            'Lcom/box/app/cfg/CfgNav;->wrap('), 2)
+        self.assertIn('move-object/from16 v32, v3', fixed)
+        self.assertIn('move-object/from16 v33, v7', fixed)
+        self.assertIn('move-object/from16 v32, v2', fixed)
+        self.assertIn('move-object/from16 v33, v3', fixed)
+        self.assertEqual(fixed.count(
+            'iget-object v4, v0, Lzu5;->l:Landroid/content/Context;'), 2)
+        self.assertNotIn('Lzu5;->p:Lsv5;', fixed)
+        self.assertIn('move-result-object v3', fixed)
+        self.assertIn('move-result-object v10', fixed)
+        fixed_again, changed_again = fix_zu5_cfg_nav_wrapper_registers(fixed)
+        self.assertFalse(changed_again)
+        self.assertEqual(fixed_again, fixed)
 
     def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
         with tempfile.TemporaryDirectory() as temp:

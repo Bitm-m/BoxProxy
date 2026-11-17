@@ -524,8 +524,11 @@ def fix_zu5_cfg_nav_wrapper_registers(text):
     wrap_ref = 'Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;'
     intermediate_first = f'invoke-static {{v3, v7, v8}}, {wrap_ref}'
     intermediate_second = f'invoke-static {{v2, v3, v8}}, {wrap_ref}'
+    stage6_first = f'invoke-static {{v3, v2, v7}}, {wrap_ref}'
     fixed_call = f'invoke-static/range {{v32 .. v34}}, {wrap_ref}'
     intermediate_context = 'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;'
+    stage6_first_load = 'iget-object v7, v0, Lzu5;->p:Lsv5;'
+    stage6_second_load = 'iget-object v8, v0, Lzu5;->p:Lsv5;'
     fixed_context = 'iget-object v4, v0, Lzu5;->l:Landroid/content/Context;'
     first_result = 'move-result-object v3'
     intermediate_second_result = 'move-result-object v2'
@@ -610,8 +613,15 @@ def fix_zu5_cfg_nav_wrapper_registers(text):
             and lines[second_load].strip() == intermediate_context
             and lines[second_result_index].strip() == intermediate_second_result
         )
-        if not fixed_form and not intermediate_form:
-            raise ValueError('zu5 CfgNav wrapper registers differ from both known forms')
+        stage6_form = (
+            locals_count == 33
+            and first_call == stage6_first and second_call == intermediate_second
+            and lines[first_load].strip() == stage6_first_load
+            and lines[second_load].strip() == stage6_second_load
+            and lines[second_result_index].strip() == intermediate_second_result
+        )
+        if not fixed_form and not intermediate_form and not stage6_form:
+            raise ValueError('zu5 CfgNav wrapper registers differ from all known forms')
 
         # v8 is a live Lue3 through Lzo.c and v2 is the Yz0 that Lzo.c needs.
         # v4 is safe for the two Context loads because each next Ltj.J call
