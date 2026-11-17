@@ -127,7 +127,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 258
+    .line 273
     check-cast p1, Ljava/lang/Boolean;
 
     invoke-virtual {p1}, Ljava/lang/Boolean;->booleanValue()Z
@@ -144,7 +144,7 @@
 .method public final invoke(Z)V
     .registers 5
 
-    .line 258
+    .line 273
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$fieldRow$end$1;->this$0:Lcom/box/app/cfg/FormUi;
 
     iget-object v1, p0, Lcom/box/app/cfg/FormUi$fieldRow$end$1;->$path:Ljava/util/List;

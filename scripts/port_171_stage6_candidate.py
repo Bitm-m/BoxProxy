@@ -974,12 +974,12 @@ def adapt_cfg_nav_composer_api(text):
         'Lla2;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V'
     )
     legacy = (
-        text.count('Lt72;') == 8
+        text.count('Lt72;') == 7
         and text.count(old_signature) == 1
         and text.count('check-cast v6, Lt72;') == 1
         and text.count('invoke-virtual {v6, v3, v4}, Lt72;->T(IZ)Z') == 1
         and text.count('invoke-virtual {v6}, Lt72;->W()V') == 1
-        and text.count(old_call) == 3
+        and text.count(old_call) == 2
     )
     fixed = (
         'Lt72;' not in text
@@ -987,7 +987,7 @@ def adapt_cfg_nav_composer_api(text):
         and text.count('check-cast v6, Lla2;') == 1
         and text.count('invoke-virtual {v6, v3, v4}, Lla2;->S(IZ)Z') == 1
         and text.count('invoke-virtual {v6}, Lla2;->V()V') == 1
-        and text.count(new_call) == 3
+        and text.count(new_call) == 2
     )
     if fixed:
         return text, False
@@ -1002,9 +1002,72 @@ def adapt_cfg_nav_composer_api(text):
             or text.count('check-cast v6, Lla2;') != 1
             or text.count('invoke-virtual {v6, v3, v4}, Lla2;->S(IZ)Z') != 1
             or text.count('invoke-virtual {v6}, Lla2;->V()V') != 1
-            or text.count(new_call) != 3):
+            or text.count(new_call) != 2):
         raise ValueError('CfgNav Composer API mapping did not produce the reviewed 171 form')
     return text, True
+
+
+def validate_cfg_nav_toolbar_actions(text):
+    """Verify only the kind-1 visual action is left in each supported branch."""
+    invoke_methods = [match.group(0) for match in METHOD_RE.finditer(text)
+                      if match.group(0).splitlines()[0].startswith(
+                          '.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;')]
+    if len(invoke_methods) != 1:
+        raise ValueError(f'expected one CfgNav.invoke method, found {len(invoke_methods)}')
+    lines = invoke_methods[0].splitlines()
+    calls = [i for i, line in enumerate(lines)
+             if 'invoke-static/range' in line and 'CfgNav;->e(' in line]
+    if len(calls) != 2:
+        raise ValueError(f'expected two visual-only CfgNav toolbar actions, found {len(calls)}')
+    mihomo_checks = [i for i, line in enumerate(lines)
+                     if 'CfgGlue;->isMihomo(Ljava/lang/Object;)Z' in line]
+    singbox_checks = [i for i, line in enumerate(lines)
+                      if 'CfgGlue;->isSingBox(Ljava/lang/Object;)Z' in line]
+    if len(mihomo_checks) != 1 or len(singbox_checks) != 1:
+        raise ValueError('expected one Mihomo and one Sing-Box branch check in CfgNav.invoke')
+    mihomo_jumps = [
+        (i, re.search(r'\bif-nez\s+[^,]+,\s*(:[\w.-]+)', lines[i]))
+        for i in range(mihomo_checks[0] + 1, singbox_checks[0])
+        if 'if-nez' in lines[i]
+    ]
+    if len(mihomo_jumps) != 1 or not mihomo_jumps[0][1]:
+        raise ValueError('Mihomo check does not branch to its visual toolbar action')
+    mihomo_label_name = mihomo_jumps[0][1].group(1)
+    mihomo_labels = [i for i, line in enumerate(lines)
+                     if line.strip() == mihomo_label_name]
+    if (not (singbox_checks[0] < calls[0] < calls[1]) or len(mihomo_labels) != 1
+            or not (calls[0] < mihomo_labels[0] < calls[1])):
+        raise ValueError('Sing-Box and Mihomo visual actions are not in their respective branches')
+    singbox_jumps = [
+        re.search(r'\bif-eqz\s+[^,]+,\s*(:[\w.-]+)', lines[i])
+        for i in range(singbox_checks[0] + 1, calls[0])
+        if 'if-eqz' in lines[i]
+    ]
+    if len(singbox_jumps) != 1 or not singbox_jumps[0]:
+        raise ValueError('Sing-Box check does not skip the visual action for other formats')
+    singbox_skip_label = singbox_jumps[0].group(1)
+    skip_labels = [i for i, line in enumerate(lines) if line.strip() == singbox_skip_label]
+    if len(skip_labels) != 1 or skip_labels[0] <= calls[1]:
+        raise ValueError('Sing-Box skip branch does not converge after the Mihomo action')
+    expected = [
+        'const/4 v9, 0x1',
+        r'const-string v10, "\u53ef\u89c6"',
+        'const/high16 v11, 0x42600000',
+    ]
+    for call in calls:
+        preceding = []
+        index = call - 1
+        while index >= 0 and len(preceding) < len(expected):
+            value = lines[index].split('#', 1)[0].strip()
+            if value and not value.startswith(('.', '#', ':')):
+                preceding.append(value)
+            index -= 1
+        if list(reversed(preceding)) != expected:
+            raise ValueError('CfgNav toolbar action is not kind 1, visual, at the reviewed 56dp offset')
+    if r'\u951a' in invoke_methods[0]:
+        raise ValueError('CfgNav still includes a Mihomo anchor toolbar action')
+    return ('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp; '
+            'kind 1 maps to CfgIcon selector 0; no anchor toolbar action')
 
 
 def validate_cfg_nav_composable_lambda_register_flow(text):
@@ -1085,6 +1148,7 @@ def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
     path = out_root / 'smali/com/box/app/cfg/CfgNav.smali'
     text = path.read_text(errors='replace')
     text, composer_api_changed = adapt_cfg_nav_composer_api(text)
+    toolbar_detail = validate_cfg_nav_toolbar_actions(text)
     call = ('invoke-static/range {v4 .. v16}, '
             'Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V')
     factory_call = 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;'
@@ -1093,7 +1157,7 @@ def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
         if composer_api_changed:
             path.write_text(text)
         return ('already wraps CfgIcon with Ltj.J and uses the 171 Lla2 Composer API; '
-                + flow + '; ' + validation)
+                + toolbar_detail + '; ' + flow + '; ' + validation)
     matches = [match for match in METHOD_RE.finditer(text) if call in match.group(0)]
     if len(matches) != 1:
         raise ValueError(f'expected one mapped CfgNav -> Lhq.h call, found {len(matches)}')
@@ -1130,7 +1194,7 @@ def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
     flow = validate_cfg_nav_composable_lambda_register_flow(updated)
     path.write_text(updated)
     return ('wrapped CfgIcon with 171 Ltj.J and mapped the Composer API to Lla2/S/V; '
-            + flow + '; ' + validation)
+            + toolbar_detail + '; ' + flow + '; ' + validation)
 
 
 def adapt_update_core_dingtalk_sources(out_root):

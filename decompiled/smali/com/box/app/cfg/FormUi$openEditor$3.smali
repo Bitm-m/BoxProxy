@@ -100,7 +100,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 281
+    .line 296
     check-cast p1, Ljava/lang/String;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$3;->invoke(Ljava/lang/String;)V
@@ -115,7 +115,7 @@
 
     if-nez p1, :cond_f
 
-    .line 285
+    .line 300
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$openEditor$3;->$write:Lkotlin/jvm/functions/Function1;
 
     const/4 p1, 0x0

@@ -69,7 +69,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     .registers 4
 
-    .line 43
+    .line 46
     check-cast p1, Ljava/lang/String;
 
     check-cast p2, Ljava/lang/String;
@@ -90,7 +90,7 @@
 
     check-cast p0, Lcom/box/app/cfg/FormUi;
 
-    .line 43
+    .line 46
     invoke-virtual {p0, p1, p2, p3}, Lcom/box/app/cfg/FormUi;->applyText$main(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;)V
 
     return-void

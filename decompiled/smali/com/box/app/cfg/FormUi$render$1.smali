@@ -68,7 +68,7 @@
 .method public bridge synthetic invoke()Ljava/lang/Object;
     .registers 1
 
-    .line 74
+    .line 88
     invoke-virtual {p0}, Lcom/box/app/cfg/FormUi$render$1;->invoke()V
 
     sget-object p0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
@@ -77,12 +77,22 @@
 .end method
 
 .method public final invoke()V
-    .registers 1
+    .registers 3
 
-    .line 74
+    .line 88
+    sget-object v0, Lcom/box/app/cfg/CfgSession;->token:Ljava/lang/Object;
+
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$render$1;->this$0:Lcom/box/app/cfg/FormUi;
 
-    invoke-static {p0}, Lcom/box/app/cfg/FormUi;->access$tidyDialog(Lcom/box/app/cfg/FormUi;)V
+    invoke-virtual {p0}, Lcom/box/app/cfg/FormUi;->getAct()Landroid/app/Activity;
+
+    move-result-object p0
+
+    check-cast p0, Landroid/content/Context;
+
+    const/4 v1, 0x0
+
+    invoke-static {v1, v0, p0}, Lcom/box/app/cfg/CfgLauncher;->open(ILjava/lang/Object;Landroid/content/Context;)V
 
     return-void
 .end method

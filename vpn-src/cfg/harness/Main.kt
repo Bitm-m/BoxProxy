@@ -40,6 +40,7 @@ fun main(args: Array<String>) {
     val seed = args[2].toLong()
     val kind = args[3]
     val texts = args.drop(4).map { File(it).readText() }
+    if (kind == "formrefresh") CfgGlue.path = "/tmp/fkdata/mihomo/config.yaml"
     val f = Class.forName("android.os.Build\$VERSION").getField("SDK_INT"); f.isAccessible = true; f.setInt(null, sdk)
     val rnd = Random(seed)
     if (kind == "sb" || kind == "sbdump" || kind == "sbpath" || kind == "sbflow") {
@@ -53,7 +54,7 @@ fun main(args: Array<String>) {
         Dialog.fShown.clear()
         CfgGlue.text = texts[i % texts.size]
         CfgSession.token = Any(); CfgSession.text = CfgGlue.text; CfgSession.path = CfgGlue.path
-        val a: CfgBaseActivity = if (kind == "form") FormActivity() else if (kind == "sb" || kind == "sbdump" || kind == "sbpath" || kind == "sbflow") SbFormActivity() else AnchorActivity()
+        val a: CfgBaseActivity = if (kind == "form" || kind == "formrefresh") FormActivity() else if (kind == "sb" || kind == "sbdump" || kind == "sbpath" || kind == "sbflow") SbFormActivity() else AnchorActivity()
         val m = Activity::class.java.getDeclaredMethod("onCreate", android.os.Bundle::class.java)
         m.isAccessible = true
         try { m.invoke(a, null as android.os.Bundle?) } catch (e: java.lang.reflect.InvocationTargetException) { note(e.cause!!, "onCreate"); }
@@ -61,6 +62,28 @@ fun main(args: Array<String>) {
         if (a.fContent == null || a.fFinished) note(IllegalStateException("onCreate produced no content"), "boot")
     }
     boot(0)
+    if (kind == "formrefresh") {
+        val a = act as FormActivity
+        val fld = FormActivity::class.java.getDeclaredField("ui"); fld.isAccessible = true
+        val ui = fld.get(a) as FormUi
+        var bad = 0
+        fun ck(name: String, ok: Boolean) { println((if (ok) "ok   " else "FAIL ") + name); if (!ok) bad++ }
+        val initial = ui.text
+        val latest = initial + "\n# edited in the shared anchor draft\n"
+        CfgGlue.text = latest
+        val resume = FormActivity::class.java.getDeclaredMethod("onResume"); resume.isAccessible = true
+        resume.invoke(a)
+        ck("FormActivity refreshes YAML from the shared editor draft", ui.text == latest)
+        ck("anchor-panel refresh enters form undo history", ui.history.size == 1 && ui.history.last() == initial)
+        val all = ArrayList<View>(); walk(a.fContent!!, all)
+        val labels = all.filterIsInstance<TextView>().map { it.text.toString() }
+        ck("Mihomo visual form exposes the anchor-panel action", "锚点面板" in labels)
+        ck("整理配置 remains in the visual form tools", "整理配置" in labels)
+        ui.undo()
+        ck("form undo restores the pre-anchor draft", ui.text == initial && CfgGlue.text == initial)
+        println(if (bad == 0) "FORM REFRESH OK" else "FORM REFRESH FAILED $bad")
+        return
+    }
     if (kind == "sbflow") {
         val fld = SbFormActivity::class.java.getDeclaredField("ui"); fld.isAccessible = true
         val ui = fld.get(act) as SbUi

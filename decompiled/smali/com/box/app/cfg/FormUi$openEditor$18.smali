@@ -100,7 +100,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 329
+    .line 344
     check-cast p1, Ljava/lang/String;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$18;->invoke(Ljava/lang/String;)V
@@ -113,7 +113,7 @@
 .method public final invoke(Ljava/lang/String;)V
     .registers 5
 
-    .line 332
+    .line 347
     move-object v0, p1
 
     check-cast v0, Ljava/lang/CharSequence;
@@ -166,7 +166,7 @@
 
     goto :goto_1a
 
-    .line 333
+    .line 348
     :cond_29
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$openEditor$18;->this$0:Lcom/box/app/cfg/FormUi;
 
@@ -202,7 +202,7 @@
 
     goto :goto_59
 
-    .line 334
+    .line 349
     :cond_4e
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$openEditor$18;->$write:Lkotlin/jvm/functions/Function1;
 

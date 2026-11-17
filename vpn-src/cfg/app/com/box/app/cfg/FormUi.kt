@@ -28,6 +28,9 @@ internal class FormUi(
     val history = ArrayList<String>()
     var host = FormHost(doc, ::applyText, fileBaseDir)
     val c: Activity get() = act
+    private val isMihomoYaml = EditorGlue.isMihomo(
+        if (fileBaseDir.isNullOrEmpty()) fileName else "$fileBaseDir/$fileName",
+    )
 
     internal fun applyText(newText: String, toast: String, reveal: Int?) {
         if (newText == text) { showToast(toast); return }
@@ -42,6 +45,16 @@ internal class FormUi(
         doc = YamlDoc.parse(t)
         host = FormHost(doc, ::applyText, fileBaseDir)
         commit(t)
+    }
+
+    /** The anchor activity edits the same editor draft; refresh the form when it returns. */
+    fun refreshFromEditor(updated: String) {
+        if (updated == text) return
+        history.add(text)
+        text = updated
+        doc = YamlDoc.parse(updated)
+        host = FormHost(doc, ::applyText, fileBaseDir)
+        render(true)
     }
 
     fun undo() {
@@ -71,7 +84,9 @@ internal class FormUi(
             col
         }
         val acts = ArrayList<View>()
-        if (route == null) acts.add(textBtn(c, "整理") { tidyDialog() })
+        if (route == null && isMihomoYaml) {
+            acts.add(textBtn(c, "锚点面板") { CfgLauncher.open(0, CfgSession.token, act) })
+        }
         if (history.isNotEmpty()) acts.add(iconBtn(c, Ic.UNDO, Th.text) { undo() })
         sc.setPage(title, content, keep, acts)
     }

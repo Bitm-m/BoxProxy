@@ -100,7 +100,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 278
+    .line 293
     check-cast p1, Ljava/lang/Boolean;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$1;->invoke(Ljava/lang/Boolean;)V
@@ -115,7 +115,7 @@
 
     if-nez p1, :cond_2c
 
-    .line 279
+    .line 294
     iget-boolean p1, p0, Lcom/box/app/cfg/FormUi$openEditor$1;->$hasVal:Z
 
     const/4 v0, 0x0

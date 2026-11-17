@@ -68,7 +68,7 @@
 .method public bridge synthetic invoke()Ljava/lang/Object;
     .registers 1
 
-    .line 75
+    .line 90
     invoke-virtual {p0}, Lcom/box/app/cfg/FormUi$render$2;->invoke()V
 
     sget-object p0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
@@ -79,7 +79,7 @@
 .method public final invoke()V
     .registers 1
 
-    .line 75
+    .line 90
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$render$2;->this$0:Lcom/box/app/cfg/FormUi;
 
     invoke-virtual {p0}, Lcom/box/app/cfg/FormUi;->undo()V

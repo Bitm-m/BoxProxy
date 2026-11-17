@@ -229,6 +229,14 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertIn('Update Core DingTalk source metadata', semantic_fixes)
         self.assertIn('RestoreCfg/VpnSeed v171 stream-copy and empty-seed recovery', semantic_fixes)
+        self.assertIn('CfgNav Compose lambda', semantic_fixes)
+        cfg_nav_report = next(item['detail'] for item in plan['stage6Report']['semanticFixes']
+                              if item['name'] == 'CfgNav Compose lambda')
+        self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp',
+                      cfg_nav_report)
+        self.assertIn('kind 1 maps to CfgIcon selector 0', cfg_nav_report)
+        self.assertIn('no anchor toolbar action', cfg_nav_report)
+        self.assertIn('anchor action is exposed in Mihomo YAML', cfg_nav_report)
         for relative in ('smali/sd1.smali', 'smali/ba7.smali'):
             self.assertIn(relative, plan['baseSha256'])
             self.assertIn(relative, plan['resultSha256'])
@@ -244,14 +252,14 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertEqual(repair(project), [])
 
             result = references.check(project)
-            self.assertEqual(result['classes'], 9879)
-            self.assertEqual(result['references'], 578946)
+            self.assertEqual(result['classes'], 9880)
+            self.assertEqual(result['references'], 578986)
             self.assertEqual(result['errors'], [])
             smali_files, branch_errors = branch_offsets.scan_project(project)
-            self.assertEqual(smali_files, 9879)
+            self.assertEqual(smali_files, 9880)
             self.assertEqual(branch_errors, [])
             move_files, move_errors = reference_moves.scan_project(project)
-            self.assertEqual(move_files, 9879)
+            self.assertEqual(move_files, 9880)
             self.assertEqual(move_errors, [])
 
             xl4 = (project / 'smali/xl4.smali').read_text()
@@ -312,7 +320,8 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertIn('check-cast v6, Lla2;', cfg_nav)
             self.assertIn('Lla2;->S(IZ)Z', cfg_nav)
             self.assertIn('Lla2;->V()V', cfg_nav)
-            self.assertEqual(cfg_nav.count('CfgNav;->e(Lla2;'), 3)
+            self.assertEqual(cfg_nav.count('CfgNav;->e(Lla2;'), 2)
+            self.assertNotIn(r'\u951a', cfg_nav)
             cfg_nav_e = cfg_nav.split('.method private static e(Lla2;', 1)[1].split(
                 '.end method', 1)[0]
             composer_load = 'move-object/from16 v14, p0'
@@ -320,8 +329,55 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertEqual(cfg_nav_e.count(composer_load), 1)
             self.assertLess(cfg_nav_e.index(composer_load), cfg_nav_e.index(lambda_factory))
             self.assertIn(lambda_factory, cfg_nav_e)
+            self.assertIn('xor-int/lit8 v2, v2, 0x1', cfg_nav_e)
+            cfg_nav_invoke = cfg_nav.split(
+                '.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            self.assertIn('CfgGlue;->isMihomo(Ljava/lang/Object;)Z', cfg_nav_invoke)
+            self.assertIn('CfgGlue;->isSingBox(Ljava/lang/Object;)Z', cfg_nav_invoke)
+            self.assertIn('if-nez v3, :cond_mihomo', cfg_nav_invoke)
+            self.assertIn('if-eqz v3, :goto_done', cfg_nav_invoke)
+            visual_calls = [i for i, line in enumerate(cfg_nav_invoke.splitlines())
+                            if 'CfgNav;->e(Lla2;' in line]
+            mihomo_branch = cfg_nav_invoke.splitlines().index('    :cond_mihomo')
+            self.assertEqual(len(visual_calls), 2)
+            self.assertLess(visual_calls[0], mihomo_branch)
+            self.assertGreater(visual_calls[1], mihomo_branch)
+            self.assertEqual(cfg_nav_invoke.count('const/4 v9, 0x1'), 2)
+            self.assertEqual(cfg_nav_invoke.count(r'\u53ef\u89c6'), 2)
+            self.assertEqual(cfg_nav_invoke.count('0x42600000'), 2)
+
             cfg_icon = (project / 'smali/com/box/app/cfg/CfgIcon.smali').read_text()
             self.assertIn('.implements Ll92;', cfg_icon)
+            icon_invoke = cfg_icon.split(
+                '.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            self.assertIn('if-nez v0, :use_anchor', icon_invoke)
+            anchor_label = icon_invoke.index('\n    :use_anchor\n')
+            self.assertLess(icon_invoke.index('CfgIcon;->vis()'), anchor_label)
+            self.assertGreater(icon_invoke.index('CfgIcon;->anc()'), anchor_label)
+
+            form_ui = (project / 'smali/com/box/app/cfg/FormUi.smali').read_text()
+            self.assertIn('->isMihomoYaml:Z', form_ui)
+            self.assertIn(r'\u951a\u70b9\u9762\u677f', form_ui)
+            self.assertIn(r'\u6574\u7406\u914d\u7f6e', form_ui)
+            refresh = form_ui.split(
+                '.method public final refreshFromEditor(Ljava/lang/String;)V', 1)[1].split(
+                    '.end method', 1)[0]
+            self.assertIn('->history:Ljava/util/ArrayList;', refresh)
+            self.assertIn('YamlDoc$Companion;->parse(Ljava/lang/String;)', refresh)
+            self.assertIn('FormHost;-><init>(', refresh)
+            self.assertIn('FormUi;->render(Z)V', refresh)
+            launcher = (project / 'smali/com/box/app/cfg/FormUi$render$1.smali').read_text()
+            self.assertIn('CfgLauncher;->open(ILjava/lang/Object;Landroid/content/Context;)V', launcher)
+            self.assertIn('const/4 v1, 0x0', launcher)
+            form_activity = (project / 'smali/com/box/app/cfg/FormActivity.smali').read_text()
+            resume = form_activity.split('.method protected onResume()V', 1)[1].split(
+                '.end method', 1)[0]
+            self.assertIn('CfgGlue;->getText(Ljava/lang/Object;)Ljava/lang/String;', resume)
+            self.assertIn('FormUi;->refreshFromEditor(Ljava/lang/String;)V', resume)
+            self.assertTrue((project / 'smali/com/box/app/cfg/FormUi$refreshFromEditor$1.smali').is_file())
+
             callback = (project / 'smali/l92.smali').read_text()
             self.assertIn('.implements Lt92;', callback)
             composer = (project / 'smali/la2.smali').read_text()

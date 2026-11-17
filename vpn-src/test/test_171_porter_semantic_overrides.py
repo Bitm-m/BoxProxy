@@ -343,9 +343,23 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
     .locals 12
     check-cast v6, Lt72;
     invoke-virtual {v6, v3, v4}, Lt72;->T(IZ)Z
+    invoke-static {v7}, Lcom/box/app/cfg/CfgGlue;->isMihomo(Ljava/lang/Object;)Z
+    move-result v3
+    if-nez v3, :cond_mihomo
+    invoke-static {v7}, Lcom/box/app/cfg/CfgGlue;->isSingBox(Ljava/lang/Object;)Z
+    move-result v3
+    if-eqz v3, :goto_done
+    const/4 v9, 0x1
+    const-string v10, "\\u53ef\\u89c6"
+    const/high16 v11, 0x42600000
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
+    goto :goto_done
+    :cond_mihomo
+    const/4 v9, 0x1
+    const-string v10, "\\u53ef\\u89c6"
+    const/high16 v11, 0x42600000
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
-    invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
+    :goto_done
     invoke-virtual {v6}, Lt72;->W()V
     return-object v0
 .end method
@@ -378,7 +392,7 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
             self.assertIn('check-cast v6, Lla2;', text)
             self.assertIn('Lla2;->S(IZ)Z', text)
             self.assertIn('Lla2;->V()V', text)
-            self.assertEqual(text.count('CfgNav;->e(Lla2;'), 3)
+            self.assertEqual(text.count('CfgNav;->e(Lla2;'), 2)
             cfg_nav_e = text.split('.method private static e(Lla2;', 1)[1].split(
                 '.end method', 1)[0]
             self.assertLess(
@@ -386,11 +400,16 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
                 cfg_nav_e.index('invoke-static {v3, v13, v14}, Ltj;->J('))
             self.assertIn('wrapped CfgIcon with 171 Ltj.J', detail)
             self.assertIn('mapped the Composer API to Lla2/S/V', detail)
+            self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp', detail)
+            self.assertIn('kind 1 maps to CfgIcon selector 0', detail)
+            self.assertIn('no anchor toolbar action', detail)
             self.assertIn('factory arguments and Lyz0 result register flow verified', detail)
             self.assertIn('unused by the pinned 171 Smali tree', detail)
             self.assertEqual(
                 porter.adapt_cfg_nav_composable_lambda(root, target),
                 'already wraps CfgIcon with Ltj.J and uses the 171 Lla2 Composer API; '
+                'Mihomo and Sing-Box each keep one kind-1 visual action at 56dp; '
+                'kind 1 maps to CfgIcon selector 0; no anchor toolbar action; '
                 'CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified; ' +
                 porter.validate_cfg_nav_composable_lambda_target(target))
             bad_flow = path.read_text().replace(

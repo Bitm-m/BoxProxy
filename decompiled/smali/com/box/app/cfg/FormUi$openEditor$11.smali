@@ -103,7 +103,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 319
+    .line 334
     check-cast p1, Ljava/util/List;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$11;->invoke(Ljava/util/List;)V
@@ -128,7 +128,7 @@
         }
     .end annotation
 
-    .line 320
+    .line 335
     invoke-interface {p1}, Ljava/util/List;->isEmpty()Z
 
     move-result v0

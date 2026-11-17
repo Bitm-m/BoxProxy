@@ -2,9 +2,9 @@
 .super Ljava/lang/Object;
 .source "CfgNav.java"
 
-# 配置编辑器顶栏 navigationIcon 的包装：先原样画返回键 (m05)，再在它右边多画两个图标按钮
-# （图标按钮：「可视」= 可视化修改（滑杆图标），「锚点」= 锚点面板（船锚图标））。navigationIcon 槽只有一个 layoutId 容器（Box 叠放），
-# 所以额外的按钮用 padding-start 错开。守卫 (Lt72;->T / W) 照 m05 的写法抄，避免 skipToGroupEnd 后再发射。
+# 配置编辑器顶栏 navigationIcon 的包装：先原样画返回键，再在右边画「可视化修改」（滑杆图标）。
+# navigationIcon 槽只有一个 layoutId 容器（Box 叠放），所以用 padding-start 错开；56dp = 返回键 48dp + 8dp，
+# 与 Save 和相邻次级菜单按钮之间的间隔一致。守卫 (Lt72;->T / W) 照 m05 的写法抄，避免 skipToGroupEnd 后再发射。
 
 # interfaces
 .implements Lt62;
@@ -60,7 +60,7 @@
 
     move/from16 v2, p3
 
-    # 图标与功能对调：可视化修改（kind 1）用锚点图标，锚点面板（kind 0）用滑块图标
+    # CfgIcon 的 0 是滑杆图标；kind 1 可视化修改映射到 0。
     xor-int/lit8 v2, v2, 0x1
 
     invoke-direct {v13, v2}, Lcom/box/app/cfg/CfgIcon;-><init>(I)V
@@ -171,7 +171,7 @@
 
     const-string v10, "\u53ef\u89c6"
 
-    const/high16 v11, 0x42400000    # 48.0f
+    const/high16 v11, 0x42600000    # 56.0f (48dp back-button slot + 8dp action gap)
 
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
 
@@ -184,15 +184,7 @@
 
     const-string v10, "\u53ef\u89c6"
 
-    const/high16 v11, 0x42400000    # 48.0f
-
-    invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
-
-    const/4 v9, 0x0
-
-    const-string v10, "\u951a\u70b9"
-
-    const/high16 v11, 0x42c00000    # 96.0f
+    const/high16 v11, 0x42600000    # 56.0f (48dp back-button slot + 8dp action gap)
 
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
 
