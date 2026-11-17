@@ -1,0 +1,47 @@
+"""Reproducibility test for the hash-pinned 171 migration candidate."""
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'scripts'))
+import check_smali_references as references  # noqa: E402
+import migrate_upstream as migration  # noqa: E402
+from repair_171_stage6_candidate import repair  # noqa: E402
+
+SNAPSHOT = ROOT / 'upstream/26.11.16.25abc84'
+
+
+class Full171MigrationTest(unittest.TestCase):
+    def test_pinned_candidate_rebuilds_with_stage6_and_reference_checks(self):
+        plan = json.loads((SNAPSHOT / 'migration/full.json').read_text())
+        coverage = json.loads((SNAPSHOT / 'migration/coverage.json').read_text())
+        self.assertEqual(plan['stage6Report']['ok'], 51)
+        self.assertEqual(plan['stage6Report']['errors'], [])
+        self.assertEqual(plan['stage6Report']['whole'], 16)
+        self.assertEqual(plan['stage6Report']['patch'], 35)
+        self.assertEqual(coverage['inventory']['wholeMethods'], 16)
+        self.assertEqual(coverage['inventory']['patchedMethods'], 35)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            project = migration.prepare(SNAPSHOT, Path(temporary) / 'reproduced')
+            apktool = (project / 'apktool.yml').read_text()
+            self.assertIn('  versionCode: 171', apktool)
+            self.assertIn('  versionName: 26.11.16.25abc84', apktool)
+            self.assertEqual(repair(project), [])
+
+            result = references.check(project)
+            self.assertEqual(result['classes'], 9879)
+            self.assertEqual(result['references'], 578921)
+            self.assertEqual(result['errors'], [])
+
+            cfg_nav = (project / 'smali/com/box/app/cfg/CfgNav.smali').read_text()
+            self.assertIn(
+                'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;',
+                cfg_nav)
+
+
+if __name__ == '__main__':
+    unittest.main()

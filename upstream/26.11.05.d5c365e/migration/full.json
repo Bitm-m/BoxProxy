@@ -11108,5 +11108,9 @@
     "VPN permission/packet/DNS/IPv6/boot/battery/OEM restrictions",
     "same-signature upgrade from 134 customized build"
   ],
-  "followUpMethods": []
+  "followUpMethods": [],
+  "runtimeArchive": "runtime-payload.tar.gz",
+  "runtimeArchiveSha256": "340559155a9a85f9954cfe31f36ca9e5139ab44853e63daaa03c1db8068e3627",
+  "runtimeArchiveFileCount": 1430,
+  "runtimeArchiveBytes": 21508133
 }

@@ -1,0 +1,420 @@
+#!/usr/bin/env python3
+"""Repair and verify the reviewed semantic edge cases in a generated 171 tree.
+
+The stage-6 smali porter works in a disposable tree. This small, deterministic
+post-pass protects four sensitive R8 deltas where text/register alignment is not
+sufficient evidence: the VPN enum, the core name/label registry, a range-call
+argument, and the two new coroutine states. It never edits the source decompile.
+"""
+import argparse
+import re
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+METHOD_RE = re.compile(r"^\.method[^\n]*$.*?^\.end method[ \t]*$", re.M | re.S)
+LABEL_RE = re.compile(r"^(:\S+)\s*$")
+DEBUG_PREFIXES = ('.line ', '.local ', '.end local ', '.restart local ',
+                  '.param ', '.end param ', '.source ', '.prologue')
+CORE_ENTRIES = (
+    ('mihomo', 'proxy_core_mihomo'),
+    ('mihomo_smart', 'proxy_core_mihomo_smart'),
+    ('mihomo_dingtalk', 'proxy_core_mihomo_dingtalk'),
+    ('sing-box', 'proxy_core_sing_box'),
+    ('sing-box_ref1nd', 'proxy_core_sing_box_ref1nd'),
+    ('sing-box_dingtalk', 'proxy_core_sing_box_dingtalk'),
+    ('xray', 'proxy_core_xray'),
+    ('v2fly', 'proxy_core_v2fly'),
+    ('hysteria', 'proxy_core_hysteria'),
+)
+
+
+def method_signature(block):
+    return block.splitlines()[0].split()[-1]
+
+
+def get_method(text, signature):
+    hits = [m.group(0).rstrip() for m in METHOD_RE.finditer(text)
+            if method_signature(m.group(0)) == signature]
+    if len(hits) != 1:
+        raise ValueError(f'expected exactly one {signature}, found {len(hits)}')
+    return hits[0]
+
+
+def replace_method(text, signature, replacement):
+    old = get_method(text, signature)
+    if text.count(old) != 1:
+        raise ValueError(f'ambiguous method text for {signature}')
+    return text.replace(old, replacement, 1)
+
+
+def update_method(text, signature, transform):
+    old = get_method(text, signature)
+    new = transform(old)
+    if new == old:
+        return text, False
+    return replace_method(text, signature, new), True
+
+
+def fix_ne5(text):
+    signature = '<clinit>()V'
+
+    def transform(block):
+        if '.field public static final enum t:Lne5;' not in text:
+            raise ValueError('ne5 is missing the custom VPN enum field')
+        lines = block.splitlines()
+        locals_indices = [i for i, line in enumerate(lines)
+                          if re.match(r'^\s*\.locals\s+\d+\s*$', line)]
+        if len(locals_indices) != 1:
+            raise ValueError('ne5 <clinit> must have one .locals directive')
+        li = locals_indices[0]
+        m = re.match(r'^\s*\.locals\s+(\d+)', lines[li])
+        count = int(m.group(1))
+        old_value = re.compile(r'^(\s*)const-string\s+v2,\s*"vpn"\s*$')
+        new_value = re.compile(r'^\s*const-string\s+v9,\s*"vpn"\s*$')
+        old_hits = [i for i, line in enumerate(lines) if old_value.match(line)]
+        new_hits = [i for i, line in enumerate(lines) if new_value.match(line)]
+        if old_hits and new_hits:
+            raise ValueError('ne5 has both aliased and repaired vpn string registers')
+        if len(old_hits) > 1 or len(new_hits) != 1 and not old_hits:
+            raise ValueError('ne5 <clinit> has an unexpected vpn string initializer')
+        if old_hits:
+            indent = old_value.match(lines[old_hits[0]]).group(1)
+            lines[old_hits[0]] = indent + 'const-string v9, "vpn"'
+        old_ctor = 'invoke-direct {v6, v7, v8, v2}, Lne5;-><init>(ILjava/lang/String;Ljava/lang/String;)V'
+        new_ctor = 'invoke-direct {v6, v7, v8, v9}, Lne5;-><init>(ILjava/lang/String;Ljava/lang/String;)V'
+        old_ctor_hits = [i for i, line in enumerate(lines) if old_ctor in line]
+        new_ctor_hits = [i for i, line in enumerate(lines) if new_ctor in line]
+        if old_ctor_hits and new_ctor_hits:
+            raise ValueError('ne5 has both aliased and repaired VPN constructor arguments')
+        if len(old_ctor_hits) > 1 or len(new_ctor_hits) != 1 and not old_ctor_hits:
+            raise ValueError('ne5 <clinit> has an unexpected VPN constructor call')
+        if old_ctor_hits:
+            lines[old_ctor_hits[0]] = lines[old_ctor_hits[0]].replace(old_ctor, new_ctor)
+        if count < 10:
+            lines[li] = re.sub(r'(\.locals\s+)\d+', r'\g<1>10', lines[li])
+        if not any(new_ctor in line for line in lines):
+            raise ValueError('ne5 VPN enum constructor does not consume v9')
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
+def fix_g65(text):
+    signature = 'invoke(Ljava/lang/Object;)Ljava/lang/Object;'
+    old = re.compile(r'^(\s*)iget-object\s+v5,\s*v2,\s*Ldc0;->h:Ljava/lang/String;\s*$')
+    new = re.compile(r'^\s*iget-object\s+v10,\s*v2,\s*Ldc0;->h:Ljava/lang/String;\s*$')
+
+    def transform(block):
+        lines = block.splitlines()
+        old_hits = [i for i, line in enumerate(lines) if old.match(line)]
+        new_hits = [i for i, line in enumerate(lines) if new.match(line)]
+        if old_hits and new_hits:
+            raise ValueError('g65 contains both the clobbering and repaired field load')
+        if len(old_hits) > 1 or len(new_hits) != 1 and not old_hits:
+            raise ValueError('g65 invoke has an unexpected Ldc0.h field load')
+        if old_hits:
+            indent = old.match(lines[old_hits[0]]).group(1)
+            lines[old_hits[0]] = indent + 'iget-object v10, v2, Ldc0;->h:Ljava/lang/String;'
+        if not any('invoke-static/range {v2 .. v26}, Ldc0;->a(' in line for line in lines):
+            raise ValueError('g65 invoke no longer uses the reviewed v2..v26 argument range')
+        if not any(re.match(r'^\s*\.locals\s+(?:2[6-9]|[3-9]\d+)\s*$', line) for line in lines):
+            raise ValueError('g65 invoke has no local v10 register')
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
+def public_string_ids(public_xml):
+    resources = {}
+    root = ET.parse(public_xml).getroot()
+    for entry in root:
+        if entry.tag == 'public' and entry.attrib.get('type') == 'string':
+            resources[entry.attrib['name']] = entry.attrib['id']
+    return resources
+
+
+def core_resource_ids(resources):
+    ids = []
+    for _, resource_name in CORE_ENTRIES:
+        value = resources.get(resource_name)
+        if not value or not re.fullmatch(r'0x[0-9a-fA-F]{8}', value):
+            raise ValueError('missing public string resource: ' + resource_name)
+        ids.append(value)
+    return ids
+
+
+def verify_ui_resources_and_types(root, resources):
+    hide_id = resources.get('proxy_selector_hide_unavailable')
+    restore_id = resources.get('proxy_config_restore_default')
+    if not hide_id or not restore_id:
+        raise ValueError('custom settings/restore string resources are missing')
+
+    settings = (root / 'smali/t36.smali').read_text(errors='replace')
+    if hide_id not in settings or 'VpnPrefs;->items(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;' not in settings:
+        raise ValueError('t36 settings list does not use the mapped hide-unavailable resource/helper')
+    for rel in ('smali/k.smali', 'smali/q75.smali'):
+        text = (root / rel).read_text(errors='replace')
+        if restore_id not in text or 'RestoreCfg;->MENU' not in text:
+            raise ValueError(rel + ' does not use the mapped restore-menu resource')
+
+    prefs = (root / 'smali/com/box/app/vpn/VpnPrefs.smali').read_text(errors='replace')
+    items = get_method(prefs, 'items(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;')
+    if ('new-instance v1, Lyr1;' not in items
+            or 'Lyr1;-><init>(Ljava/lang/String;ZZLw82;Ljava/util/List;I)V' not in items
+            or 'Lip1;' in items or 'Le62;' in items):
+        raise ValueError('VpnPrefs.items is not mapped to the 171 Lyr1/Lw82 option types')
+    callback = (root / 'smali/com/box/app/vpn/PanelToggle.smali').read_text(errors='replace')
+    if '.implements Lw82;' not in callback or '.implements Le62;' in callback:
+        raise ValueError('PanelToggle does not implement the 171 callback interface Lw82')
+
+
+def fix_r57(text, ids):
+    signature = '<clinit>()V'
+
+    def transform(old_block):
+        header = old_block.splitlines()[0]
+        body = ['    .locals 10', '']
+        for reg, (name, _) in enumerate(CORE_ENTRIES):
+            body.append(f'    const-string v{reg}, "{name}"')
+        body += [
+            '    filled-new-array/range {v0 .. v8}, [Ljava/lang/String;',
+            '    move-result-object v0',
+            '    invoke-static {v0}, Lkm;->e0([Ljava/lang/Object;)Ljava/util/List;',
+            '    move-result-object v0',
+            '    sput-object v0, Lr57;->a:Ljava/util/List;',
+        ]
+        for reg, resource_id in enumerate(ids, 1):
+            body += [
+                f'    const v0, {resource_id}',
+                '    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;',
+                f'    move-result-object v{reg}',
+            ]
+        body += [
+            '    filled-new-array/range {v1 .. v9}, [Ljava/lang/Integer;',
+            '    move-result-object v0',
+            '    invoke-static {v0}, Lkm;->e0([Ljava/lang/Object;)Ljava/util/List;',
+            '    move-result-object v0',
+            '    sput-object v0, Lr57;->b:Ljava/util/List;',
+            '    return-void',
+        ]
+        return '\n'.join([header] + body + ['.end method'])
+
+    return update_method(text, signature, transform)
+
+
+def executable_label_definitions(lines):
+    labels = {}
+    switch_depth = 0
+    for index, line in enumerate(lines):
+        s = line.strip()
+        if s.startswith(('.packed-switch ', '.sparse-switch')):
+            switch_depth += 1
+            continue
+        if switch_depth and s in ('.end packed-switch', '.end sparse-switch'):
+            switch_depth -= 1
+            continue
+        if switch_depth:
+            continue
+        m = LABEL_RE.fullmatch(s)
+        if m:
+            labels.setdefault(m.group(1)[1:], []).append(index)
+    return labels
+
+
+def handler_instructions(lines, label_index):
+    out = []
+    for line in lines[label_index + 1:]:
+        s = line.strip()
+        if not s or s.startswith(('#', *DEBUG_PREFIXES)):
+            continue
+        if LABEL_RE.fullmatch(s):
+            break
+        out.append(s)
+    return out
+
+
+def fix_pd1(text):
+    signature = 'g(Ljava/lang/String;Lda1;)Ljava/lang/Object;'
+
+    def transform(block):
+        lines = block.splitlines()
+        labels = executable_label_definitions(lines)
+        for dest in ('goto_dd', 'goto_sd'):
+            if len(labels.get(dest, [])) != 1:
+                raise ValueError(f'pd1 coroutine continuation :{dest} is missing or ambiguous')
+
+        # Keep the existing target pswitch_0 handler (the one which goes to
+        # :goto_4); remove any label-aliased copy and rebuild custom states 9/10
+        # immediately before it. Removing whole handler ranges avoids deleting a
+        # neighboring :pswitch_9/:pswitch_10 block when labels were coalesced.
+        def ps0_candidates():
+            out = []
+            for pos in executable_label_definitions(lines).get('pswitch_0', []):
+                instructions = handler_instructions(lines, pos)
+                if (len(instructions) == 2 and instructions[0].startswith('invoke-static {v1}, ')
+                        and instructions[1] == 'goto/16 :goto_4'):
+                    out.append((pos, instructions[0]))
+            return out
+
+        candidates = ps0_candidates()
+        if not candidates:
+            raise ValueError('pd1 has no reviewed pswitch_0 -> :goto_4 handler')
+        keep_pos, throw_on_failure = candidates[-1]
+        labels = executable_label_definitions(lines)
+        remove_labels = [pos for pos in labels.get('pswitch_0', []) if pos != keep_pos]
+        remove_labels += labels.get('pswitch_9', []) + labels.get('pswitch_10', [])
+        ranges = []
+        all_labels = sorted(i for positions in labels.values() for i in positions)
+        for start in sorted(set(remove_labels)):
+            end = next((i for i in all_labels if i > start), len(lines))
+            ranges.append((start, end))
+        for start, end in sorted(ranges, reverse=True):
+            del lines[start:end]
+
+        labels = executable_label_definitions(lines)
+        candidates = ps0_candidates()
+        if len(candidates) != 1:
+            raise ValueError('pd1 pswitch_0 merge did not leave exactly one target handler')
+        keep_pos, throw_on_failure = candidates[0]
+        state_handlers = [
+            '    :pswitch_9',
+            '    ' + throw_on_failure,
+            '    goto/16 :goto_dd',
+            '    :pswitch_10',
+            '    ' + throw_on_failure,
+            '    goto/16 :goto_sd',
+        ]
+        lines[keep_pos:keep_pos] = state_handlers
+
+        # The switch data is not a label definition; rewrite its entries as the
+        # exact 0..10 mapping required by the target state machine.
+        packed = [(i, line.strip()) for i, line in enumerate(lines)
+                  if line.strip().startswith('.packed-switch ')]
+        ends = [i for i, line in enumerate(lines)
+                if line.strip() == '.end packed-switch']
+        if len(packed) != 1 or len(ends) != 1 or ends[0] <= packed[0][0]:
+            raise ValueError('pd1 coroutine method must have exactly one packed-switch block')
+        start, directive = packed[0]
+        if directive != '.packed-switch 0x0':
+            raise ValueError('pd1 coroutine packed-switch no longer starts at state zero')
+        expected = ['pswitch_8', 'pswitch_7', 'pswitch_6', 'pswitch_5',
+                    'pswitch_4', 'pswitch_3', 'pswitch_2', 'pswitch_1',
+                    'pswitch_0', 'pswitch_9', 'pswitch_10']
+        end = ends[0]
+        lines[start + 1:end] = ['        :' + label for label in expected]
+
+        labels = executable_label_definitions(lines)
+        for label, dest in (('pswitch_9', 'goto_dd'), ('pswitch_10', 'goto_sd')):
+            if len(labels.get(label, [])) != 1:
+                raise ValueError(f'pd1 has no unique executable {label} state')
+            instructions = handler_instructions(lines, labels[label][0])
+            if (len(instructions) != 2 or instructions[0] != throw_on_failure
+                    or instructions[1] != f'goto/16 :{dest}'):
+                raise ValueError(f'{label} does not resume through :{dest}')
+        if len(labels.get('pswitch_0', [])) != 1:
+            raise ValueError('pd1 still has duplicate executable pswitch_0 labels')
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
+def duplicate_labels(root, replacements):
+    errors = []
+    for path in root.rglob('*.smali'):
+        text = replacements.get(path, path.read_text(errors='replace'))
+        active = False
+        switch_depth = 0
+        labels = {}
+        for number, line in enumerate(text.splitlines(), 1):
+            s = line.strip()
+            if s.startswith('.method '):
+                active = True
+                switch_depth = 0
+                labels = {}
+                continue
+            if s == '.end method':
+                for label, lines in labels.items():
+                    if len(lines) > 1:
+                        errors.append(f'{path}:{label}:{lines}')
+                active = False
+                continue
+            if not active:
+                continue
+            if s.startswith(('.packed-switch ', '.sparse-switch')):
+                switch_depth += 1
+                continue
+            if switch_depth and s in ('.end packed-switch', '.end sparse-switch'):
+                switch_depth -= 1
+                continue
+            if switch_depth:
+                continue
+            m = LABEL_RE.fullmatch(s)
+            if m:
+                labels.setdefault(m.group(1), []).append(number)
+    return errors
+
+
+def verify_version(root):
+    text = (root / 'apktool.yml').read_text()
+    if not re.search(r'^\s+versionCode:\s*171\s*$', text, re.M):
+        raise ValueError('candidate apktool.yml is not versionCode 171')
+    if not re.search(r'^\s+versionName:\s*26\.11\.16\.25abc84\s*$', text, re.M):
+        raise ValueError('candidate apktool.yml is not 26.11.16.25abc84')
+
+
+def repair(root):
+    root = Path(root)
+    verify_version(root)
+    if not (root / 'smali').is_dir():
+        raise ValueError('candidate has no smali tree')
+    public = root / 'res/values/public.xml'
+    resources = public_string_ids(public)
+    ids = core_resource_ids(resources)
+    verify_ui_resources_and_types(root, resources)
+    replacements = {}
+    changed = []
+    operations = (
+        (root / 'smali/ne5.smali', lambda text: fix_ne5(text), 'ne5 VPN enum register'),
+        (root / 'smali/g65.smali', lambda text: fix_g65(text), 'g65 range-call field register'),
+        (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
+        (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
+    )
+    for path, operation, description in operations:
+        if not path.is_file():
+            raise ValueError('candidate is missing ' + str(path.relative_to(root)))
+        old = path.read_text(errors='replace')
+        new, did_change = operation(old)
+        replacements[path] = new
+        if did_change:
+            changed.append(description)
+    errors = duplicate_labels(root, replacements)
+    if errors:
+        raise ValueError('duplicate executable smali labels remain: ' + '; '.join(errors[:10]))
+
+    # Stage each replacement beside its source, then atomically publish all edits
+    # only after every structural check has passed.
+    staged = []
+    try:
+        for path, text in replacements.items():
+            temp = path.with_name(path.name + '.repair-tmp')
+            temp.write_text(text)
+            staged.append((temp, path))
+        for temp, path in staged:
+            temp.replace(path)
+    finally:
+        for temp, _ in staged:
+            if temp.exists():
+                temp.unlink()
+    return changed
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('candidate', type=Path, help='generated 171 apktool tree, e.g. .tools/migrated')
+    args = parser.parse_args()
+    changed = repair(args.candidate)
+    print('Verified 171 stage-6 semantic repairs; changed:', ', '.join(changed) if changed else 'none')
+
+
+if __name__ == '__main__':
+    main()

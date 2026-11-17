@@ -7,6 +7,10 @@
 #   - 可选：Android SDK build-tools（zipalign / apksigner / aapt2），
 #           脚本会在 $ANDROID_HOME/build-tools/<最新> 下自动查找；缺失则只产出未签名 APK。
 #
+# 指定输入/输出（可选，环境变量）：
+#   PROJECT_DIR=.tools/migrated OUT_DIR=.tools/build-171 bash scripts/build.sh
+# 默认仍构建 decompiled/ 并输出到 dist/。
+#
 # 自定义签名（可选，环境变量）：
 #   KEYSTORE=/path/to/keystore.jks KEYSTORE_PASSWORD=... KEY_ALIAS=... [KEY_PASSWORD=...]
 # 未设置时自动在 dist/debug.keystore 生成调试密钥（口令 android，别名 androiddebugkey）。
@@ -15,9 +19,9 @@ cd "$(dirname "$0")/.."
 
 APKTOOL_VERSION="${APKTOOL_VERSION:-2.9.3}"
 APKTOOL_SHA256="7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4"
-PROJECT_DIR="decompiled"
-TOOLS_DIR=".tools"
-OUT_DIR="dist"
+PROJECT_DIR="${PROJECT_DIR:-decompiled}"
+TOOLS_DIR="${TOOLS_DIR:-.tools}"
+OUT_DIR="${OUT_DIR:-dist}"
 
 command -v java >/dev/null 2>&1 || { echo "error: java not found (need JDK 17)"; exit 1; }
 

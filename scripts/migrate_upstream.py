@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import shutil
+import tarfile
 import tempfile
 
 from upstream_snapshot import extract
@@ -73,7 +74,6 @@ def apply_phase(project, bundle):
 
 def apply_full(project, bundle, runtime=None):
     project, bundle = Path(project), Path(bundle)
-    runtime = Path(runtime) if runtime else Path(__file__).resolve().parents[1] / 'decompiled'
     plan = json.loads((bundle / 'full.json').read_text())
     if plan['status'] != 'full-custom-migration-host-validated-device-validation-pending':
         raise ValueError('Unexpected full-plan status')
@@ -85,15 +85,66 @@ def apply_full(project, bundle, runtime=None):
     for name, expected in plan['baseSha256'].items():
         if digest(relative_path(project, name)) != expected:
             raise ValueError('Unreviewed full-migration input: ' + name)
+
+    # Older, superseded runtimes are retained as a small hash-pinned payload so
+    # their migration can still be reproduced after decompiled/ advances.
+    payload = None
+    payload_modes = {}
+    if runtime is None and plan.get('runtimeArchive'):
+        archive = relative_path(bundle, plan['runtimeArchive'])
+        if digest(archive) != plan.get('runtimeArchiveSha256'):
+            raise ValueError('Full-migration runtime archive SHA-256 mismatch')
+        expected_runtime = set(modified) | set(additions)
+        payload = {}
+        with tarfile.open(archive, 'r:gz') as source:
+            members = source.getmembers()
+            if len(members) != plan.get('runtimeArchiveFileCount'):
+                raise ValueError('Full-migration runtime archive count mismatch')
+            for member in members:
+                rel = PurePosixPath(member.name)
+                if (not member.isfile() or rel.is_absolute() or '..' in rel.parts
+                        or len(rel.parts) < 2 or rel.parts[0] != 'runtime'):
+                    raise ValueError('Unsafe full-migration runtime entry: ' + member.name)
+                name = PurePosixPath(*rel.parts[1:]).as_posix()
+                if name in payload:
+                    raise ValueError('Duplicate full-migration runtime entry: ' + name)
+                if name not in expected_runtime:
+                    raise ValueError('Unexpected full-migration runtime entry: ' + name)
+                stream = source.extractfile(member)
+                data = stream.read()
+                if len(data) != member.size:
+                    raise ValueError('Truncated full-migration runtime entry: ' + name)
+                payload[name] = data
+                payload_modes[name] = member.mode & 0o777
+        if set(payload) != expected_runtime:
+            raise ValueError('Full-migration runtime archive file set mismatch')
+        if sum(map(len, payload.values())) != plan.get('runtimeArchiveBytes'):
+            raise ValueError('Full-migration runtime archive byte count mismatch')
+    elif runtime is None:
+        runtime = Path(__file__).resolve().parents[1] / 'decompiled'
+    else:
+        runtime = Path(runtime)
+
     for group in (modified, additions):
         for name, expected in group.items():
-            source, dest = relative_path(runtime, name), relative_path(project, name)
-            if digest(source) != expected:
-                raise ValueError('Unreviewed full-migration runtime: ' + name)
+            dest = relative_path(project, name)
             if group is additions and dest.exists():
                 raise ValueError('Refusing to overwrite upstream file: ' + name)
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, dest)
+            if payload is not None:
+                data = payload[name]
+                actual = hashlib.sha256(data).hexdigest()
+                if actual != expected:
+                    raise ValueError('Unreviewed full-migration runtime: ' + name)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes(data)
+                dest.chmod(payload_modes[name])
+            else:
+                source = relative_path(runtime, name)
+                if digest(source) != expected:
+                    raise ValueError('Unreviewed full-migration runtime: ' + name)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, dest)
+                shutil.copystat(source, dest, follow_symlinks=False)
     expected_files = dict(plan['upstreamUnchangedSha256'], **modified, **additions)
     actual_files = {p.relative_to(project).as_posix() for p in project.rglob('*') if p.is_file()}
     if actual_files != set(expected_files):
