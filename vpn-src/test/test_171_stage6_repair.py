@@ -199,6 +199,7 @@ class Stage6RepairTest(unittest.TestCase):
 .class public final Leu0;
 .method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
     .locals 37
+    const/16 v4, 0xe
     move-object/from16 v17, v5
     invoke-static/range {v16 .. v25}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V
     invoke-virtual {v3, v10}, Lla2;->r(Z)V
@@ -224,6 +225,9 @@ class Stage6RepairTest(unittest.TestCase):
     invoke-static/range {v11 .. v20}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V
     invoke-virtual {v5, v10}, Lla2;->r(Z)V
     const v7, -0x236bac2a
+    const/high16 v0, 0x180000
+    and-int/2addr v6, v4
+    or-int v23, v6, v0
     return-object v0
 .end method
 ''')
@@ -349,6 +353,17 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;', eu0_hunk)
             self.assertIn('move-object/from16 v22, v5', eu0_hunk)
             self.assertEqual(eu0_hunk.count('invoke-virtual {v5, v10}, Lla2;->r(Z)V'), 2)
+            self.assertIn('const/16 v4, 0xe', eu0_hunk)
+            eu0_lines = eu0_method.splitlines()
+            flag_mask = next(index for index, line in enumerate(eu0_lines)
+                             if line.strip() == 'and-int/2addr v6, v4')
+            v4_resets = [index for index, line in enumerate(eu0_lines)
+                         if line.strip() == 'const/16 v4, 0xe']
+            self.assertEqual(len(v4_resets), 2)
+            resource_id = next(index for index, line in enumerate(eu0_lines)
+                               if line.strip() == 'const v4, 0x7f0f055c')
+            self.assertGreater(v4_resets[-1], resource_id)
+            self.assertLess(v4_resets[-1], flag_mask)
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)
@@ -371,6 +386,37 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('goto/16 :goto_dd', pd1)
             self.assertIn('goto/16 :goto_sd', pd1)
             self.assertIn('        :pswitch_9\n        :pswitch_10', pd1)
+            self.assertEqual(repair(root), [])
+
+    def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.make_candidate(root)
+            self.assertEqual(len(repair(root)), 9)
+
+            eu0_path = root / 'smali/eu0.smali'
+            eu0 = eu0_path.read_text()
+            anchor = 'move-object/from16 v17, v5'
+            start = eu0.index(anchor) + len(anchor)
+            end = eu0.index('const v7, -0x236bac2a', start)
+            hunk = eu0[start:end]
+            reset = '    const/16 v4, 0xe\n'
+            self.assertEqual(hunk.count(reset), 1)
+            eu0_path.write_text(eu0[:start] + hunk.replace(reset, '', 1) + eu0[end:])
+
+            changed = repair(root)
+            self.assertEqual(changed, ['eu0 battery-toggle Compose register order'])
+            repaired = eu0_path.read_text()
+            method = repaired.split(
+                '.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            lines = method.splitlines()
+            resets = [index for index, line in enumerate(lines)
+                      if line.strip() == 'const/16 v4, 0xe']
+            mask = next(index for index, line in enumerate(lines)
+                        if line.strip() == 'and-int/2addr v6, v4')
+            self.assertEqual(len(resets), 2)
+            self.assertLess(resets[-1], mask)
             self.assertEqual(repair(root), [])
 
 

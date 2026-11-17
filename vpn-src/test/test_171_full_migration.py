@@ -87,6 +87,17 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertIn('invoke-static {v4, v5}, Lub3;->a0(ILla2;)Ljava/lang/String;', eu0_hunk)
             self.assertIn('move-object/from16 v22, v5', eu0_hunk)
             self.assertEqual(eu0_hunk.count('invoke-virtual {v5, v10}, Lla2;->r(Z)V'), 2)
+            self.assertIn('const/16 v4, 0xe', eu0_hunk)
+            eu0_lines = eu0_method.splitlines()
+            flag_mask = next(index for index, line in enumerate(eu0_lines)
+                             if line.strip() == 'and-int/2addr v6, v4')
+            v4_resets = [index for index, line in enumerate(eu0_lines)
+                         if line.strip() == 'const/16 v4, 0xe']
+            self.assertEqual(len(v4_resets), 2)
+            resource_id = next(index for index, line in enumerate(eu0_lines)
+                               if line.strip() == 'const v4, 0x7f0f055c')
+            self.assertGreater(v4_resets[-1], resource_id)
+            self.assertLess(v4_resets[-1], flag_mask)
 
             r6 = (project / 'smali/r6.smali').read_text()
             self.assertIn('if-nez v6, :boxproxy_match', r6)

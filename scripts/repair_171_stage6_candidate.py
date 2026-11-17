@@ -339,7 +339,7 @@ def fix_qc0_external_root_name(text):
 
 
 def fix_eu0_battery_toggle_hunk(text):
-    """Restore the battery-toggle Compose call after all of its arguments are set."""
+    """Restore the battery-toggle Compose call and preserve nn3's change mask."""
     signature = 'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
     anchor = 'move-object/from16 v17, v5'
     end_marker = 'const v7, -0x236bac2a'
@@ -393,7 +393,12 @@ def fix_eu0_battery_toggle_hunk(text):
         'move-object/from16 v22, v5',
         'invoke-static/range {v16 .. v25}, Lub3;->s(ZLh92;Ljava/lang/String;Ljava/lang/String;Lyz0;ZLla2;III)V',
         'invoke-virtual {v5, v10}, Lla2;->r(Z)V',
+        # The upstream wrapper later masks v6 with v4 (0xe) to build the
+        # child composable flags for nn3.L. Resource IDs above use v4, so
+        # restore that live mask before the wrapper consumes it.
+        'const/16 v4, 0xe',
     ]
+    legacy_fixed = fixed[:-1]
 
     def instructions(lines):
         return [line.strip() for line in lines
@@ -410,8 +415,8 @@ def fix_eu0_battery_toggle_hunk(text):
         actual = instructions(lines[start:end])
         if actual == fixed:
             return block
-        if actual != broken:
-            raise ValueError('eu0.a battery-toggle hunk differs from both known forms')
+        if actual not in (broken, legacy_fixed):
+            raise ValueError('eu0.a battery-toggle hunk differs from known broken/repaired forms')
         anchor_line = lines[anchors[0]]
         indent = anchor_line[:len(anchor_line) - len(anchor_line.lstrip())]
         lines[start:end] = [indent + line for line in fixed]
