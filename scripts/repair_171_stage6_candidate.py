@@ -480,6 +480,44 @@ def fix_y75_key_result_order(text):
     return update_method(text, signature, transform)
 
 
+def fix_ij4_restore_cfg_constructor_argument(text):
+    """Pass ij4's e65 config model—not its neighboring String—to RestoreCfg."""
+    signature = ('<init>(Ljava/util/List;Ljava/lang/String;Lb34;Lqn3;Lme5;Lb34;'
+                 'Lb34;Ljava/lang/String;Le65;Landroid/content/Context;'
+                 'Ljava/lang/String;Lh92;Ljava/lang/String;Lqn3;Lb34;Lb34;Lb34;Lb34;)V')
+    broken = 'invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V'
+    fixed = 'invoke-static {p9}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V'
+    p8_store = 'iput-object p8, p0, Lij4;->r:Ljava/lang/Object;'
+    p9_store = 'iput-object p9, p0, Lij4;->s:Ljava/lang/Object;'
+
+    def transform(block):
+        lines = block.splitlines()
+        calls = [(i, line.strip()) for i, line in enumerate(lines)
+                 if 'Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V' in line]
+        p8_stores = [i for i, line in enumerate(lines) if line.strip() == p8_store]
+        p9_stores = [i for i, line in enumerate(lines) if line.strip() == p9_store]
+        if len(calls) != 1 or len(p8_stores) != 1 or len(p9_stores) != 1:
+            raise ValueError('ij4 constructor no longer has the reviewed RestoreCfg/e65 field hunk')
+        call_line, call = calls[0]
+        p8_index, p9_index = p8_stores[0], p9_stores[0]
+        if call == fixed:
+            if not p8_index < p9_index < call_line:
+                raise ValueError('ij4 RestoreCfg call is not after its e65 model field store')
+            return block
+        if call != broken or not p8_index < call_line < p9_index:
+            raise ValueError('ij4 RestoreCfg argument differs from both known register forms')
+
+        # In this constructor p8 is String and p9 is e65. Keep the hook with
+        # the config-model store, as in the legacy constructor, and pass p9.
+        indent = re.match(r'^\s*', lines[p9_index]).group(0)
+        lines.pop(call_line)
+        p9_index -= 1
+        lines.insert(p9_index + 1, indent + fixed)
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""
     signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
@@ -808,6 +846,7 @@ def repair(root):
         (root / 'smali/qc0.smali', lambda text: fix_qc0_external_root_name(text), 'qc0 external-files root name'),
         (root / 'smali/eu0.smali', lambda text: fix_eu0_battery_toggle_hunk(text), 'eu0 battery-toggle Compose register order'),
         (root / 'smali/y75.smali', lambda text: fix_y75_key_result_order(text), 'y75 enum-key invoke result order'),
+        (root / 'smali/ij4.smali', lambda text: fix_ij4_restore_cfg_constructor_argument(text), 'ij4 RestoreCfg e65 constructor argument'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )

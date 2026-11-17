@@ -31,6 +31,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('qc0 external-files root name on both branches', semantic_fixes)
         self.assertIn('eu0 battery-toggle Compose register order', semantic_fixes)
         self.assertIn('y75 enum-key invoke result order', semantic_fixes)
+        self.assertIn('ij4 RestoreCfg e65 constructor argument', semantic_fixes)
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
@@ -127,6 +128,20 @@ class Full171MigrationTest(unittest.TestCase):
                 'invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I')
             self.assertEqual(y75_instructions[key_index - 1], 'move/from16 p3, v1')
             self.assertEqual(y75_instructions[key_index + 1], 'move-result v1')
+
+            ij4 = (project / 'smali/ij4.smali').read_text()
+            ij4_method = ij4.split(
+                '.method public synthetic constructor <init>(Ljava/util/List;',
+                1)[1].split('.end method', 1)[0]
+            ij4_instructions = [line.strip() for line in ij4_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            p9_store = ij4_instructions.index(
+                'iput-object p9, p0, Lij4;->s:Ljava/lang/Object;')
+            restore_call = ij4_instructions.index(
+                'invoke-static {p9}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V')
+            self.assertEqual(restore_call, p9_store + 1)
+            self.assertNotIn('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V',
+                             ij4_instructions)
 
 
 if __name__ == '__main__':

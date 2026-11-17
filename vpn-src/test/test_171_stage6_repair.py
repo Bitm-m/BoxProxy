@@ -244,6 +244,18 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/ij4.smali').write_text('''
+.class public final synthetic Lij4;
+.method public synthetic constructor <init>(Ljava/util/List;Ljava/lang/String;Lb34;Lqn3;Lme5;Lb34;Lb34;Ljava/lang/String;Le65;Landroid/content/Context;Ljava/lang/String;Lh92;Ljava/lang/String;Lqn3;Lb34;Lb34;Lb34;Lb34;)V
+    .locals 1
+    iput-object p8, p0, Lij4;->r:Ljava/lang/Object;
+    invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V
+    iput-object p9, p0, Lij4;->s:Ljava/lang/Object;
+    iput-object p10, p0, Lij4;->t:Ljava/lang/Object;
+    return-void
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -317,15 +329,21 @@ class Stage6RepairTest(unittest.TestCase):
                             broken_y75.index('move/from16 p3, v1'))
             self.assertLess(broken_y75.index('move/from16 p3, v1'),
                             broken_y75.index('move-result v1'))
+            broken_ij4 = (root / 'smali/ij4.smali').read_text()
+            self.assertIn('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V',
+                          broken_ij4)
+            self.assertLess(broken_ij4.index('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;'),
+                            broken_ij4.index('iput-object p9, p0, Lij4;->s:Ljava/lang/Object;'))
 
             changed = repair(root)
-            self.assertEqual(len(changed), 10)
+            self.assertEqual(len(changed), 11)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
             self.assertIn('qc0 external-files root name', changed)
             self.assertIn('eu0 battery-toggle Compose register order', changed)
             self.assertIn('y75 enum-key invoke result order', changed)
+            self.assertIn('ij4 RestoreCfg e65 constructor argument', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -426,13 +444,24 @@ class Stage6RepairTest(unittest.TestCase):
                 'invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I')
             self.assertEqual(y75_instructions[key_index - 1], 'move/from16 p3, v1')
             self.assertEqual(y75_instructions[key_index + 1], 'move-result v1')
+
+            ij4 = (root / 'smali/ij4.smali').read_text()
+            ij4_method = ij4.split('.method public synthetic constructor <init>(', 1)[1].split('.end method', 1)[0]
+            ij4_instructions = [line.strip() for line in ij4_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            p9_store = ij4_instructions.index('iput-object p9, p0, Lij4;->s:Ljava/lang/Object;')
+            restore_call = ij4_instructions.index(
+                'invoke-static {p9}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V')
+            self.assertEqual(restore_call, p9_store + 1)
+            self.assertNotIn('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V',
+                             ij4_instructions)
             self.assertEqual(repair(root), [])
 
     def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.make_candidate(root)
-            self.assertEqual(len(repair(root)), 10)
+            self.assertEqual(len(repair(root)), 11)
 
             eu0_path = root / 'smali/eu0.smali'
             eu0 = eu0_path.read_text()

@@ -90,7 +90,7 @@
     "smali/gc0.smali": "cab83e149268d542776dcb7e5e56dae613e77c207c992ea2d9c500686baaa9fd",
     "smali/go5.smali": "3da17093dc5bc7e509e0e6f4025ae2c77c52ae7a31ca6026bc321263c70056a1",
     "smali/i50.smali": "9cca83401a001057c75b58697f968050c0a100ebd3b00685c2322485de972ab1",
-    "smali/ij4.smali": "3912357b0552330f935b587890633aac94ad746b0acb8db69293abad03e20da2",
+    "smali/ij4.smali": "2f76b8f6b14197e1488a337f1de1f4b320d5d61d7afd026d6e4e0c8ed6ba9c79",
     "smali/in6.smali": "9131cf580b6f23b1a43b9a79ca5e858fe3a525db9c85d1abd52a8ac1b520140f",
     "smali/j75.smali": "5a7044bbb491703e5d39602a9061db603ec1262fe49aafb363f19ae09c455c1c",
     "smali/je5.smali": "f4c12bc94540584d4b1e02672b7579faf21a4d6973f412773dce00a60c7cf887",
@@ -11330,13 +11330,17 @@
         "detail": "Save v1 into p3 before replacing Enum.ordinal() with VpnBridge.key; keep move-result immediately after the invoke so ART receives the defined integer result."
       },
       {
+        "name": "ij4 RestoreCfg e65 constructor argument",
+        "detail": "Pass ij4 p9 (the e65 config model), not p8 (the neighboring String), to RestoreCfg.vm; place the hook after storing the model in ij4.s."
+      },
+      {
         "name": "pd1 resumed sing-box DingTalk constructor register",
         "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "00bdb9ab8265e83ebed60f26551805dbaf8ecdc422ba7e00fcf0aed9edd09c8e",
+  "runtimeArchiveSha256": "6e6f985ac9562ef519342f8b6647efd09bd6db9f3fbcb406bb600df528fee3cd",
   "runtimeArchiveFileCount": 1429,
   "runtimeArchiveBytes": 20527175
 }
