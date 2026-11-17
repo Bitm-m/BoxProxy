@@ -140,7 +140,7 @@
     "smali/yb1.smali": "2ad9376a8d2d8f2a8fc3ff23f093276c3579b79fcdee9c14f81611bb880fe358",
     "smali/z51.smali": "6ff95d98006e6c7bdc453e05176257201bd0cf5491ba964c5463fa297d03527f",
     "smali/zj.smali": "f659ced5fb7521eb415fcf2f8994ba5a79ac9295165a79c482f8a447edff6943",
-    "smali/zo2.smali": "cffefb54a3753a84b3c7bbd6e5536c32c3d1d7f533f987f1fc956447dc83d074",
+    "smali/zo2.smali": "916f301998f14425e66c612c0116983805cccf96f74322ddb8060a4b5545e72a",
     "smali/zt6.smali": "3b84d9cb164a1b7e1c5bba1e16a5f36ef7e3e67ec69e822f0642b8e78fc20ca3",
     "smali/zu0.smali": "12c50946dc3e522033084b62ad1fc76afb4c0fc4ae043447d6ea44fd3071d8ac",
     "smali/zu5.smali": "4d0908508184351bce42ec6d6eb85c6c0c3b95d6691a7b4cb7669f5516470faf"
@@ -11341,6 +11341,10 @@
         "detail": "Pass both CfgNav.wrap calls the correct lambda, pv5 model, and Context via v32-v34 range staging; preserve v8 (Lue3) and the Yz0 in v2, and keep the second Ll92 result in v10 until the following Ltj.J replaces it with Yz0."
       },
       {
+        "name": "zo2 VPN control result register",
+        "detail": "Store VpnBridge.control's result in v5 instead of p2, preserving p2/p3 as the suspend method's long delay and retaining the early-return path."
+      },
+      {
         "name": "pd1 resumed sing-box DingTalk constructor register",
         "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
       },
@@ -11355,7 +11359,7 @@
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "93fb95276e5d8efbb46e411510d3140a78ec4160fbe64bf65be0fb695d86f881",
+  "runtimeArchiveSha256": "5946f40ff4d9e0f1de6f61379277b55c31bc49ccde0cc206db87be7afe52186b",
   "runtimeArchiveFileCount": 1432,
   "runtimeArchiveBytes": 21163874
 }

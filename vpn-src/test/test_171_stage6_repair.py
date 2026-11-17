@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import check_smali_branch_offsets as branch_offsets  # noqa: E402
 import check_smali_reference_moves as reference_moves  # noqa: E402
 from repair_171_stage6_candidate import (  # noqa: E402
+    fix_zo2_vpn_bridge_result_register,
     fix_zu5_cfg_nav_wrapper_registers,
     repair,
 )
@@ -86,6 +87,19 @@ class Stage6RepairTest(unittest.TestCase):
         (root / 'smali/com/box/app/vpn/PanelToggle.smali').write_text('''\
 .class public final Lcom/box/app/vpn/PanelToggle;
 .implements Lw82;
+''')
+        (root / 'smali/zo2.smali').write_text('''\
+.class public final Lzo2;
+.method public final a(Ljava/lang/String;JLda1;)Ljava/lang/Object;
+    .locals 8
+    invoke-static/range {p1 .. p1}, Lcom/box/app/vpn/VpnBridge;->control(Ljava/lang/String;)Lvo2;
+    move-result-object p2
+    if-eqz p2, :cond_vpn_none
+    return-object p2
+    :cond_vpn_none
+    long-to-int p4, p2
+    return-object p0
+.end method
 ''')
 
         (root / 'smali/ne5.smali').write_text('''\
@@ -348,6 +362,32 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+    def test_zo2_vpn_result_does_not_overwrite_long_parameter(self):
+        method = '''\
+.method public final a(Ljava/lang/String;JLda1;)Ljava/lang/Object;
+    .locals 8
+    invoke-static/range {p1 .. p1}, Lcom/box/app/vpn/VpnBridge;->control(Ljava/lang/String;)Lvo2;
+    move-result-object p2
+    if-eqz p2, :cond_vpn_none
+    return-object p2
+    :cond_vpn_none
+    long-to-int p4, p2
+    return-object p0
+.end method
+'''
+        fixed, changed = fix_zo2_vpn_bridge_result_register(method)
+        self.assertTrue(changed)
+        self.assertIn('move-result-object v5', fixed)
+        self.assertIn('if-eqz v5, :cond_vpn_none', fixed)
+        self.assertIn('return-object v5', fixed)
+        self.assertIn('long-to-int p4, p2', fixed)
+        self.assertNotIn('move-result-object p2', fixed)
+        fixed_again, changed_again = fix_zo2_vpn_bridge_result_register(fixed)
+        self.assertFalse(changed_again)
+        self.assertEqual(fixed_again, fixed)
+        with self.assertRaisesRegex(ValueError, 'v5 local'):
+            fix_zo2_vpn_bridge_result_register(method.replace('.locals 8', '.locals 5'))
+
     def test_repairs_known_register_and_state_merge_hazards(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -386,9 +426,12 @@ class Stage6RepairTest(unittest.TestCase):
                           broken_zu5)
             self.assertEqual(broken_zu5.count('iget-object v8, v0, Lzu5;->l:Landroid/content/Context;'), 2)
             self.assertIn('move-result-object v2', broken_zu5)
+            broken_zo2 = (root / 'smali/zo2.smali').read_text()
+            self.assertIn('move-result-object p2', broken_zo2)
+            self.assertIn('long-to-int p4, p2', broken_zo2)
 
             changed = repair(root)
-            self.assertEqual(len(changed), 12)
+            self.assertEqual(len(changed), 13)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
@@ -397,6 +440,13 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('y75 enum-key invoke result order', changed)
             self.assertIn('ij4 RestoreCfg e65 constructor argument', changed)
             self.assertIn('zu5 CfgNav wrapper argument registers', changed)
+            self.assertIn('zo2 VPN control result register', changed)
+            fixed_zo2 = (root / 'smali/zo2.smali').read_text()
+            self.assertIn('move-result-object v5', fixed_zo2)
+            self.assertIn('if-eqz v5, :cond_vpn_none', fixed_zo2)
+            self.assertIn('return-object v5', fixed_zo2)
+            self.assertNotIn('move-result-object p2', fixed_zo2)
+            self.assertIn('long-to-int p4, p2', fixed_zo2)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -608,7 +658,7 @@ class Stage6RepairTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.make_candidate(root)
-            self.assertEqual(len(repair(root)), 12)
+            self.assertEqual(len(repair(root)), 13)
 
             eu0_path = root / 'smali/eu0.smali'
             eu0 = eu0_path.read_text()

@@ -226,6 +226,11 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('y75 enum-key invoke result order', semantic_fixes)
         self.assertIn('ij4 RestoreCfg e65 constructor argument', semantic_fixes)
         self.assertIn('zu5 CfgNav wrapper argument registers', semantic_fixes)
+        self.assertIn('zo2 VPN control result register', semantic_fixes)
+        zo2_report = next(item['detail'] for item in plan['stage6Report']['semanticFixes']
+                          if item['name'] == 'zo2 VPN control result register')
+        self.assertIn('v5 instead of p2', zo2_report)
+        self.assertIn('p2/p3 as the suspend method', zo2_report)
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertIn('Update Core DingTalk source metadata', semantic_fixes)
         self.assertIn('RestoreCfg/VpnSeed v171 stream-copy and empty-seed recovery', semantic_fixes)
@@ -313,6 +318,19 @@ class Full171MigrationTest(unittest.TestCase):
             r6 = (project / 'smali/r6.smali').read_text()
             self.assertIn('if-nez v6, :boxproxy_match', r6)
             self.assertIn('if-ltz v6, :cond_7', r6)
+
+            zo2 = (project / 'smali/zo2.smali').read_text()
+            zo2_method = zo2.split(
+                '.method public final a(Ljava/lang/String;JLda1;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            self.assertIn('invoke-static/range {p1 .. p1}, '
+                          'Lcom/box/app/vpn/VpnBridge;->control(Ljava/lang/String;)Lvo2;',
+                          zo2_method)
+            self.assertIn('move-result-object v5', zo2_method)
+            self.assertIn('if-eqz v5, :cond_vpn_none', zo2_method)
+            self.assertIn('return-object v5', zo2_method)
+            self.assertNotIn('move-result-object p2', zo2_method)
+            self.assertIn('long-to-int p4, p2', zo2_method)
 
             cfg_nav = (project / 'smali/com/box/app/cfg/CfgNav.smali').read_text()
             self.assertNotIn('Lt72;', cfg_nav)

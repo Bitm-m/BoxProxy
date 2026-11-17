@@ -3,9 +3,10 @@
 
 The stage-6 smali porter works in a disposable tree. This deterministic post-pass
 protects sensitive R8/API deltas where text/register alignment is insufficient:
-the VPN enum and invoke-result adjacency, core registry, range-call argument,
-Compose register order, storage-directory branch, coroutine states, tar-entry
-matcher, and callback receiver preservation. It never edits the source decompile.
+the VPN enum and invoke-result adjacency, long-parameter register preservation,
+core registry, range-call argument, Compose register order, storage-directory
+branch, coroutine states, tar-entry matcher, and callback receiver preservation.
+It never edits the source decompile.
 """
 import argparse
 import re
@@ -695,6 +696,75 @@ def fix_zu5_cfg_nav_wrapper_registers(text):
 
     return update_method(text, signature, transform)
 
+
+def fix_zo2_vpn_bridge_result_register(text):
+    """Keep the VPN control result out of zo2's long timeout parameter.
+
+    In the migrated method p2/p3 are the two halves of the long delay. The
+    aligned custom hook used move-result-object p2, which made ART reject the
+    whole class before the command handler could run. v5 is an available local
+    at the hook and is initialized again before its later file-path use.
+    """
+    signature = 'a(Ljava/lang/String;JLda1;)Ljava/lang/Object;'
+    control_call = (
+        'invoke-static/range {p1 .. p1}, '
+        'Lcom/box/app/vpn/VpnBridge;->control(Ljava/lang/String;)Lvo2;'
+    )
+    broken = (
+        'move-result-object p2',
+        'if-eqz p2, :cond_vpn_none',
+        'return-object p2',
+    )
+    fixed = (
+        'move-result-object v5',
+        'if-eqz v5, :cond_vpn_none',
+        'return-object v5',
+    )
+
+    def transform(block):
+        locals_values = [int(match.group(1)) for line in block.splitlines()
+                         if (match := re.match(r'^\s*\.locals\s+(\d+)\s*$', line))]
+        if len(locals_values) != 1 or locals_values[0] < 6:
+            raise ValueError('zo2 command result needs the reviewed v5 local register')
+        lines = block.splitlines()
+        calls = [i for i, line in enumerate(lines) if line.strip() == control_call]
+        if len(calls) != 1:
+            raise ValueError('zo2 does not have exactly one reviewed VpnBridge.control call')
+        instructions = []
+        for index, line in enumerate(lines):
+            value = line.strip()
+            if (not value or value.startswith(('.', '#', ':'))):
+                continue
+            instructions.append((index, value))
+        call_positions = [i for i, (_, value) in enumerate(instructions)
+                          if value == control_call]
+        if len(call_positions) != 1 or call_positions[0] + 3 >= len(instructions):
+            raise ValueError('zo2 VpnBridge.control result sequence is truncated')
+        position = call_positions[0]
+        actual = tuple(value for _, value in instructions[position + 1:position + 4])
+        if actual == broken:
+            result_register = 'p2'
+            replacement = fixed
+        elif actual == fixed:
+            result_register = 'v5'
+            replacement = fixed
+        else:
+            raise ValueError('zo2 VpnBridge.control result differs from both reviewed register forms')
+        if ':cond_vpn_none' not in [line.strip() for line in lines]:
+            raise ValueError('zo2 VpnBridge control-none label is missing')
+        if 'long-to-int p4, p2' not in [value for _, value in instructions[position + 4:]]:
+            raise ValueError('zo2 timeout long is not preserved through its resume-state save')
+        if result_register == 'v5':
+            return block
+        for offset, value in enumerate(replacement, 1):
+            line_index = instructions[position + offset][0]
+            indent = re.match(r'^\s*', lines[line_index]).group(0)
+            lines[line_index] = indent + value
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""
     signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
@@ -1025,6 +1095,7 @@ def repair(root):
         (root / 'smali/y75.smali', lambda text: fix_y75_key_result_order(text), 'y75 enum-key invoke result order'),
         (root / 'smali/ij4.smali', lambda text: fix_ij4_restore_cfg_constructor_argument(text), 'ij4 RestoreCfg e65 constructor argument'),
         (root / 'smali/zu5.smali', lambda text: fix_zu5_cfg_nav_wrapper_registers(text), 'zu5 CfgNav wrapper argument registers'),
+        (root / 'smali/zo2.smali', lambda text: fix_zo2_vpn_bridge_result_register(text), 'zo2 VPN control result register'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )
