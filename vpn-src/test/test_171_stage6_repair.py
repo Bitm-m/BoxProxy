@@ -173,6 +173,28 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/qc0.smali').write_text('''\
+.class public final Lqc0;
+.method public static k()Lfc0;
+    .locals 9
+    invoke-static {}, Lln;->w()Landroid/content/Context;
+    move-result-object v0
+    const/4 v2, 0x0
+    invoke-virtual {v0, v2}, Landroid/content/Context;->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;
+    move-result-object v0
+    if-nez v0, :cond_external_files_ready
+    invoke-static {}, Lln;->w()Landroid/content/Context;
+    move-result-object v0
+    invoke-virtual {v0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+    move-result-object v0
+    const-string v2, "box"
+    :cond_external_files_ready
+    new-instance v1, Ljava/io/File;
+    invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+    return-object v1
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -226,12 +248,16 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('aliases v11', reference_errors[0])
             broken_uu0 = (root / 'smali/uu0.smali').read_text()
             self.assertIn('const-string v5, "Match the root service', broken_uu0)
+            broken_qc0 = (root / 'smali/qc0.smali').read_text()
+            self.assertLess(broken_qc0.index('\n    const-string v2, "box"'),
+                            broken_qc0.index('\n    :cond_external_files_ready\n'))
 
             changed = repair(root)
-            self.assertEqual(len(changed), 7)
+            self.assertEqual(len(changed), 8)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
+            self.assertIn('qc0 external-files root name', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -263,6 +289,14 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertNotIn('const-string v5, "Match the root service', uu0)
             self.assertLess(uu0.index('const-string v11, "Match the root service'),
                             uu0.index('invoke-static {v13, v7, v11, v2, v12},'))
+
+            qc0 = (root / 'smali/qc0.smali').read_text()
+            qc0_k = qc0.split('.method public static k()Lfc0;', 1)[1].split('.end method', 1)[0]
+            self.assertIn('if-nez v0, :cond_external_files_ready', qc0_k)
+            self.assertLess(qc0_k.index('\n    :cond_external_files_ready\n'),
+                            qc0_k.index('\n    const-string v2, "box"'))
+            self.assertLess(qc0_k.index('const-string v2, "box"'),
+                            qc0_k.index('invoke-direct {v1, v0, v2},'))
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)

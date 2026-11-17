@@ -28,6 +28,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('r6 tar-entry matching and nonzero branch offsets', semantic_fixes)
         self.assertIn('xl4 Compose callback receiver preservation', semantic_fixes)
         self.assertIn('uu0 coroutine core-version String register', semantic_fixes)
+        self.assertIn('qc0 external-files root name on both branches', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -64,6 +65,14 @@ class Full171MigrationTest(unittest.TestCase):
                 'invoke-static {v13, v7, v11, v2, v12}, '
                 'Lly1;->s(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;'
                 'Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;', uu0)
+
+            qc0 = (project / 'smali/qc0.smali').read_text()
+            qc0_k = qc0.split('.method public static k()Lfc0;', 1)[1].split('.end method', 1)[0]
+            self.assertIn('if-nez v0, :cond_external_files_ready', qc0_k)
+            self.assertLess(qc0_k.index('\n    :cond_external_files_ready\n'),
+                            qc0_k.index('\n    const-string v2, "box"'))
+            self.assertLess(qc0_k.index('const-string v2, "box"'),
+                            qc0_k.index('invoke-direct {v1, v0, v2},'))
 
             r6 = (project / 'smali/r6.smali').read_text()
             self.assertIn('if-nez v6, :boxproxy_match', r6)

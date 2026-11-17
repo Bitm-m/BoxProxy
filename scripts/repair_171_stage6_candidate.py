@@ -3,8 +3,9 @@
 
 The stage-6 smali porter works in a disposable tree. This deterministic post-pass
 protects sensitive R8/API deltas where text/register alignment is insufficient:
-the VPN enum, core registry, range-call argument, coroutine states, tar-entry
-matcher, and callback receiver preservation. It never edits the source decompile.
+the VPN enum, core registry, range-call argument, storage-directory branch,
+coroutine states, tar-entry matcher, and callback receiver preservation. It never
+edits the source decompile.
 """
 import argparse
 import re
@@ -261,6 +262,78 @@ def fix_xl4_callback_receiver(text):
             check_v9_scratch(lines, saved_receivers[0], fixed_fields[0])
             return block
         raise ValueError('xl4.k receiver hunk differs from both the known broken and repaired forms')
+
+    return update_method(text, signature, transform)
+
+
+def fix_qc0_external_root_name(text):
+    """Initialize qc0.k's File child on both external and internal storage paths."""
+    signature = 'k()Lfc0;'
+    external_files = ('invoke-virtual {v0, v2}, '
+                      'Landroid/content/Context;->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;')
+    use_internal = 'if-nez v0, :cond_external_files_ready'
+    internal_files = ('invoke-virtual {v0}, '
+                      'Landroid/content/Context;->getFilesDir()Ljava/io/File;')
+    ready_label = ':cond_external_files_ready'
+    root_name = 'const-string v2, "box"'
+    file_object = 'new-instance v1, Ljava/io/File;'
+    file_constructor = ('invoke-direct {v1, v0, v2}, '
+                        'Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V')
+
+    def is_instruction(line):
+        value = line.strip()
+        return bool(value and not value.startswith(DEBUG_PREFIXES)
+                    and not value.startswith(('#', ':')))
+
+    def transform(block):
+        lines = block.splitlines()
+        instructions = {
+            'external_files': external_files,
+            'use_internal': use_internal,
+            'internal_files': internal_files,
+            'ready_label': ready_label,
+            'root_name': root_name,
+            'file_object': file_object,
+            'file_constructor': file_constructor,
+        }
+        positions = {}
+        for name, instruction in instructions.items():
+            hits = [i for i, line in enumerate(lines)
+                    if line.strip() == instruction]
+            if len(hits) != 1:
+                raise ValueError('qc0.k is missing or has duplicate ' + name + ' instruction')
+            positions[name] = hits[0]
+
+        external = positions['external_files']
+        branch = positions['use_internal']
+        fallback = positions['internal_files']
+        label = positions['ready_label']
+        name = positions['root_name']
+        file_new = positions['file_object']
+        constructor = positions['file_constructor']
+        join_start, join_end = sorted((label, name))
+        if not (external < branch < fallback < join_start < join_end < file_new < constructor):
+            raise ValueError('qc0.k storage-directory branch differs from the reviewed shape')
+
+        fallback_result = [line.strip() for line in lines[fallback + 1:join_start]
+                           if is_instruction(line)]
+        if fallback_result != ['move-result-object v0']:
+            raise ValueError('qc0.k internal-files fallback has an unexpected result sequence')
+        if any(is_instruction(line) for line in lines[join_start + 1:join_end]):
+            raise ValueError('qc0.k root name and ready label are not a common-path join')
+        common_path = [line.strip() for line in lines[join_end + 1:constructor]
+                       if is_instruction(line)]
+        if common_path != [file_object]:
+            raise ValueError('qc0.k reuses a path register before File construction')
+
+        if name < label:
+            # The branch skips the null-valued v2 assignment when external files
+            # are available. Move the join before the literal so both paths set it.
+            lines[name], lines[label] = lines[label], lines[name]
+            return chr(10).join(lines)
+        if label < name:
+            return block
+        raise ValueError('qc0.k root-name initialization differs from both known forms')
 
     return update_method(text, signature, transform)
 
@@ -568,6 +641,7 @@ def repair(root):
         (root / 'smali/r6.smali', lambda text: fix_r6_tar_matcher(text), 'r6 tar entry matcher'),
         (root / 'smali/xl4.smali', lambda text: fix_xl4_callback_receiver(text), 'xl4 callback receiver'),
         (root / 'smali/uu0.smali', lambda text: fix_uu0_core_version_script_register(text), 'uu0 core-version script register'),
+        (root / 'smali/qc0.smali', lambda text: fix_qc0_external_root_name(text), 'qc0 external-files root name'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )
