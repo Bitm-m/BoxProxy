@@ -519,63 +519,171 @@ def fix_ij4_restore_cfg_constructor_argument(text):
 
 
 def fix_zu5_cfg_nav_wrapper_registers(text):
-    """Pass zu5's pv5 model and Context to both custom CfgNav wrappers."""
+    """Preserve zu5's live Compose values while calling CfgNav.wrap."""
     signature = 'invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
     wrap_ref = 'Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;'
-    broken_first = f'invoke-static {{v3, v2, v7}}, {wrap_ref}'
-    fixed_first = f'invoke-static {{v3, v7, v8}}, {wrap_ref}'
-    second = f'invoke-static {{v2, v3, v8}}, {wrap_ref}'
-    broken_loads = (
-        'iget-object v7, v0, Lzu5;->p:Lsv5;',
-        'iget-object v8, v0, Lzu5;->p:Lsv5;',
+    intermediate_first = f'invoke-static {{v3, v7, v8}}, {wrap_ref}'
+    intermediate_second = f'invoke-static {{v2, v3, v8}}, {wrap_ref}'
+    fixed_call = f'invoke-static/range {{v32 .. v34}}, {wrap_ref}'
+    intermediate_context = 'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;'
+    fixed_context = 'iget-object v4, v0, Lzu5;->l:Landroid/content/Context;'
+    first_result = 'move-result-object v3'
+    intermediate_second_result = 'move-result-object v2'
+    fixed_second_result = 'move-result-object v10'
+    first_composable_call = 'invoke-static {v4, v3, v1}, Ltj;->J(ILt92;Lla2;)Lyz0;'
+    source_yz0_call = 'invoke-static {v9, v2, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;'
+    next_composable_call = 'invoke-static {v4, v9, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;'
+    lzo_call = 'invoke-static/range {v8 .. v18}, Lzo;->c('
+    first_staging = (
+        'move-object/from16 v32, v3',
+        'move-object/from16 v33, v7',
+        'move-object/from16 v34, v4',
     )
-    context_load = 'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;'
+    second_staging = (
+        'move-object/from16 v32, v2',
+        'move-object/from16 v33, v3',
+        'move-object/from16 v34, v4',
+    )
 
-    def previous_instruction(lines, index):
-        index -= 1
-        while index >= 0:
+    def adjacent_instruction(lines, index, step):
+        index += step
+        while 0 <= index < len(lines):
             value = lines[index].strip()
             if (not value or value.startswith(DEBUG_PREFIXES)
                     or value.startswith(('#', ':'))):
-                index -= 1
+                index += step
                 continue
             return index
         return None
 
+    def previous_instructions(lines, index, count):
+        found = []
+        for _ in range(count):
+            index = adjacent_instruction(lines, index, -1)
+            if index is None:
+                return None
+            found.append(index)
+        return list(reversed(found))
+
     def transform(block):
         lines = block.splitlines()
-        calls = [(i, line.strip()) for i, line in enumerate(lines)
-                 if wrap_ref in line]
-        broken_first_hits = [i for i, value in calls if value == broken_first]
-        fixed_first_hits = [i for i, value in calls if value == fixed_first]
-        second_hits = [i for i, value in calls if value == second]
-        if len(calls) != 2 or len(broken_first_hits) + len(fixed_first_hits) != 1 \
-                or len(second_hits) != 1:
-            raise ValueError('zu5.invoke must have both reviewed CfgNav wrapper call sites')
+        locals_entries = [(i, int(match.group(1))) for i, line in enumerate(lines)
+                          if (match := re.match(r'^\s*\.locals\s+(\d+)\s*$', line))]
+        if len(locals_entries) != 1:
+            raise ValueError('zu5.invoke must have one reviewed .locals directive')
+        locals_index, locals_count = locals_entries[0]
+        calls = [(i, line.strip()) for i, line in enumerate(lines) if wrap_ref in line]
+        if len(calls) != 2:
+            raise ValueError('zu5.invoke must have exactly two reviewed CfgNav wrapper call sites')
+        (first_index, first_call), (second_index, second_call) = calls
+        if first_index >= second_index:
+            raise ValueError('zu5 CfgNav wrapper call sites are out of reviewed order')
+        first_load = adjacent_instruction(lines, first_index, -1)
+        second_load = adjacent_instruction(lines, second_index, -1)
+        first_result_index = adjacent_instruction(lines, first_index, 1)
+        second_result_index = adjacent_instruction(lines, second_index, 1)
+        if None in (first_load, second_load, first_result_index, second_result_index):
+            raise ValueError('zu5 CfgNav wrapper call is missing its adjacent load or result')
+        if lines[first_result_index].strip() != first_result:
+            raise ValueError('zu5 first CfgNav wrapper result differs from the reviewed form')
+        if not any(line.strip() == 'iget-object v7, v0, Lzu5;->j:Lpv5;'
+                   for line in lines[:first_index]):
+            raise ValueError('zu5 first CfgNav wrapper has no saved pv5 model in v7')
+        if not any(line.strip() == 'iget-object v3, v0, Lzu5;->j:Lpv5;'
+                   for line in lines[first_index:second_index]):
+            raise ValueError('zu5 second CfgNav wrapper has no pv5 model in v3')
 
-        first_index = broken_first_hits[0] if broken_first_hits else fixed_first_hits[0]
-        second_index = second_hits[0]
-        first_load_index = previous_instruction(lines, first_index)
-        second_load_index = previous_instruction(lines, second_index)
-        if first_load_index is None or second_load_index is None:
-            raise ValueError('zu5 CfgNav wrapper call is missing its preceding receiver load')
+        first_prefix = previous_instructions(lines, first_index, 4)
+        second_prefix = previous_instructions(lines, second_index, 4)
+        fixed_form = (
+            locals_count >= 35
+            and first_call == fixed_call and second_call == fixed_call
+            and first_prefix is not None and second_prefix is not None
+            and [lines[i].strip() for i in first_prefix] == [fixed_context, *first_staging]
+            and [lines[i].strip() for i in second_prefix] == [fixed_context, *second_staging]
+            and lines[second_result_index].strip() == fixed_second_result
+        )
+        intermediate_form = (
+            locals_count >= 33
+            and first_call == intermediate_first and second_call == intermediate_second
+            and lines[first_load].strip() == intermediate_context
+            and lines[second_load].strip() == intermediate_context
+            and lines[second_result_index].strip() == intermediate_second_result
+        )
+        if not fixed_form and not intermediate_form:
+            raise ValueError('zu5 CfgNav wrapper registers differ from both known forms')
 
-        if broken_first_hits:
-            if (lines[first_load_index].strip() != broken_loads[0]
-                    or lines[second_load_index].strip() != broken_loads[1]):
-                raise ValueError('zu5 CfgNav wrapper receivers differ from the reviewed broken form')
-            lines[first_load_index] = re.match(r'^\s*', lines[first_load_index]).group(0) + context_load
-            lines[second_load_index] = re.match(r'^\s*', lines[second_load_index]).group(0) + context_load
-            lines[first_index] = re.match(r'^\s*', lines[first_index]).group(0) + fixed_first
-            return '\n'.join(lines)
+        # v8 is a live Lue3 through Lzo.c and v2 is the Yz0 that Lzo.c needs.
+        # v4 is safe for the two Context loads because each next Ltj.J call
+        # reloads its integer key. Stage the three arguments in the otherwise
+        # dead high locals v32-v34 and use range form (35c cannot encode v32+).
+        first_following_calls = [i for i in range(first_result_index + 1, second_index)
+                                 if lines[i].strip() == first_composable_call]
+        if len(first_following_calls) != 1:
+            raise ValueError('zu5 first wrapper must feed its reviewed Ltj.J call')
+        first_following = first_following_calls[0]
+        first_key = adjacent_instruction(lines, first_following, -1)
+        first_j_result = adjacent_instruction(lines, first_following, 1)
+        if (first_key is None or lines[first_key].strip() != 'const v4, -0x7a21ea59'
+                or first_j_result is None or lines[first_j_result].strip() != 'move-result-object v3'):
+            raise ValueError('zu5 first wrapper Context register is not reset before its Ltj.J call')
 
-        if (lines[first_load_index].strip() != context_load
-                or lines[second_load_index].strip() != context_load):
-            raise ValueError('zu5 CfgNav wrapper receivers differ from both known forms')
-        return block
+        source_calls = [i for i in range(second_index)
+                        if lines[i].strip() == source_yz0_call]
+        if len(source_calls) != 1:
+            raise ValueError('zu5 second wrapper must follow its reviewed Yz0 producer')
+        source_result = adjacent_instruction(lines, source_calls[0], 1)
+        if source_result is None or lines[source_result].strip() != 'move-result-object v2':
+            raise ValueError('zu5 second wrapper input v2 is not the reviewed Yz0 result')
+
+        next_calls = [i for i in range(second_result_index + 1, len(lines))
+                      if lines[i].strip() == next_composable_call]
+        if len(next_calls) != 1:
+            raise ValueError('zu5 second wrapper must be followed by its reviewed Ltj.J call')
+        next_call = next_calls[0]
+        next_key = adjacent_instruction(lines, next_call, -1)
+        next_result = adjacent_instruction(lines, next_call, 1)
+        lzo_calls = [i for i in range(next_call + 1, len(lines))
+                     if lines[i].strip().startswith(lzo_call)]
+        if (next_key is None or lines[next_key].strip() != 'const v4, 0x6cb9fadf'
+                or next_result is None or lines[next_result].strip() != 'move-result-object v10'
+                or len(lzo_calls) != 1 or lzo_calls[0] <= next_result):
+            raise ValueError('zu5 second wrapper result is not safely superseded before Lzo.c')
+        if any(re.search(r'\bv10\b', lines[i].strip())
+               for i in range(second_result_index + 1, next_result)):
+            raise ValueError('zu5 v10 is live between the second wrapper and Ltj.J result')
+        if any(re.search(r'\bv2\b', lines[i].strip())
+               for i in range(second_result_index + 1, lzo_calls[0])
+               if lines[i].strip() != 'move-object v8, v2'):
+            raise ValueError('zu5 v2 is unexpectedly used or overwritten before Lzo.c')
+        if 'move-object v8, v2' not in [lines[i].strip()
+                                        for i in range(next_result + 1, lzo_calls[0])]:
+            raise ValueError('zu5 Lzo.c call no longer receives the saved Yz0 in v2')
+        if fixed_form:
+            return block
+
+        # Upgrade the known 33-local 35c form. v32-v34 are added locals; the
+        # symbolic p0/p1/p2 aliases therefore remain valid after .locals grows.
+        if locals_count < 35:
+            lines[locals_index] = re.sub(r'(\.locals\s+)\d+', r'\g<1>35', lines[locals_index])
+        first_indent = re.match(r'^\s*', lines[first_load]).group(0)
+        second_indent = re.match(r'^\s*', lines[second_load]).group(0)
+        lines[first_load] = first_indent + fixed_context
+        lines[second_load] = second_indent + fixed_context
+        first_call_indent = re.match(r'^\s*', lines[first_index]).group(0)
+        second_call_indent = re.match(r'^\s*', lines[second_index]).group(0)
+        lines[first_index] = first_call_indent + fixed_call
+        lines[second_index] = second_call_indent + fixed_call
+        lines[second_result_index] = (
+            re.match(r'^\s*', lines[second_result_index]).group(0) + fixed_second_result)
+        for index, moves in sorted(
+                ((first_index, first_staging), (second_index, second_staging)),
+                key=lambda pair: pair[0], reverse=True):
+            indent = re.match(r'^\s*', lines[index]).group(0)
+            lines[index:index] = [indent + move for move in moves]
+        return '\n'.join(lines)
 
     return update_method(text, signature, transform)
-
 
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""

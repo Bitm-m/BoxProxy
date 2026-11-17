@@ -139,7 +139,7 @@
     "smali/zo2.smali": "cffefb54a3753a84b3c7bbd6e5536c32c3d1d7f533f987f1fc956447dc83d074",
     "smali/zt6.smali": "3b84d9cb164a1b7e1c5bba1e16a5f36ef7e3e67ec69e822f0642b8e78fc20ca3",
     "smali/zu0.smali": "12c50946dc3e522033084b62ad1fc76afb4c0fc4ae043447d6ea44fd3071d8ac",
-    "smali/zu5.smali": "cefb9069c3623e05a110ee5c54a89d154d7b8046a3ee4b7394ce020dc3ce37df"
+    "smali/zu5.smali": "4d0908508184351bce42ec6d6eb85c6c0c3b95d6691a7b4cb7669f5516470faf"
   },
   "additionsSha256": {
     "assets/box/mihomo/mianliu.yaml": "da501ded244748d6eac94e6b78b847d05adc87db80be1c311a4a2c908c57f257",
@@ -11335,7 +11335,7 @@
       },
       {
         "name": "zu5 CfgNav wrapper argument registers",
-        "detail": "Pass the zu5 pv5 model and Context fields to each CfgNav.wrap hook; preserve v7 as pv5 and do not pass the label String or sv5 as those arguments."
+        "detail": "Pass both CfgNav.wrap calls the correct lambda, pv5 model, and Context via v32-v34 range staging; preserve v8 (Lue3) and the Yz0 in v2, and keep the second Ll92 result in v10 until the following Ltj.J replaces it with Yz0."
       },
       {
         "name": "pd1 resumed sing-box DingTalk constructor register",
@@ -11344,7 +11344,7 @@
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "4c2aa09420fd306c2d89c7d78d11427333fcefb3bd7294498bac57650d498b35",
+  "runtimeArchiveSha256": "7100bfd80f47d4fd3dac46f95d3f122028d24f3494ba3ed9beb9c24f2e5b4921",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527215
+  "runtimeArchiveBytes": 20527390
 }

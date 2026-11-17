@@ -1,5 +1,6 @@
 """Reproducibility test for the hash-pinned 171 migration candidate."""
 import json
+import re
 from pathlib import Path
 import sys
 import tempfile
@@ -152,18 +153,46 @@ class Full171MigrationTest(unittest.TestCase):
                                 if line.strip() and not line.strip().startswith(('.', '#', ':'))]
             wrap_indices = [i for i, line in enumerate(zu5_instructions)
                             if 'CfgNav;->wrap(' in line]
-            self.assertEqual(
-                [zu5_instructions[i] for i in wrap_indices],
-                [
-                    'invoke-static {v3, v7, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
-                    'invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
-                ],
+            fixed_wrap = (
+                'invoke-static/range {v32 .. v34}, '
+                'Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;'
             )
+            self.assertEqual([zu5_instructions[i] for i in wrap_indices],
+                             [fixed_wrap, fixed_wrap])
+            self.assertIn('.locals 35', zu5_method)
+            self.assertEqual([zu5_instructions[i - 4] for i in wrap_indices], [
+                'iget-object v4, v0, Lzu5;->l:Landroid/content/Context;',
+                'iget-object v4, v0, Lzu5;->l:Landroid/content/Context;',
+            ])
+            self.assertEqual([zu5_instructions[i - 3] for i in wrap_indices], [
+                'move-object/from16 v32, v3', 'move-object/from16 v32, v2',
+            ])
+            self.assertEqual([zu5_instructions[i - 2] for i in wrap_indices], [
+                'move-object/from16 v33, v7', 'move-object/from16 v33, v3',
+            ])
             self.assertEqual([zu5_instructions[i - 1] for i in wrap_indices], [
-                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
-                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
+                'move-object/from16 v34, v4', 'move-object/from16 v34, v4',
+            ])
+            self.assertEqual([zu5_instructions[i + 1] for i in wrap_indices], [
+                'move-result-object v3', 'move-result-object v10',
             ])
             self.assertIn('iget-object v7, v0, Lzu5;->j:Lpv5;', zu5_instructions)
+            self.assertIn('move-object v13, v8', zu5_instructions)
+            second_wrap_index = wrap_indices[1]
+            source_yz0_call = zu5_instructions.index(
+                'invoke-static {v9, v2, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;')
+            self.assertLess(source_yz0_call, second_wrap_index)
+            self.assertEqual(zu5_instructions[source_yz0_call + 1], 'move-result-object v2')
+            following_j = zu5_instructions.index(
+                'invoke-static {v4, v9, v13}, Ltj;->J(ILt92;Lla2;)Lyz0;',
+                second_wrap_index)
+            self.assertEqual(zu5_instructions[following_j + 1], 'move-result-object v10')
+            lzo_index = next(i for i, line in enumerate(zu5_instructions)
+                             if line.startswith('invoke-static/range {v8 .. v18}, Lzo;->c('))
+            self.assertEqual(zu5_instructions[lzo_index - 1], 'move-object v8, v2')
+            v2_uses = [line for line in zu5_instructions[second_wrap_index + 2:lzo_index]
+                       if re.search(r'\bv2\b', line)]
+            self.assertEqual(v2_uses, ['move-object v8, v2'])
             self.assertNotIn('iget-object v7, v0, Lzu5;->p:Lsv5;', zu5_instructions)
             self.assertNotIn('iget-object v8, v0, Lzu5;->p:Lsv5;', zu5_instructions)
 
