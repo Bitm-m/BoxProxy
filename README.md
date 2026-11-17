@@ -24,7 +24,7 @@ PROJECT_DIR=.tools/local-171/decompiled \
 ```
 
 本地已完成回编译和包信息校验的 APK 是 `.tools/build-171/BoxProxy-26.11.16.25abc84-unsigned.apk`（versionCode 171；SHA-256
-`17c718135bcbc641c0832dfdef74e7cf0b4ffc48bf476da276b0455fc9a3abb0`）。它是**未对齐、未签名**的本地回编译产物，
+`1219aac0a661382d4a36821816423c7917f49f68961ed0f98c79d31ec8bc92ae`）。它是**未对齐、未签名**的本地回编译产物，
 不等同于 GitHub Actions 的 APK artifact，也没有安装到设备验证。
 
 ## CI 产物与设备验证

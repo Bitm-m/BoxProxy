@@ -111,7 +111,7 @@
     "smali/qc0.smali": "033a1bc66eabcca6ab87e2b0d0a1d11ccfac39bcdee7594e7a01b062eaa45ae2",
     "smali/qo2.smali": "17d5e22decb77aba484ccca33410522028f6ef566dbec32dd5ef95f241582f77",
     "smali/r57.smali": "4793ab47444bf5d898e85ef2b268c13554b6e2263d70a04379ab666cea5535a1",
-    "smali/r6.smali": "75c2d86c7d0f3de28636c460aa6ae15c4dd7127c978f9e7b6d0b213439667244",
+    "smali/r6.smali": "c52047f0ab4421887492a8bc1427710010d241966cef0d0500015aca16082f26",
     "smali/rl3.smali": "0156e321e11723fec5ff356867235909ab7f570b355fbe5f58c96633fb58116e",
     "smali/s36.smali": "0e4c6aa2086f8f35c63c7460ef6954b112644f5d0572915926e8e040fff326fe",
     "smali/s65.smali": "29faf97195b210605beb2731725070bd00667366fe2a56656183c67c337e2977",
@@ -11304,11 +11304,15 @@
       {
         "name": "CfgNav Compose lambda",
         "detail": "wrapped CfgIcon with 171 Ltj.J; 171 Ltj.J factory verified; custom key 0x43464749 is unused by the pinned 171 Smali tree"
+      },
+      {
+        "name": "r6 tar-entry matching and nonzero branch offsets",
+        "detail": "Preserve exact-name matches; accept prefix-dash split entries only at >= 1 MiB; use a nonzero branch target."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "c727322a151b8baadef153075801c07180004da4312b4c049a1278f937573176",
+  "runtimeArchiveSha256": "fc9e6aed821817bf0a9ee18aeb3085dbf89677426eadd39c8aa49834012892d8",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527225
+  "runtimeArchiveBytes": 20527144
 }

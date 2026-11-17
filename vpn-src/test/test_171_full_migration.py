@@ -7,6 +7,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
+import check_smali_branch_offsets as branch_offsets  # noqa: E402
 import check_smali_references as references  # noqa: E402
 import migrate_upstream as migration  # noqa: E402
 from repair_171_stage6_candidate import repair  # noqa: E402
@@ -22,6 +23,8 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertEqual(plan['stage6Report']['errors'], [])
         self.assertEqual(plan['stage6Report']['whole'], 16)
         self.assertEqual(plan['stage6Report']['patch'], 35)
+        semantic_fixes = {item['name'] for item in plan['stage6Report']['semanticFixes']}
+        self.assertIn('r6 tar-entry matching and nonzero branch offsets', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -36,6 +39,13 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertEqual(result['classes'], 9879)
             self.assertEqual(result['references'], 578921)
             self.assertEqual(result['errors'], [])
+            smali_files, branch_errors = branch_offsets.scan_project(project)
+            self.assertEqual(smali_files, 9879)
+            self.assertEqual(branch_errors, [])
+
+            r6 = (project / 'smali/r6.smali').read_text()
+            self.assertIn('if-nez v6, :boxproxy_match', r6)
+            self.assertIn('if-ltz v6, :cond_7', r6)
 
             cfg_nav = (project / 'smali/com/box/app/cfg/CfgNav.smali').read_text()
             self.assertIn(

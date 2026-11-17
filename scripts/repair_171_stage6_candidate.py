@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Repair and verify the reviewed semantic edge cases in a generated 171 tree.
 
-The stage-6 smali porter works in a disposable tree. This small, deterministic
-post-pass protects four sensitive R8 deltas where text/register alignment is not
-sufficient evidence: the VPN enum, the core name/label registry, a range-call
-argument, and the two new coroutine states. It never edits the source decompile.
+The stage-6 smali porter works in a disposable tree. This deterministic post-pass
+protects sensitive R8/API deltas where text/register alignment is insufficient:
+the VPN enum, core registry, range-call argument, coroutine states, and the
+custom tar-entry matcher. It never edits the source decompile.
 """
 import argparse
 import re
@@ -119,6 +119,76 @@ def fix_g65(text):
             raise ValueError('g65 invoke no longer uses the reviewed v2..v26 argument range')
         if not any(re.match(r'^\s*\.locals\s+(?:2[6-9]|[3-9]\d+)\s*$', line) for line in lines):
             raise ValueError('g65 invoke has no local v10 register')
+        return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
+def fix_r6_tar_matcher(text):
+    """Restore the reviewed exact-name / large split-segment tar match."""
+    signature = 'l(Ljava/io/InputStream;Ljava/lang/String;Ljava/io/File;Ljava/lang/Long;Z)V'
+    compare = ('invoke-static {v3, p1}, '
+               'Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z')
+    max_size_call = ('invoke-virtual {p3}, '
+                     'Ljava/lang/Long;->longValue()J')
+    broken = [
+        'move-result v3',
+        'if-eqz v3, :cond_7',
+        'const-wide/32 v6, 0x100000',
+        'cmp-long v6, v4, v6',
+        'if-ltz v6, :cond_6',
+        ':boxproxy_match',
+        'if-nez v6, :boxproxy_match',
+        'const-string v6, "-"',
+        'invoke-virtual {p1, v6}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;',
+        'move-result-object v6',
+        'invoke-virtual {v3, v6}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z',
+        'move-result v6',
+    ]
+    corrected = [
+        'move-result v6',
+        'if-nez v6, :boxproxy_match',
+        'const-string v6, "-"',
+        'invoke-virtual {p1, v6}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;',
+        'move-result-object v6',
+        'invoke-virtual {v3, v6}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z',
+        'move-result v6',
+        'if-eqz v6, :cond_7',
+        'const-wide/32 v6, 0x100000',
+        'cmp-long v6, v4, v6',
+        'if-ltz v6, :cond_7',
+        ':boxproxy_match',
+    ]
+
+    def significant(line):
+        value = line.strip()
+        return (value and not value.startswith(DEBUG_PREFIXES)
+                and not value.startswith('#'))
+
+    def transform(block):
+        lines = block.splitlines()
+        compare_hits = [i for i, line in enumerate(lines) if line.strip() == compare]
+        if len(compare_hits) != 1:
+            raise ValueError('r6.l must have one reviewed entry-name equality check')
+        compare_index = compare_hits[0]
+        size_hits = [i for i, line in enumerate(lines)
+                     if i > compare_index and line.strip() == max_size_call]
+        if not size_hits:
+            raise ValueError('r6.l is missing its size-limit check after entry matching')
+        end = size_hits[0]
+        previous = [i for i in range(compare_index + 1, end) if significant(lines[i])]
+        old_code = [lines[i].strip() for i in previous]
+        if old_code == corrected:
+            return block
+        if old_code != broken:
+            raise ValueError('r6.l tar matcher differs from both the known broken and repaired forms')
+
+        indent = re.match(r'^\s*', lines[previous[0]]).group(0)
+        replacement = [indent + instruction for instruction in corrected]
+        # Drop stale source-line annotations with the malformed hunk. They are
+        # debug-only and would otherwise describe instructions that no longer exist.
+        start = compare_index + 1
+        lines[start:end] = replacement
         return '\n'.join(lines)
 
     return update_method(text, signature, transform)
@@ -376,6 +446,7 @@ def repair(root):
     operations = (
         (root / 'smali/ne5.smali', lambda text: fix_ne5(text), 'ne5 VPN enum register'),
         (root / 'smali/g65.smali', lambda text: fix_g65(text), 'g65 range-call field register'),
+        (root / 'smali/r6.smali', lambda text: fix_r6_tar_matcher(text), 'r6 tar entry matcher'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )

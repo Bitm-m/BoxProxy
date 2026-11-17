@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
+import check_smali_branch_offsets as branch_offsets  # noqa: E402
 from repair_171_stage6_candidate import repair  # noqa: E402
 
 
@@ -99,6 +100,31 @@ class Stage6RepairTest(unittest.TestCase):
     return-void
 .end method
 ''')
+        (root / 'smali/r6.smali').write_text('''\
+.class public final Lr6;
+.method public static l(Ljava/io/InputStream;Ljava/lang/String;Ljava/io/File;Ljava/lang/Long;Z)V
+    .locals 8
+    invoke-static {v3, p1}, Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z
+    move-result v3
+    if-eqz v3, :cond_7
+    const-wide/32 v6, 0x100000
+    cmp-long v6, v4, v6
+    if-ltz v6, :cond_6
+    :boxproxy_match
+    if-nez v6, :boxproxy_match
+    const-string v6, "-"
+    invoke-virtual {p1, v6}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v6
+    invoke-virtual {v3, v6}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    move-result v6
+    invoke-virtual {p3}, Ljava/lang/Long;->longValue()J
+    move-result-wide v0
+    return-void
+    :cond_7
+    return-void
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -143,8 +169,13 @@ class Stage6RepairTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.make_candidate(root)
+            before_errors = branch_offsets.scan_project(root)[1]
+            self.assertEqual(len(before_errors), 1)
+            self.assertIn('r6.smali', before_errors[0])
+
             changed = repair(root)
-            self.assertEqual(len(changed), 4)
+            self.assertEqual(len(changed), 5)
+            self.assertIn('r6 tar entry matcher', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -154,6 +185,13 @@ class Stage6RepairTest(unittest.TestCase):
             g65 = (root / 'smali/g65.smali').read_text()
             self.assertIn('iget-object v10, v2, Ldc0;->h:Ljava/lang/String;', g65)
             self.assertNotIn('iget-object v5, v2, Ldc0;->h:Ljava/lang/String;', g65)
+
+            r6 = (root / 'smali/r6.smali').read_text()
+            self.assertIn('move-result v6', r6)
+            self.assertIn('if-nez v6, :boxproxy_match', r6)
+            self.assertIn('if-eqz v6, :cond_7', r6)
+            self.assertIn('if-ltz v6, :cond_7', r6)
+            self.assertEqual(branch_offsets.scan_project(root)[1], [])
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)

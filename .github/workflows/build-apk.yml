@@ -98,6 +98,9 @@ jobs:
       - name: Validate internal smali member references
         run: python3 scripts/check_smali_references.py "$PROJECT_DIR"
 
+      - name: Reject zero-offset Smali branches
+        run: python3 scripts/check_smali_branch_offsets.py "$PROJECT_DIR"
+
       - name: Build unsigned APK with apktool
         shell: bash
         run: |
