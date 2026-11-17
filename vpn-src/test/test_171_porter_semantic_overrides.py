@@ -164,7 +164,7 @@ class Stage6SemanticOverridesTest(unittest.TestCase):
             self.assertIn(mihomo_pattern, source_defaults)
             self.assertIn('const-string v16, "tag"', source_defaults)
             self.assertIn('const-string v17, "Prerelease-Alpha"', source_defaults)
-            self.assertIn('const/4 v19, 0x1', source_defaults)
+            self.assertIn('const/16 v19, 0x1', source_defaults)
             self.assertIn('const-string v20, ""', source_defaults)  # no archive entry
             self.assertIn('const-string v21, ""', source_defaults)  # no pinned checksum
             self.assertIn('sing-box_dingtalk', source_defaults)
@@ -173,7 +173,7 @@ class Stage6SemanticOverridesTest(unittest.TestCase):
             self.assertIn('const-string v17, "latest"', source_defaults)
             self.assertIn('sing-box-.+-android-arm64-v8a-ebpf' + smali_regex_escape
                           + '.tar' + smali_regex_escape + '.gz', source_defaults)
-            self.assertIn('const/4 v20, 0x1', source_defaults)
+            self.assertIn('const/16 v20, 0x1', source_defaults)
             self.assertIn('const-string v21, ""', source_defaults)  # no archive entry
             self.assertIn('const-string v22, ""', source_defaults)  # no pinned checksum
             self.assertIn('filled-new-array/range {v3 .. v11}, [Lqd1;', source_defaults)

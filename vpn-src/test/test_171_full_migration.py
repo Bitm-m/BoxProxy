@@ -141,8 +141,8 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('const-string v17, "latest"', defaults)
         self.assertIn('sing-box-.+-android-arm64-v8a-ebpf' + smali_regex_escape
                       + '.tar' + smali_regex_escape + '.gz', defaults)
-        self.assertIn('const/4 v19, 0x1', defaults)  # Mihomo asset pattern is regex.
-        self.assertIn('const/4 v20, 0x1', defaults)  # Sing-Box asset pattern is regex.
+        self.assertIn('const/16 v19, 0x1', defaults)  # v19 is above const/4's range.
+        self.assertIn('const/16 v20, 0x1', defaults)  # Sing-Box regex flag.
 
         allowed_targets = sd1.split('.method static constructor <clinit>()V', 1)[1].split(
             '.end method', 1)[0]

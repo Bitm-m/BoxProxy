@@ -1179,7 +1179,7 @@ def adapt_update_core_dingtalk_sources(out_root):
     const-string v16, "tag"
     const-string v17, "Prerelease-Alpha"
     const-string v18, "mihomo-android-arm64-v8-alpha-smart-[A-Za-z0-9._-]+\\\\.gz"
-    const/4 v19, 0x1
+    const/16 v19, 0x1
     const-string v20, ""
     const-string v21, ""
     invoke-direct/range {v10 .. v21}, Lqd1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;)V
@@ -1194,7 +1194,7 @@ def adapt_update_core_dingtalk_sources(out_root):
     const-string v17, "latest"
     const-string v18, ""
     const-string v19, "sing-box-.+-android-arm64-v8a-ebpf\\\\.tar\\\\.gz"
-    const/4 v20, 0x1
+    const/16 v20, 0x1
     const-string v21, ""
     const-string v22, ""
     invoke-direct/range {v11 .. v22}, Lqd1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;)V
