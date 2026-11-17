@@ -232,7 +232,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('CfgNav Compose lambda', semantic_fixes)
         cfg_nav_report = next(item['detail'] for item in plan['stage6Report']['semanticFixes']
                               if item['name'] == 'CfgNav Compose lambda')
-        self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp',
+        self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at compact 24dp spacing',
                       cfg_nav_report)
         self.assertIn('kind 1 maps to CfgIcon selector 0', cfg_nav_report)
         self.assertIn('no anchor toolbar action', cfg_nav_report)
@@ -345,7 +345,7 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertGreater(visual_calls[1], mihomo_branch)
             self.assertEqual(cfg_nav_invoke.count('const/4 v9, 0x1'), 2)
             self.assertEqual(cfg_nav_invoke.count(r'\u53ef\u89c6'), 2)
-            self.assertEqual(cfg_nav_invoke.count('0x42600000'), 2)
+            self.assertEqual(cfg_nav_invoke.count('0x41c00000'), 2)
 
             cfg_icon = (project / 'smali/com/box/app/cfg/CfgIcon.smali').read_text()
             self.assertIn('.implements Ll92;', cfg_icon)

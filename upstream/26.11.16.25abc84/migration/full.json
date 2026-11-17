@@ -215,7 +215,7 @@
     "smali/com/box/app/cfg/CfgGlue.smali": "8f98f3abe603d271fe2b9d7f357c9cd6f91b650678ca845309ce7f034e462a1c",
     "smali/com/box/app/cfg/CfgIcon.smali": "ea7b1dc81d9e39299fdc2e7315ab5b1d0c8c872f96129549a89367b67083a1d6",
     "smali/com/box/app/cfg/CfgLauncher.smali": "30ed6954e673fa86da55c3a197a9cba770441e345a83602243a03dcc2190f95f",
-    "smali/com/box/app/cfg/CfgNav.smali": "70cf523dcbbc99c3d6d4324acff73c01155dde26ab8f1a767bdad7814314aeed",
+    "smali/com/box/app/cfg/CfgNav.smali": "6373c80d531a30f0442a3d7857cd1abd1bf3847107d684bd49dab773c3fef21a",
     "smali/com/box/app/cfg/CfgSession.smali": "5325f592d5dda0799682c104ce056598472e7b19bd94e5f609c325ecdf1e0553",
     "smali/com/box/app/cfg/Cx.smali": "da2931c3196a3c4c2315318e1c82e52fe446cf8a2f78094d3f0443a1ace11a6d",
     "smali/com/box/app/cfg/Dlg$1.smali": "b63d325e5fd387651c8081e1313b62e979ac84f623af997b0bb1bc509c8e6340",
@@ -11306,7 +11306,7 @@
       },
       {
         "name": "CfgNav Compose lambda",
-        "detail": "wrapped CfgIcon with 171 Ltj.J and mapped the Composer API to Lla2/S/V; Mihomo and Sing-Box each keep one kind-1 visual action at 56dp; kind 1 maps to CfgIcon selector 0; no anchor toolbar action; CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified; 171 Ltj.J factory, Lla2.S/V Composer methods, and Ll92-to-Lt92 callback interface verified; custom key 0x43464749 is unused by the pinned 171 Smali tree; the anchor action is exposed in Mihomo YAML's visual form"
+        "detail": "wrapped CfgIcon with 171 Ltj.J and mapped the Composer API to Lla2/S/V; Mihomo and Sing-Box each keep one kind-1 visual action at compact 24dp spacing; kind 1 maps to CfgIcon selector 0; no anchor toolbar action; CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified; 171 Ltj.J factory, Lla2.S/V Composer methods, and Ll92-to-Lt92 callback interface verified; custom key 0x43464749 is unused by the pinned 171 Smali tree; the anchor action is exposed in Mihomo YAML's visual form"
       },
       {
         "name": "r6 tar-entry matching and nonzero branch offsets",
@@ -11355,7 +11355,7 @@
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "2bc3f044f728714085f64abb9f25d5cf00965c5d06e2eff6ec9e42d76d541e3f",
+  "runtimeArchiveSha256": "93fb95276e5d8efbb46e411510d3140a78ec4160fbe64bf65be0fb695d86f881",
   "runtimeArchiveFileCount": 1432,
-  "runtimeArchiveBytes": 21163844
+  "runtimeArchiveBytes": 21163874
 }

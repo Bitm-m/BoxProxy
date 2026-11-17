@@ -1052,7 +1052,7 @@ def validate_cfg_nav_toolbar_actions(text):
     expected = [
         'const/4 v9, 0x1',
         r'const-string v10, "\u53ef\u89c6"',
-        'const/high16 v11, 0x42600000',
+        'const/high16 v11, 0x41c00000',
     ]
     for call in calls:
         preceding = []
@@ -1063,10 +1063,10 @@ def validate_cfg_nav_toolbar_actions(text):
                 preceding.append(value)
             index -= 1
         if list(reversed(preceding)) != expected:
-            raise ValueError('CfgNav toolbar action is not kind 1, visual, at the reviewed 56dp offset')
+            raise ValueError('CfgNav toolbar action is not kind 1, visual, at the reviewed compact 24dp offset')
     if r'\u951a' in invoke_methods[0]:
         raise ValueError('CfgNav still includes a Mihomo anchor toolbar action')
-    return ('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp; '
+    return ('Mihomo and Sing-Box each keep one kind-1 visual action at compact 24dp spacing; '
             'kind 1 maps to CfgIcon selector 0; no anchor toolbar action')
 
 

@@ -351,13 +351,13 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
     if-eqz v3, :goto_done
     const/4 v9, 0x1
     const-string v10, "\\u53ef\\u89c6"
-    const/high16 v11, 0x42600000
+    const/high16 v11, 0x41c00000
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
     goto :goto_done
     :cond_mihomo
     const/4 v9, 0x1
     const-string v10, "\\u53ef\\u89c6"
-    const/high16 v11, 0x42600000
+    const/high16 v11, 0x41c00000
     invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
     :goto_done
     invoke-virtual {v6}, Lt72;->W()V
@@ -400,7 +400,10 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
                 cfg_nav_e.index('invoke-static {v3, v13, v14}, Ltj;->J('))
             self.assertIn('wrapped CfgIcon with 171 Ltj.J', detail)
             self.assertIn('mapped the Composer API to Lla2/S/V', detail)
-            self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at 56dp', detail)
+            self.assertIn('Mihomo and Sing-Box each keep one kind-1 visual action at compact 24dp spacing', detail)
+            too_wide = text.replace('0x41c00000', '0x42600000')
+            with self.assertRaisesRegex(ValueError, 'compact 24dp offset'):
+                porter.validate_cfg_nav_toolbar_actions(too_wide)
             self.assertIn('kind 1 maps to CfgIcon selector 0', detail)
             self.assertIn('no anchor toolbar action', detail)
             self.assertIn('factory arguments and Lyz0 result register flow verified', detail)
@@ -408,7 +411,7 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
             self.assertEqual(
                 porter.adapt_cfg_nav_composable_lambda(root, target),
                 'already wraps CfgIcon with Ltj.J and uses the 171 Lla2 Composer API; '
-                'Mihomo and Sing-Box each keep one kind-1 visual action at 56dp; '
+                'Mihomo and Sing-Box each keep one kind-1 visual action at compact 24dp spacing; '
                 'kind 1 maps to CfgIcon selector 0; no anchor toolbar action; '
                 'CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified; ' +
                 porter.validate_cfg_nav_composable_lambda_target(target))

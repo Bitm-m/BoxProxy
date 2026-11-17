@@ -37,7 +37,7 @@ Mishka 的界面是 Compose + Miuix，没法直接放进这个 apktool 工程，
 ## 实现
 
 * `decompiled/smali/em5.smali`：顶栏 navigationIcon 包装为 `CfgNav.wrap(...)`；Mihomo 和 Sing-Box 都只挂一个「可视化修改」图标。
-* `com/box/app/cfg/CfgNav`（手写 smali，实现 `Lt62`）：先原样画返回键，再画滑杆图标；起点 56dp（48dp 返回键槽 + 8dp 间隔），与 Save 和相邻次级菜单按钮的间距一致。
+* `com/box/app/cfg/CfgNav`（手写 smali，实现 `Lt62`）：先原样画返回键，再画滑杆图标；起点 24dp，让滑杆与返回键形成紧凑的一组，视觉间隔贴近右侧相邻操作按钮；原 56dp 间隔过大。
 * `CfgGlue`（手写 smali）：`mj5.b()` 读实时文本、`mj5.m(String)` + `mj5.k()` 整篇替换；`CfgClick` / `CfgIcon` 同属胶水层。
 * `CfgLauncher.open(kind, token, ctx)`：0 = `AnchorActivity`，1 = `FormActivity`；两个 Activity 已在 `AndroidManifest.xml` 注册（`exported=false`）。
 * 其余 `com/box/app/cfg/*`、`top/yukonga/*`、`kotlin/*`、`androidx/compose/runtime/Immutable` 是 `vpn-src/tools/build-cfg.sh` 的生成物，见 `vpn-src/README.md`。
