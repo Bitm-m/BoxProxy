@@ -235,7 +235,7 @@ class Stage6RepairTest(unittest.TestCase):
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
-    .locals 3
+    .locals 22
     packed-switch v5, :pswitch_data_0
     return-object v7
     :pswitch_0
@@ -255,7 +255,15 @@ class Stage6RepairTest(unittest.TestCase):
     :goto_dd
     return-object v0
     :goto_sd
-    return-object v0
+    new-instance v14, Lfd1;
+    const-string v16, "sing-box"
+    const-string v17, "Sing-Box Smart + eBPF"
+    const-string v18, "download-url"
+    const/4 v19, 0x0
+    sget-object v20, Lga1;->j:Lga1;
+    const-string v21, "sing-box"
+    invoke-direct/range {v14 .. v21}, Lfd1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lwa1;Lga1;Ljava/lang/String;)V
+    return-object v14
     :pswitch_data_0
     .packed-switch 0x0
         :pswitch_8
@@ -386,6 +394,11 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('goto/16 :goto_dd', pd1)
             self.assertIn('goto/16 :goto_sd', pd1)
             self.assertIn('        :pswitch_9\n        :pswitch_10', pd1)
+            pd1_method = pd1.split('.method public final g(', 1)[1].split('.end method', 1)[0]
+            sd_start = pd1_method.index('\n    :goto_sd\n')
+            sd_name = pd1_method.index('const-string v15, "sing-box_dingtalk"', sd_start)
+            sd_call = pd1_method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
+            self.assertLess(sd_name, sd_call)
             self.assertEqual(repair(root), [])
 
     def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
@@ -417,6 +430,32 @@ class Stage6RepairTest(unittest.TestCase):
                         if line.strip() == 'and-int/2addr v6, v4')
             self.assertEqual(len(resets), 2)
             self.assertLess(resets[-1], mask)
+            self.assertEqual(repair(root), [])
+
+    def test_upgrades_legacy_pd1_resume_path_with_undefined_string_register(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.make_candidate(root)
+            repair(root)
+
+            pd1_path = root / 'smali/pd1.smali'
+            pd1 = pd1_path.read_text()
+            method_start = pd1.index('.method public final g(')
+            sd_start = pd1.index('\n    :goto_sd\n', method_start)
+            sd_end = pd1.index('\n    :pswitch_data_0', sd_start)
+            block = pd1[sd_start:sd_end]
+            assignment = '    const-string v15, "sing-box_dingtalk"\n'
+            self.assertEqual(block.count(assignment), 1)
+            pd1_path.write_text(pd1[:sd_start] + block.replace(assignment, '', 1) + pd1[sd_end:])
+
+            changed = repair(root)
+            self.assertEqual(changed, ['pd1 coroutine dispatch labels'])
+            repaired = pd1_path.read_text()
+            method = repaired.split('.method public final g(', 1)[1].split('.end method', 1)[0]
+            sd_start = method.index('\n    :goto_sd\n')
+            sd_name = method.index('const-string v15, "sing-box_dingtalk"', sd_start)
+            sd_call = method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
+            self.assertLess(sd_name, sd_call)
             self.assertEqual(repair(root), [])
 
 

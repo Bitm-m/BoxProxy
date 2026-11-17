@@ -30,6 +30,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('uu0 coroutine core-version String register', semantic_fixes)
         self.assertIn('qc0 external-files root name on both branches', semantic_fixes)
         self.assertIn('eu0 battery-toggle Compose register order', semantic_fixes)
+        self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -107,6 +108,13 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertIn(
                 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;',
                 cfg_nav)
+
+            pd1 = (project / 'smali/pd1.smali').read_text()
+            pd1_method = pd1.split('.method public final g(', 1)[1].split('.end method', 1)[0]
+            sd_start = pd1_method.index('\n    :goto_sd\n')
+            sd_name = pd1_method.index('const-string v15, "sing-box_dingtalk"', sd_start)
+            sd_call = pd1_method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
+            self.assertLess(sd_name, sd_call)
 
 
 if __name__ == '__main__':

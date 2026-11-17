@@ -104,7 +104,7 @@
     "smali/ne5.smali": "52e3bc9cf6d3b7f0f74143ad8b27da284ad259bc010aff8287fa004588820ece",
     "smali/nn3.smali": "005b059bc090d759909a46cc68a560895f224eb59cb9cbe97499bce33573cda9",
     "smali/ox1.smali": "bf25de9d670fa21a5003ba6849011bdc1c47fcb3175127f6f0b0d0b7f33d044e",
-    "smali/pd1.smali": "e465a3caee69b4490869100c6f551ccd652b682724bcac23176169fcb9b06849",
+    "smali/pd1.smali": "919235c8309fa3a92b29ea590aedfcecf733d47287fd1a44d6df3d949f52f621",
     "smali/po2.smali": "6fc6f1ff41d1a06b8180b53691995c398a9a1006599e14de50134072fae4f143",
     "smali/pv5.smali": "a85faf9a85fe463fa9d5da888d04fcb50f69194f92068441fa92ab95578bdf4d",
     "smali/q75.smali": "126e1d00bc7a55ae77dbc7bad498187df9795b52c13b4cf830f8ad8f939d70ae",
@@ -11324,11 +11324,15 @@
       {
         "name": "eu0 battery-toggle Compose register order",
         "detail": "Keep the upstream settings-row Compose call ahead of the custom battery row, pass the battery toggle arguments in typed registers, and restore v4=0xe before nn3.L consumes the parent Compose changed-mask."
+      },
+      {
+        "name": "pd1 resumed sing-box DingTalk constructor register",
+        "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "eeb4dac5b61f4ff0e1a7a9e866a3057e14cc5cee706f6ad084bdd5f3f15164c4",
+  "runtimeArchiveSha256": "0611648c6904cdf52be21519df223ed76dd4385715b33286000d12982035d333",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527129
+  "runtimeArchiveBytes": 20527171
 }

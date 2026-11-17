@@ -662,6 +662,28 @@ def fix_pd1(text):
                 raise ValueError(f'{label} does not resume through :{dest}')
         if len(labels.get('pswitch_0', [])) != 1:
             raise ValueError('pd1 still has duplicate executable pswitch_0 labels')
+
+        # State 10 re-enters the sing-box DingTalk continuation directly, so
+        # v15 cannot rely on the String assigned earlier in the initial invoke.
+        # The resumed and synchronous paths both need the first Lfd1 String.
+        sd_pos = labels['goto_sd'][0]
+        next_label = min((pos for positions in labels.values() for pos in positions
+                          if pos > sd_pos), default=len(lines))
+        sd_call = ('invoke-direct/range {v14 .. v21}, Lfd1;-><init>('
+                   'Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;'
+                   'Lwa1;Lga1;Ljava/lang/String;)V')
+        sd_calls = [i for i in range(sd_pos + 1, next_label)
+                    if lines[i].strip() == sd_call]
+        if len(sd_calls) != 1:
+            raise ValueError('pd1 :goto_sd must have one reviewed Lfd1 constructor call')
+        sd_name = 'const-string v15, "sing-box_dingtalk"'
+        sd_names = [i for i in range(sd_pos + 1, next_label)
+                    if lines[i].strip() == sd_name]
+        if len(sd_names) > 1 or sd_names and sd_names[0] > sd_calls[0]:
+            raise ValueError('pd1 :goto_sd has an invalid v15 constructor String assignment')
+        if not sd_names:
+            indent = re.match(r'^\s*', lines[sd_calls[0]]).group(0)
+            lines.insert(sd_calls[0], indent + sd_name)
         return '\n'.join(lines)
 
     return update_method(text, signature, transform)
