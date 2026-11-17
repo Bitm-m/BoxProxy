@@ -13,6 +13,7 @@
     "smali/a4.smali": "ae05e456c5221922135ed557d5c03b91de3aa00547bb91a0c0e1b48e5ca64d23",
     "smali/b1.smali": "dc9ec29ef5f5f60ea27040708127e6f3b44d9b947296dcac21c151fd4c8d2ff4",
     "smali/b75.smali": "7768011df3cbad74dc293fbd45c0641724eee9cd793772a353fe6355c28e181f",
+    "smali/ba7.smali": "4f1eb4db69b2e5bc0771fc8d70bf59f5dfae7eab10f036b2ebf5aeec141ddd04",
     "smali/com/box/app/AppApplication.smali": "bbbb2208c705c128d5eb58edeab6762c1f76cea4031c8a7042ab05ec1e48c578",
     "smali/en6.smali": "36fd83ab5777a896b471b8901f22ca6343d02ab22433e7209e155ed8aef3fde6",
     "smali/eu0.smali": "8e08dfabc1ae0f54dad18e5dc5ed659e2cb3e0cfc8405364a3a96843632af151",
@@ -47,6 +48,7 @@
     "smali/s36.smali": "ae128def0bc4b51c41f0a7e9a5157f380951b34b24c2718f0c12529a94ad0d5b",
     "smali/s65.smali": "13fb028dd4c253767316c0548193fabcb1191ca84b209b57182268c1b54cc306",
     "smali/sa3.smali": "c74d7f05e5c6838ba49914f2557b45332f981e8936ff32902bc3e34554e03a10",
+    "smali/sd1.smali": "e0415069684c52f676637554142f9679e38f1f9259b504f4e3e38b8b1ac7a144",
     "smali/t1.smali": "a111c0635e5fc18842b473c015906fd653dbd94fc81f5b6de1cf0a1532672afd",
     "smali/t36.smali": "35104d3b3abab420bf2edeb4d9077f28e5978229ddb343038d4f9bbe17549533",
     "smali/tu.smali": "3395fdd4aeab730255710ae069b62e97511e6535d1f1815a26d44ca482ada11b",
@@ -82,6 +84,7 @@
     "smali/a4.smali": "a0f1d8bd32c8f81ceccb7a56d2b59d93e283564525a46b5aa711b4593c5b2fca",
     "smali/b1.smali": "abb4c751f57e143b2e93fb7a3bdcaf3914f2e37ff1f49f5d529c4fa442d4bed6",
     "smali/b75.smali": "6dac45eeb5a9c10293cfb309bed7c7e3729e9baaf4b152d68b06720f2aa73d2a",
+    "smali/ba7.smali": "80ba185539f49a9b3030b892a0c81df861dea1c04de2dfaa9edf272d00ad6e85",
     "smali/com/box/app/AppApplication.smali": "f2b2f03b33277ba6a4c0706782df89c3cab63397bdf81b40c43453b18e3194e3",
     "smali/en6.smali": "a7820aaefb30c5925e74b199bb931057915ccfcab3fb0590ba18c45337cd8372",
     "smali/eu0.smali": "30a66452966f02cc7ff21b53785cc9023e093558bcfeb7aadf4a820b2466c9cd",
@@ -116,6 +119,7 @@
     "smali/s36.smali": "0e4c6aa2086f8f35c63c7460ef6954b112644f5d0572915926e8e040fff326fe",
     "smali/s65.smali": "29faf97195b210605beb2731725070bd00667366fe2a56656183c67c337e2977",
     "smali/sa3.smali": "b1bde76b5d9f78cb11957afe6822743574a0a7dd1a94647f587e336250c2c839",
+    "smali/sd1.smali": "121b3b407f1ef952631ebf7a7b7bd4dab58077bf0f681d32d4122666153a6099",
     "smali/t1.smali": "b3d84f451ded958461c268b658ef49d61f04f3535abd979e12300f1a47dd9811",
     "smali/t36.smali": "1bc87a7f156ae43a06d334421e0c209ecf4c5882a4d90e37d4070854b6e0df7f",
     "smali/tu.smali": "6e66b7a0d41585ba5fdd48ba5e9b28136710edcfba43152199b80cadc937d3fa",
@@ -2547,7 +2551,6 @@
     "smali/ba4.smali": "f8030f9c508bd28d58c2c28d19a9f91e144fa6d8f2c0729fe686a5719eaab267",
     "smali/ba5.smali": "49a563f6bb4104a0c1e36fb6b27f57632cec1c097e5c00623fdfaa1566a209a2",
     "smali/ba6.smali": "29906428211fcc54c4c531578d1024a071b57466964b3d3a6d7d5e9cabc32a66",
-    "smali/ba7.smali": "4f1eb4db69b2e5bc0771fc8d70bf59f5dfae7eab10f036b2ebf5aeec141ddd04",
     "smali/bb.smali": "52cda5b9abff59c870ce95ee50eb9fe97e7f325a2261acb6afae048ad45fd3a2",
     "smali/bb0.smali": "f646dbf2a1555e284c5b635d6e0875911c03998abf8a6b2948cf36c5a3a375cd",
     "smali/bb1.smali": "4e49b6def5ab47ddd42ffdcd658f2bb75af612833713a6dd5f30699e319411bb",
@@ -8197,7 +8200,6 @@
     "smali/sc7.smali": "7335d05dde5709bd5153e114d2c568debbda1ab80e62d90896f00a230cfc962d",
     "smali/sd.smali": "8be48bf91ade5b6a9902abf38e17560c2537907946cfd3be928ebef34cad47dd",
     "smali/sd0.smali": "296f12cde3899d19b408c127acba0763fff814c2223f880d1eeda376eadd153f",
-    "smali/sd1.smali": "e0415069684c52f676637554142f9679e38f1f9259b504f4e3e38b8b1ac7a144",
     "smali/sd2.smali": "20a793490dc0454c424cb04f18d7ad5929fa1539b0bb56fca55d4fc635009452",
     "smali/sd3.smali": "fd66fa28771fe3c6271efc7a9f56bae6be120dda1eb5724d17a66b11e26a9327",
     "smali/sd4.smali": "0a133fd11594329bc78c0c55bac97c170099651c6e2092122264ff7924330514",
@@ -11344,11 +11346,15 @@
       {
         "name": "RestoreCfg/VpnSeed v171 stream-copy and empty-seed recovery",
         "detail": "Call the declared v171 Loq.D(InputStream, OutputStream) helper in restore/seeding; repair zero-length seeded configs even when the one-time seed flag is already set, without overwriting non-empty files or recreating deleted files."
+      },
+      {
+        "name": "Update Core DingTalk source metadata",
+        "detail": "added both legacy GitHub DingTalk sources to sd1.b; one-time merged and saved them into existing sources_v1 preferences before ba7 renders the Qd1 list"
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "34612a9da79407272f719f5b0859a7383176ffd22ebe29e9c4fe963c587de849",
-  "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527801
+  "runtimeArchiveSha256": "41ff646496235846041bbb4da736560bf32ca04826cf4fc60584f04bf965c889",
+  "runtimeArchiveFileCount": 1431,
+  "runtimeArchiveBytes": 21155942
 }

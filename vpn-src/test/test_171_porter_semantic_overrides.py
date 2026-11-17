@@ -95,6 +95,148 @@ class Stage6SemanticOverridesTest(unittest.TestCase):
             'Loq;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J')
         self.assertNotIn('Lcs;->u(', mapped)
 
+    @staticmethod
+    def write_update_core_source_targets(root):
+        sd1 = root / 'smali/sd1.smali'
+        sd1.parent.mkdir(parents=True, exist_ok=True)
+        sd1.write_text('''\\
+.class public abstract Lsd1;
+.method public static b()Ljava/util/List;
+    .locals 24
+    new-instance v3, Lqd1;
+    new-instance v4, Lqd1;
+    new-instance v5, Lqd1;
+    new-instance v6, Lqd1;
+    new-instance v7, Lqd1;
+    new-instance v8, Lqd1;
+    new-instance v9, Lqd1;
+    filled-new-array/range {v3 .. v9}, [Lqd1;
+    return-object v0
+.end method
+.method public static f(Ljava/util/List;)V
+    return-void
+.end method
+''')
+        ba7 = root / 'smali/ba7.smali'
+        ba7.write_text('''\\
+.class public final Lba7;
+.method public static k()V
+    .locals 37
+    const-string v1, "sources_v1"
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v0
+    if-nez v0, :cond_saved_sources
+    invoke-static {}, Lsd1;->b()Ljava/util/List;
+    move-result-object v0
+    invoke-static {v0}, Lsd1;->f(Ljava/util/List;)V
+    goto :goto_4
+    :cond_saved_sources
+    new-instance v1, Lorg/json/JSONArray;
+    invoke-direct {v1, v0}, Lorg/json/JSONArray;-><init>(Ljava/lang/String;)V
+    invoke-static {}, Lsd1;->b()Ljava/util/List;
+    move-result-object v0
+    :goto_4
+    invoke-static {v0}, Lmb3;->L(Ljava/lang/Object;)Liw4;
+    invoke-static/range {v0 .. v9}, Luj;->B(Lob7;Lqd1;ZLw82;Lw82;Lw82;Lw82;Lw82;Lla2;I)V
+    return-void
+.end method
+''')
+        return sd1, ba7
+
+    def test_update_core_dingtalk_sources_follow_v171_defaults_and_saved_list_loader(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            sd1, ba7 = self.write_update_core_source_targets(root)
+
+            detail = porter.adapt_update_core_dingtalk_sources(root)
+            sd1_text = sd1.read_text()
+            source_defaults = porter.method_blocks(sd1_text)['b()Ljava/util/List;']
+            self.assertIn('mihomo_dingtalk', source_defaults)
+            smali_unicode_escape = chr(92)
+            smali_regex_escape = chr(92) * 2
+            chinese_suffix = ''.join(smali_unicode_escape + code
+                                     for code in ('u9489', 'u9489', 'u76f4', 'u8fde'))
+            self.assertIn('Mihomo Smart + eBPF + ' + chinese_suffix, source_defaults)
+            self.assertIn('jieluojun/mihomo', source_defaults)
+            self.assertIn('Prerelease-Alpha', source_defaults)
+            mihomo_pattern = ('mihomo-android-arm64-v8-alpha-smart-[A-Za-z0-9._-]+'
+                              + smali_regex_escape + '.gz')
+            self.assertIn(mihomo_pattern, source_defaults)
+            self.assertIn('const-string v16, "tag"', source_defaults)
+            self.assertIn('const-string v17, "Prerelease-Alpha"', source_defaults)
+            self.assertIn('const/4 v19, 0x1', source_defaults)
+            self.assertIn('const-string v20, ""', source_defaults)  # no archive entry
+            self.assertIn('const-string v21, ""', source_defaults)  # no pinned checksum
+            self.assertIn('sing-box_dingtalk', source_defaults)
+            self.assertIn('Sing-Box Smart + eBPF + ' + chinese_suffix, source_defaults)
+            self.assertIn('jieluojun/sing-box', source_defaults)
+            self.assertIn('const-string v17, "latest"', source_defaults)
+            self.assertIn('sing-box-.+-android-arm64-v8a-ebpf' + smali_regex_escape
+                          + '.tar' + smali_regex_escape + '.gz', source_defaults)
+            self.assertIn('const/4 v20, 0x1', source_defaults)
+            self.assertIn('const-string v21, ""', source_defaults)  # no archive entry
+            self.assertIn('const-string v22, ""', source_defaults)  # no pinned checksum
+            self.assertIn('filled-new-array/range {v3 .. v11}, [Lqd1;', source_defaults)
+
+            migration = porter.method_blocks(sd1_text)['h(Ljava/util/List;)Ljava/util/List;']
+            migration_instructions = [line.strip() for line in migration.splitlines()
+                                      if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            for marker in ('dingtalk_sources_migrated_v1', 'mihomo_dingtalk',
+                           'sing-box_dingtalk', 'Lsd1;->b()Ljava/util/List;',
+                           'Lsd1;->f(Ljava/util/List;)V',
+                           'Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V',
+                           'invoke-static {v7, v10}, Lf13;->p('
+                           'Ljava/lang/Object;Ljava/lang/Object;)Z',
+                           'if-eqz v10, :loop_existing_sources',
+                           'goto :cond_next_source',
+                           'Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z',
+                           '->putBoolean(Ljava/lang/String;Z)'):
+                self.assertIn(marker, migration)
+            self.assertIn('if-eqz v2, :cond_migrate_sources', migration_instructions)
+            self.assertIn('return-object p0', migration_instructions)
+            self.assertIn(
+                'invoke-interface {v3}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;',
+                migration_instructions)
+            self.assertIn('if-eqz v4, :cond_mark_sources_migrated', migration_instructions)
+            self.assertLess(
+                migration_instructions.index(
+                    'invoke-static {v7, v10}, Lf13;->p('
+                    'Ljava/lang/Object;Ljava/lang/Object;)Z'),
+                migration_instructions.index(
+                    'invoke-virtual {v3, v6}, '
+                    'Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z'))
+            self.assertLess(
+                migration_instructions.index('if-eqz v10, :loop_existing_sources'),
+                migration_instructions.index('goto :cond_next_source'))
+            self.assertLess(
+                migration_instructions.index('invoke-static {v3}, Lsd1;->f(Ljava/util/List;)V'),
+                migration_instructions.index(
+                    'invoke-interface {v1, v2, v4}, '
+                    'Landroid/content/SharedPreferences$Editor;->putBoolean('
+                    'Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;'))
+            loader = next(block for block in porter.method_blocks(ba7.read_text()).values()
+                          if 'sources_v1' in block)
+            hook = 'invoke-static {v0}, Lsd1;->h(Ljava/util/List;)Ljava/util/List;'
+            state = 'invoke-static {v0}, Lmb3;->L(Ljava/lang/Object;)Liw4;'
+            self.assertIn('if-nez v0, :cond_saved_sources', loader)
+            fresh_defaults = loader.split('if-nez v0, :cond_saved_sources', 1)[1].split(
+                ':cond_saved_sources', 1)[0]
+            saved_sources = loader.split(':cond_saved_sources', 1)[1].split(
+                '\n    :goto_4\n', 1)[0]
+            self.assertIn('invoke-static {}, Lsd1;->b()Ljava/util/List;', fresh_defaults)
+            self.assertIn('invoke-static {v0}, Lsd1;->f(Ljava/util/List;)V', fresh_defaults)
+            self.assertIn('new-instance v1, Lorg/json/JSONArray;', saved_sources)
+            self.assertIn('Lorg/json/JSONArray;-><init>(Ljava/lang/String;)V', saved_sources)
+            self.assertEqual(loader.count(hook), 1)
+            self.assertLess(loader.index(hook), loader.index(state))
+            self.assertIn('Luj;->B(Lob7;Lqd1;', loader)
+            self.assertIn('before ba7 renders the Qd1 list', detail)
+
+            self.assertEqual(porter.adapt_update_core_dingtalk_sources(root), detail)
+            self.assertEqual(sd1.read_text().count('mihomo_dingtalk'), 2)
+            self.assertEqual(sd1.read_text().count('sing-box_dingtalk'), 2)
+            self.assertEqual(ba7.read_text().count(hook), 1)
+
     def test_cfg_icon_builder_rewrite_is_scoped_to_custom_icon(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

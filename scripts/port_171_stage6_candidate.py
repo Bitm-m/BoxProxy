@@ -1133,6 +1133,213 @@ def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
             + flow + '; ' + validation)
 
 
+def adapt_update_core_dingtalk_sources(out_root):
+    """Restore DingTalk sources in the real v171 source-list screen.
+
+    The new source manager reads ``sources_v1`` once on first composition, so
+    updating only sd1.b() would leave users with an already-persisted seven-item
+    list unchanged. Add the two reviewed GitHub release descriptors to the
+    defaults, then do a one-time, ID-preserving merge into existing preferences
+    from ba7's production loader.
+    """
+    out_root = Path(out_root)
+    sd_path = out_root / 'smali/sd1.smali'
+    ba_path = out_root / 'smali/ba7.smali'
+    if not sd_path.is_file() or not ba_path.is_file():
+        raise ValueError('v171 Update Core source manager classes sd1/ba7 are missing')
+
+    sd_text = sd_path.read_text(errors='replace')
+    sd_methods = method_blocks(sd_text)
+    source_sig = 'b()Ljava/util/List;'
+    source_block = sd_methods.get(source_sig)
+    if not source_block:
+        raise ValueError('sd1 default source-list method b() is missing')
+
+    mihomo_id = 'mihomo_dingtalk'
+    singbox_id = 'sing-box_dingtalk'
+    ids_present = [name in source_block for name in (mihomo_id, singbox_id)]
+    old_array = 'filled-new-array/range {v3 .. v9}, [Lqd1;'
+    new_array = 'filled-new-array/range {v3 .. v11}, [Lqd1;'
+    if ids_present == [False, False]:
+        locals_match = re.search(r'^\s*\.locals\s+(\d+)\s*$', source_block, re.M)
+        if not locals_match or int(locals_match.group(1)) < 24:
+            raise ValueError('sd1.b has no v10-v22 registers for the reviewed source descriptors')
+        if len(re.findall(r'^\s*new-instance\s+v\d+, Lqd1;\s*$', source_block, re.M)) != 7:
+            raise ValueError('sd1.b no longer has the reviewed seven-source default list')
+        if source_block.count(old_array) != 1:
+            raise ValueError('sd1.b default source-array anchor is missing or ambiguous')
+        descriptors = '''\
+    new-instance v10, Lqd1;
+
+    const-string v11, "mihomo_dingtalk"
+    const-string v12, "Mihomo Smart + eBPF + \\u9489\\u9489\\u76f4\\u8fde"
+    const-string v13, "mihomo"
+    const-string v14, "github"
+    const-string v15, "jieluojun/mihomo"
+    const-string v16, "tag"
+    const-string v17, "Prerelease-Alpha"
+    const-string v18, "mihomo-android-arm64-v8-alpha-smart-[A-Za-z0-9._-]+\\\\.gz"
+    const/4 v19, 0x1
+    const-string v20, ""
+    const-string v21, ""
+    invoke-direct/range {v10 .. v21}, Lqd1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;)V
+
+    new-instance v11, Lqd1;
+
+    const-string v12, "sing-box_dingtalk"
+    const-string v13, "Sing-Box Smart + eBPF + \\u9489\\u9489\\u76f4\\u8fde"
+    const-string v14, "sing-box"
+    const-string v15, "github"
+    const-string v16, "jieluojun/sing-box"
+    const-string v17, "latest"
+    const-string v18, ""
+    const-string v19, "sing-box-.+-android-arm64-v8a-ebpf\\\\.tar\\\\.gz"
+    const/4 v20, 0x1
+    const-string v21, ""
+    const-string v22, ""
+    invoke-direct/range {v11 .. v22}, Lqd1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;)V
+
+    '''
+        source_block_new = source_block.replace(
+            old_array, descriptors + new_array, 1)
+        source_file = sd_path.read_text(errors='replace')
+        if source_file.count(source_block) != 1:
+            raise ValueError('sd1.b method block is missing or ambiguous')
+        sd_text = source_file.replace(source_block, source_block_new, 1)
+        sd_path.write_text(sd_text)
+        source_block = method_blocks(sd_text).get(source_sig)
+    elif ids_present != [True, True] or new_array not in source_block:
+        raise ValueError('sd1.b contains a partial or unsupported DingTalk source-list patch')
+
+    migration_sig = 'h(Ljava/util/List;)Ljava/util/List;'
+    helper = '''\
+.method public static h(Ljava/util/List;)Ljava/util/List;
+    .locals 12
+
+    invoke-static {}, Lln;->w()Landroid/content/Context;
+    move-result-object v0
+    const-string v1, "tools_core_update"
+    const/4 v2, 0x0
+    invoke-virtual {v0, v1, v2}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+    move-result-object v0
+    const-string v1, "dingtalk_sources_migrated_v1"
+    const/4 v2, 0x0
+    invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    move-result v2
+    if-eqz v2, :cond_migrate_sources
+    return-object p0
+
+    :cond_migrate_sources
+    new-instance v3, Ljava/util/ArrayList;
+    invoke-direct {v3, p0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    const/4 v4, 0x0
+    invoke-static {}, Lsd1;->b()Ljava/util/List;
+    move-result-object v5
+    invoke-interface {v5}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+    move-result-object v5
+
+    :loop_default_sources
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+    move-result v6
+    if-eqz v6, :cond_finish_sources
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v6
+    check-cast v6, Lqd1;
+    iget-object v7, v6, Lqd1;->a:Ljava/lang/String;
+    const-string v8, "mihomo_dingtalk"
+    invoke-static {v7, v8}, Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z
+    move-result v8
+    if-nez v8, :cond_dingtalk_source
+    const-string v8, "sing-box_dingtalk"
+    invoke-static {v7, v8}, Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z
+    move-result v8
+    if-eqz v8, :cond_next_source
+
+    :cond_dingtalk_source
+    invoke-interface {v3}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+    move-result-object v9
+
+    :loop_existing_sources
+    invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
+    move-result v10
+    if-eqz v10, :cond_add_source
+    invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v10
+    check-cast v10, Lqd1;
+    iget-object v10, v10, Lqd1;->a:Ljava/lang/String;
+    invoke-static {v7, v10}, Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z
+    move-result v10
+    if-eqz v10, :loop_existing_sources
+    goto :cond_next_source
+
+    :cond_add_source
+    invoke-virtual {v3, v6}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+    move-result v10
+    const/4 v4, 0x1
+
+    :cond_next_source
+    goto :loop_default_sources
+
+    :cond_finish_sources
+    if-eqz v4, :cond_mark_sources_migrated
+    invoke-static {v3}, Lsd1;->f(Ljava/util/List;)V
+
+    :cond_mark_sources_migrated
+    invoke-interface {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    move-result-object v1
+    const-string v2, "dingtalk_sources_migrated_v1"
+    const/4 v4, 0x1
+    invoke-interface {v1, v2, v4}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    move-result-object v1
+    invoke-interface {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    return-object v3
+.end method
+'''
+    if migration_sig in sd_methods:
+        migration_block = sd_methods[migration_sig]
+        for required in ('dingtalk_sources_migrated_v1', 'mihomo_dingtalk',
+                         'sing-box_dingtalk', 'Lsd1;->f(Ljava/util/List;)V'):
+            if required not in migration_block:
+                raise ValueError('sd1.h existing-source migration is incomplete: ' + required)
+    else:
+        sd_text = sd_path.read_text(errors='replace').rstrip() + '\n\n' + helper
+        sd_path.write_text(sd_text)
+
+    ba_text = ba_path.read_text(errors='replace')
+    ba_methods = method_blocks(ba_text)
+    loader_hits = [block for block in ba_methods.values()
+                   if 'sources_v1' in block and 'Lsd1;->b()Ljava/util/List;' in block
+                   and 'Lsd1;->f(Ljava/util/List;)V' in block]
+    if len(loader_hits) != 1:
+        raise ValueError(f'expected one ba7 Update Core sources loader, found {len(loader_hits)}')
+    loader = loader_hits[0]
+    hook = 'invoke-static {v0}, Lsd1;->h(Ljava/util/List;)Ljava/util/List;'
+    if hook not in loader:
+        anchor = (':goto_4\n'
+                  '    invoke-static {v0}, Lmb3;->L(Ljava/lang/Object;)Liw4;')
+        if loader.count(anchor) != 1:
+            raise ValueError('ba7 source-loader state-initialization anchor is missing or ambiguous')
+        loader_new = loader.replace(
+            anchor,
+            ':goto_4\n'
+            '    invoke-static {v0}, Lsd1;->h(Ljava/util/List;)Ljava/util/List;\n'
+            '    move-result-object v0\n'
+            '    invoke-static {v0}, Lmb3;->L(Ljava/lang/Object;)Liw4;', 1)
+        if ba_text.count(loader) != 1:
+            raise ValueError('ba7 Update Core loader method is missing or ambiguous')
+        ba_text = ba_text.replace(loader, loader_new, 1)
+        ba_path.write_text(ba_text)
+        loader = loader_new
+    elif loader.count(hook) != 1:
+        raise ValueError('ba7 source-loader migration hook is duplicated')
+    if not (loader.index(hook) < loader.index('invoke-static {v0}, Lmb3;->L(Ljava/lang/Object;)Liw4;')
+            and 'Luj;->B(Lob7;Lqd1;' in loader):
+        raise ValueError('ba7 source-loader migration is not on the rendered Update Core path')
+
+    return ('added both legacy GitHub DingTalk sources to sd1.b; one-time merged and saved '
+            'them into existing sources_v1 preferences before ba7 renders the Qd1 list')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--old', type=Path, default=Path('.tools/upstream-old/decompiled'))
@@ -1243,6 +1450,8 @@ def main():
     for name, transform in (
         ('CfgIcon builder API', lambda: adapt_cfg_icon_builder(args.custom, args.output)),
         ('CfgNav Compose lambda', lambda: adapt_cfg_nav_composable_lambda(args.output, args.new)),
+        ('Update Core DingTalk source metadata',
+         lambda: adapt_update_core_dingtalk_sources(args.output)),
     ):
         try:
             detail = transform()
