@@ -232,6 +232,18 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/y75.smali').write_text('''\
+.class public final Ly75;
+.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 44
+    iget-object v14, v0, Ly75;->t:Lne5;
+    invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I
+    move/from16 p3, v1
+    move-result v1
+    return-object v1
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -300,14 +312,20 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('invoke-static/range {v16 .. v25}, Lub3;->s(', broken_eu0)
             self.assertLess(broken_eu0.index('invoke-static/range {v16 .. v25}, Lub3;->s('),
                             broken_eu0.index('invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z'))
+            broken_y75 = (root / 'smali/y75.smali').read_text()
+            self.assertLess(broken_y75.index('invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key('),
+                            broken_y75.index('move/from16 p3, v1'))
+            self.assertLess(broken_y75.index('move/from16 p3, v1'),
+                            broken_y75.index('move-result v1'))
 
             changed = repair(root)
-            self.assertEqual(len(changed), 9)
+            self.assertEqual(len(changed), 10)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
             self.assertIn('qc0 external-files root name', changed)
             self.assertIn('eu0 battery-toggle Compose register order', changed)
+            self.assertIn('y75 enum-key invoke result order', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -399,13 +417,22 @@ class Stage6RepairTest(unittest.TestCase):
             sd_name = pd1_method.index('const-string v15, "sing-box_dingtalk"', sd_start)
             sd_call = pd1_method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
             self.assertLess(sd_name, sd_call)
+
+            y75 = (root / 'smali/y75.smali').read_text()
+            y75_method = y75.split('.method public final a(', 1)[1].split('.end method', 1)[0]
+            y75_instructions = [line.strip() for line in y75_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            key_index = y75_instructions.index(
+                'invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I')
+            self.assertEqual(y75_instructions[key_index - 1], 'move/from16 p3, v1')
+            self.assertEqual(y75_instructions[key_index + 1], 'move-result v1')
             self.assertEqual(repair(root), [])
 
     def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.make_candidate(root)
-            self.assertEqual(len(repair(root)), 9)
+            self.assertEqual(len(repair(root)), 10)
 
             eu0_path = root / 'smali/eu0.smali'
             eu0 = eu0_path.read_text()

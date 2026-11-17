@@ -3,9 +3,9 @@
 
 The stage-6 smali porter works in a disposable tree. This deterministic post-pass
 protects sensitive R8/API deltas where text/register alignment is insufficient:
-the VPN enum, core registry, range-call argument, Compose register order,
-storage-directory branch, coroutine states, tar-entry matcher, and callback
-receiver preservation. It never edits the source decompile.
+the VPN enum and invoke-result adjacency, core registry, range-call argument,
+Compose register order, storage-directory branch, coroutine states, tar-entry
+matcher, and callback receiver preservation. It never edits the source decompile.
 """
 import argparse
 import re
@@ -425,6 +425,61 @@ def fix_eu0_battery_toggle_hunk(text):
     return update_method(text, signature, transform)
 
 
+def fix_y75_key_result_order(text):
+    """Keep y75's saved Compose flags ahead of the enum-key call/result pair."""
+    signature = 'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
+    invoke = 'invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I'
+    saved_flags = 'move/from16 p3, v1'
+    result = 'move-result v1'
+
+    def is_instruction(line):
+        value = line.strip()
+        return bool(value and not value.startswith(DEBUG_PREFIXES)
+                    and not value.startswith(('#', ':')))
+
+    def transform(block):
+        lines = block.splitlines()
+        instructions = [(i, line.strip()) for i, line in enumerate(lines)
+                        if is_instruction(line)]
+        calls = [i for i, (_, value) in enumerate(instructions) if value == invoke]
+        if len(calls) != 1:
+            raise ValueError('y75.a must have exactly one VpnBridge.key enum invocation')
+        call_pos = calls[0]
+        prior = instructions[call_pos - 1][1] if call_pos else None
+        following = [value for _, value in instructions[call_pos + 1:call_pos + 3]]
+        if following[:1] == [result]:
+            if prior != saved_flags:
+                raise ValueError('y75.a enum result has no reviewed saved-flags move before its call')
+            call_line = instructions[call_pos][0]
+            copy_line = instructions[call_pos - 1][0]
+            indent = re.match(r'^\s*', lines[copy_line]).group(0)
+            aligned_call = indent + lines[call_line].strip()
+            if aligned_call == lines[call_line]:
+                return block
+            lines[call_line] = aligned_call
+            return '\n'.join(lines)
+        if following != [saved_flags, result]:
+            raise ValueError('y75.a VpnBridge.key call/result sequence differs from known forms')
+
+        # move-result consumes the invoke result register and must be the next
+        # executable instruction; save v1 to p3 before the call overwrites it.
+        # Move the intervening debug/source lines with the save so the original
+        # upstream line mapping remains aligned with the two instructions.
+        call_line = instructions[call_pos][0]
+        copy_line = instructions[call_pos + 1][0]
+        between = lines[call_line + 1:copy_line]
+        if any(line.strip() and not line.lstrip().startswith(DEBUG_PREFIXES)
+               and not line.lstrip().startswith('#') for line in between):
+            raise ValueError('y75.a has executable code between enum-key call and saved flags')
+        indent = re.match(r'^\s*', lines[copy_line]).group(0)
+        aligned_call = indent + lines[call_line].strip()
+        return '\n'.join(lines[:call_line] + between +
+                         [lines[copy_line], aligned_call] +
+                         lines[copy_line + 1:])
+
+    return update_method(text, signature, transform)
+
+
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""
     signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
@@ -752,6 +807,7 @@ def repair(root):
         (root / 'smali/uu0.smali', lambda text: fix_uu0_core_version_script_register(text), 'uu0 core-version script register'),
         (root / 'smali/qc0.smali', lambda text: fix_qc0_external_root_name(text), 'qc0 external-files root name'),
         (root / 'smali/eu0.smali', lambda text: fix_eu0_battery_toggle_hunk(text), 'eu0 battery-toggle Compose register order'),
+        (root / 'smali/y75.smali', lambda text: fix_y75_key_result_order(text), 'y75 enum-key invoke result order'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )

@@ -30,6 +30,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('uu0 coroutine core-version String register', semantic_fixes)
         self.assertIn('qc0 external-files root name on both branches', semantic_fixes)
         self.assertIn('eu0 battery-toggle Compose register order', semantic_fixes)
+        self.assertIn('y75 enum-key invoke result order', semantic_fixes)
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
@@ -115,6 +116,17 @@ class Full171MigrationTest(unittest.TestCase):
             sd_name = pd1_method.index('const-string v15, "sing-box_dingtalk"', sd_start)
             sd_call = pd1_method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
             self.assertLess(sd_name, sd_call)
+
+            y75 = (project / 'smali/y75.smali').read_text()
+            y75_method = y75.split(
+                '.method public final a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            y75_instructions = [line.strip() for line in y75_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            key_index = y75_instructions.index(
+                'invoke-static {v14}, Lcom/box/app/vpn/VpnBridge;->key(Lne5;)I')
+            self.assertEqual(y75_instructions[key_index - 1], 'move/from16 p3, v1')
+            self.assertEqual(y75_instructions[key_index + 1], 'move-result v1')
 
 
 if __name__ == '__main__':

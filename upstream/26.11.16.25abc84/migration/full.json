@@ -132,7 +132,7 @@
     "smali/xb0.smali": "7c29065e4bd8b1fca4372c4e52a8009b287d64ea01e8a3da133f6b7184eefc3a",
     "smali/xl4.smali": "e80cdaed09eb9d57e12ec6aa4f11ae61f0241688428b7e200b13fc8946407efa",
     "smali/xv5.smali": "7e4ce41e500e9cc242439c6dc7aee11f60bf7eeb32eb9a6b95ed938eb6024bb1",
-    "smali/y75.smali": "353b0242f8bbc7afb590d4797e12a837b7f929225e2a69f2935aa108b470ce15",
+    "smali/y75.smali": "0015bc84f7e78bd2998f67ea41a4b856be00fe235ac77f20bdc7aba427a7b51f",
     "smali/yb1.smali": "2ad9376a8d2d8f2a8fc3ff23f093276c3579b79fcdee9c14f81611bb880fe358",
     "smali/z51.smali": "6ff95d98006e6c7bdc453e05176257201bd0cf5491ba964c5463fa297d03527f",
     "smali/zj.smali": "f659ced5fb7521eb415fcf2f8994ba5a79ac9295165a79c482f8a447edff6943",
@@ -11326,13 +11326,17 @@
         "detail": "Keep the upstream settings-row Compose call ahead of the custom battery row, pass the battery toggle arguments in typed registers, and restore v4=0xe before nn3.L consumes the parent Compose changed-mask."
       },
       {
+        "name": "y75 enum-key invoke result order",
+        "detail": "Save v1 into p3 before replacing Enum.ordinal() with VpnBridge.key; keep move-result immediately after the invoke so ART receives the defined integer result."
+      },
+      {
         "name": "pd1 resumed sing-box DingTalk constructor register",
         "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "0611648c6904cdf52be21519df223ed76dd4385715b33286000d12982035d333",
+  "runtimeArchiveSha256": "00bdb9ab8265e83ebed60f26551805dbaf8ecdc422ba7e00fcf0aed9edd09c8e",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527171
+  "runtimeArchiveBytes": 20527175
 }
