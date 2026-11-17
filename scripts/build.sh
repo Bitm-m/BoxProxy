@@ -7,9 +7,11 @@
 #   - 可选：Android SDK build-tools（zipalign / apksigner / aapt2），
 #           脚本会在 $ANDROID_HOME/build-tools/<最新> 下自动查找；缺失则只产出未签名 APK。
 #
-# 指定输入/输出（可选，环境变量）：
-#   PROJECT_DIR=.tools/migrated OUT_DIR=.tools/build-171 bash scripts/build.sh
-# 默认仍构建 decompiled/ 并输出到 dist/。
+# 构建 171 时，先运行：
+#   python3 scripts/migrate_upstream.py --snapshot upstream/26.11.16.25abc84 --output .tools/local-171
+# 再指定输入/输出：
+#   PROJECT_DIR=.tools/local-171/decompiled OUT_DIR=.tools/local-171-build bash scripts/build.sh
+# 默认仍构建 decompiled/（139 基线）并输出到 dist/。
 #
 # 自定义签名（可选，环境变量）：
 #   KEYSTORE=/path/to/keystore.jks KEYSTORE_PASSWORD=... KEY_ALIAS=... [KEY_PASSWORD=...]

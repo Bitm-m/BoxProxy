@@ -1,9 +1,8 @@
 name: Build APK
 
-# BoxProxy 反编译工程的回编译工作流：
-#   apktool b（官方发行版，sha256 校验）-> zipalign -> apksigner 签名/验证 -> 产物上传
-# 说明：本工程由 apktool 2.9.3 反编译生成，APKTOOL_VERSION 必须与之保持一致；
-#       升级 apktool 时需重新反编译原包，并同步修改下面的版本与 sha256。
+# 构建 171 完整迁移候选；仓库 decompiled/ 是 139 基线，不是本工作流的 APK 输入：
+#   pinned 171 snapshot -> verified full migration -> reference scan -> apktool b -> align/sign/upload
+# Apktool 2.9.3 必须与 pinned snapshot 一致；升级时需重新反编译并同步 sha256。
 
 on:
   workflow_dispatch:
@@ -11,13 +10,13 @@ on:
     branches: [main]
     tags: ["v*"]
     paths:
-      - "decompiled/**"
+      - "upstream/**"
       - "scripts/**"
       - ".github/workflows/build-apk.yml"
   pull_request:
     branches: [main]
     paths:
-      - "decompiled/**"
+      - "upstream/**"
       - "scripts/**"
       - ".github/workflows/build-apk.yml"
 
@@ -32,7 +31,7 @@ env:
   APKTOOL_VERSION: "2.9.3"
   # 官方 apktool_2.9.3.jar 的 sha256（与发行包大小 23254968 字节对应，已交叉验证）
   APKTOOL_SHA256: "7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4"
-  PROJECT_DIR: "decompiled"
+  PROJECT_DIR: ".tools/ci-171/decompiled"
 
 jobs:
   build:
@@ -42,6 +41,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Generate the pinned 171 migration candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/migrate_upstream.py \
+            --snapshot upstream/26.11.16.25abc84 \
+            --output .tools/ci-171
+          test -f "$PROJECT_DIR/apktool.yml"
 
       - name: Setup JDK 17
         uses: actions/setup-java@v6
@@ -58,6 +66,10 @@ jobs:
           version_code="$(sed -n 's/^  versionCode:[[:space:]]*//p' "$PROJECT_DIR/apktool.yml" | head -n 1 | tr -d '\r')"
           if [[ -z "$version_name" || -z "$version_code" ]]; then
             echo "::error::failed to parse versionName/versionCode from $PROJECT_DIR/apktool.yml"
+            exit 1
+          fi
+          if [[ "$version_code" != "171" || "$version_name" != "26.11.16.25abc84" ]]; then
+            echo "::error::refusing to build non-171 project ($version_name / $version_code)"
             exit 1
           fi
           echo "version_name=${version_name}" >> "$GITHUB_OUTPUT"
@@ -84,7 +96,7 @@ jobs:
           java -jar "$jar" --version
 
       - name: Validate internal smali member references
-        run: python3 scripts/check_smali_references.py
+        run: python3 scripts/check_smali_references.py "$PROJECT_DIR"
 
       - name: Build unsigned APK with apktool
         shell: bash
@@ -101,6 +113,8 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          EXPECTED_VERSION_CODE: ${{ steps.ver.outputs.version_code }}
+          EXPECTED_VERSION_NAME: ${{ steps.ver.outputs.version_name }}
         run: |
           set -euo pipefail
 
@@ -147,7 +161,14 @@ jobs:
             --ks-pass env:KS_PASS --key-pass env:KEY_PASS \
             --out "$out" "$RUNNER_TEMP/aligned.apk"
           "${bt}apksigner" verify --verbose --print-certs "$out" | tee "$RUNNER_TEMP/apksigner-verify.txt"
-          "${bt}aapt2" dump badging "$out" | head -n 5
+          badging="$("${bt}aapt2" dump badging "$out")"
+          printf '%s\n' "$badging" | sed -n '1,5p'
+          expected_package="package: name='com.boxproxy.box' versionCode='${EXPECTED_VERSION_CODE}' versionName='${EXPECTED_VERSION_NAME}'"
+          if ! grep -Fq -- "$expected_package" <<<"$badging"; then
+            echo "::error::APK badging mismatch; expected $expected_package"
+            printf '%s\n' "$badging"
+            exit 1
+          fi
 
           ( cd "$GITHUB_WORKSPACE/artifacts" && sha256sum "$(basename "$out")" > "$(basename "$out").sha256" )
           echo "sign_mode=${SIGN_MODE}" >> "$GITHUB_OUTPUT"
@@ -195,4 +216,4 @@ jobs:
           gh release create "${{ github.ref_name }}" artifacts/*.apk artifacts/*.sha256 \
             --repo "${{ github.repository }}" --verify-tag \
             --title "BoxProxy ${{ github.ref_name }}" \
-            --notes "由 GitHub Actions 从 \`decompiled/\` 反编译工程回编译（apktool ${APKTOOL_VERSION} + zipalign + apksigner）。签名与官方版本不同，无法覆盖安装官方版本，请先卸载后再安装。"
+            --notes "由 GitHub Actions 从 upstream/26.11.16.25abc84 的 171 完整迁移候选回编译（apktool ${APKTOOL_VERSION} + zipalign + apksigner）。签名与官方版本不同，无法覆盖安装官方版本，请先卸载后再安装。"

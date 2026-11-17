@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Reproduce the pinned custom 139 project in a NEW, atomically published directory.
+"""Reproduce a pinned full-custom migration in a NEW, atomically published directory.
 
-The default full plan overlays verified runtime files onto the immutable upstream
-snapshot. --phase phase1 reproduces the historical, non-release first batch.
-No heuristic mappings or fuzzy patches are executed at build time.
+The default snapshot remains the historical 139 baseline for existing regression
+tests; pass --snapshot explicitly to build another pinned version (for example 171).
+The full plan overlays hash-verified runtime files onto the immutable snapshot.
+--phase phase1 reproduces the historical, non-release first batch. No heuristic
+mappings or fuzzy patches are executed at build time.
 """
 import argparse
 import hashlib
