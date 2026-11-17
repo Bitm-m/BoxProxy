@@ -518,6 +518,65 @@ def fix_ij4_restore_cfg_constructor_argument(text):
     return update_method(text, signature, transform)
 
 
+def fix_zu5_cfg_nav_wrapper_registers(text):
+    """Pass zu5's pv5 model and Context to both custom CfgNav wrappers."""
+    signature = 'invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
+    wrap_ref = 'Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;'
+    broken_first = f'invoke-static {{v3, v2, v7}}, {wrap_ref}'
+    fixed_first = f'invoke-static {{v3, v7, v8}}, {wrap_ref}'
+    second = f'invoke-static {{v2, v3, v8}}, {wrap_ref}'
+    broken_loads = (
+        'iget-object v7, v0, Lzu5;->p:Lsv5;',
+        'iget-object v8, v0, Lzu5;->p:Lsv5;',
+    )
+    context_load = 'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;'
+
+    def previous_instruction(lines, index):
+        index -= 1
+        while index >= 0:
+            value = lines[index].strip()
+            if (not value or value.startswith(DEBUG_PREFIXES)
+                    or value.startswith(('#', ':'))):
+                index -= 1
+                continue
+            return index
+        return None
+
+    def transform(block):
+        lines = block.splitlines()
+        calls = [(i, line.strip()) for i, line in enumerate(lines)
+                 if wrap_ref in line]
+        broken_first_hits = [i for i, value in calls if value == broken_first]
+        fixed_first_hits = [i for i, value in calls if value == fixed_first]
+        second_hits = [i for i, value in calls if value == second]
+        if len(calls) != 2 or len(broken_first_hits) + len(fixed_first_hits) != 1 \
+                or len(second_hits) != 1:
+            raise ValueError('zu5.invoke must have both reviewed CfgNav wrapper call sites')
+
+        first_index = broken_first_hits[0] if broken_first_hits else fixed_first_hits[0]
+        second_index = second_hits[0]
+        first_load_index = previous_instruction(lines, first_index)
+        second_load_index = previous_instruction(lines, second_index)
+        if first_load_index is None or second_load_index is None:
+            raise ValueError('zu5 CfgNav wrapper call is missing its preceding receiver load')
+
+        if broken_first_hits:
+            if (lines[first_load_index].strip() != broken_loads[0]
+                    or lines[second_load_index].strip() != broken_loads[1]):
+                raise ValueError('zu5 CfgNav wrapper receivers differ from the reviewed broken form')
+            lines[first_load_index] = re.match(r'^\s*', lines[first_load_index]).group(0) + context_load
+            lines[second_load_index] = re.match(r'^\s*', lines[second_load_index]).group(0) + context_load
+            lines[first_index] = re.match(r'^\s*', lines[first_index]).group(0) + fixed_first
+            return '\n'.join(lines)
+
+        if (lines[first_load_index].strip() != context_load
+                or lines[second_load_index].strip() != context_load):
+            raise ValueError('zu5 CfgNav wrapper receivers differ from both known forms')
+        return block
+
+    return update_method(text, signature, transform)
+
+
 def fix_uu0_core_version_script_register(text):
     """Pass the custom version script in uu0's String argument register."""
     signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
@@ -847,6 +906,7 @@ def repair(root):
         (root / 'smali/eu0.smali', lambda text: fix_eu0_battery_toggle_hunk(text), 'eu0 battery-toggle Compose register order'),
         (root / 'smali/y75.smali', lambda text: fix_y75_key_result_order(text), 'y75 enum-key invoke result order'),
         (root / 'smali/ij4.smali', lambda text: fix_ij4_restore_cfg_constructor_argument(text), 'ij4 RestoreCfg e65 constructor argument'),
+        (root / 'smali/zu5.smali', lambda text: fix_zu5_cfg_nav_wrapper_registers(text), 'zu5 CfgNav wrapper argument registers'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )

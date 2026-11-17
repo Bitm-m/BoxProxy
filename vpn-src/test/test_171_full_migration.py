@@ -32,6 +32,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('eu0 battery-toggle Compose register order', semantic_fixes)
         self.assertIn('y75 enum-key invoke result order', semantic_fixes)
         self.assertIn('ij4 RestoreCfg e65 constructor argument', semantic_fixes)
+        self.assertIn('zu5 CfgNav wrapper argument registers', semantic_fixes)
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
@@ -142,6 +143,29 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertEqual(restore_call, p9_store + 1)
             self.assertNotIn('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V',
                              ij4_instructions)
+
+            zu5 = (project / 'smali/zu5.smali').read_text()
+            zu5_method = zu5.split(
+                '.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                1)[1].split('.end method', 1)[0]
+            zu5_instructions = [line.strip() for line in zu5_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            wrap_indices = [i for i, line in enumerate(zu5_instructions)
+                            if 'CfgNav;->wrap(' in line]
+            self.assertEqual(
+                [zu5_instructions[i] for i in wrap_indices],
+                [
+                    'invoke-static {v3, v7, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
+                    'invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
+                ],
+            )
+            self.assertEqual([zu5_instructions[i - 1] for i in wrap_indices], [
+                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
+                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
+            ])
+            self.assertIn('iget-object v7, v0, Lzu5;->j:Lpv5;', zu5_instructions)
+            self.assertNotIn('iget-object v7, v0, Lzu5;->p:Lsv5;', zu5_instructions)
+            self.assertNotIn('iget-object v8, v0, Lzu5;->p:Lsv5;', zu5_instructions)
 
 
 if __name__ == '__main__':

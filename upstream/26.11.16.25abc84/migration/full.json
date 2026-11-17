@@ -139,7 +139,7 @@
     "smali/zo2.smali": "cffefb54a3753a84b3c7bbd6e5536c32c3d1d7f533f987f1fc956447dc83d074",
     "smali/zt6.smali": "3b84d9cb164a1b7e1c5bba1e16a5f36ef7e3e67ec69e822f0642b8e78fc20ca3",
     "smali/zu0.smali": "12c50946dc3e522033084b62ad1fc76afb4c0fc4ae043447d6ea44fd3071d8ac",
-    "smali/zu5.smali": "1eb9ef3e98d41e723ec5108b75b79b4d7d29b81abfcf22fd3ebffbb57fbf673d"
+    "smali/zu5.smali": "cefb9069c3623e05a110ee5c54a89d154d7b8046a3ee4b7394ce020dc3ce37df"
   },
   "additionsSha256": {
     "assets/box/mihomo/mianliu.yaml": "da501ded244748d6eac94e6b78b847d05adc87db80be1c311a4a2c908c57f257",
@@ -11334,13 +11334,17 @@
         "detail": "Pass ij4 p9 (the e65 config model), not p8 (the neighboring String), to RestoreCfg.vm; place the hook after storing the model in ij4.s."
       },
       {
+        "name": "zu5 CfgNav wrapper argument registers",
+        "detail": "Pass the zu5 pv5 model and Context fields to each CfgNav.wrap hook; preserve v7 as pv5 and do not pass the label String or sv5 as those arguments."
+      },
+      {
         "name": "pd1 resumed sing-box DingTalk constructor register",
         "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "6e6f985ac9562ef519342f8b6647efd09bd6db9f3fbcb406bb600df528fee3cd",
+  "runtimeArchiveSha256": "4c2aa09420fd306c2d89c7d78d11427333fcefb3bd7294498bac57650d498b35",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527175
+  "runtimeArchiveBytes": 20527215
 }

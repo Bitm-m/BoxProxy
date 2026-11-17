@@ -256,6 +256,34 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/zu5.smali').write_text('''
+.class public final Lzu5;
+.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 10
+    iget-object v7, v0, Lzu5;->j:Lpv5;
+    iget-object v2, v7, Lpv5;->l:Liw4;
+    invoke-virtual {v2}, Liw4;->getValue()Ljava/lang/Object;
+    move-result-object v2
+    check-cast v2, Ljava/lang/String;
+    new-instance v3, Lx65;
+    const/4 v6, 0x7
+    invoke-direct {v3, v4, v6}, Lx65;-><init>(Lw82;B)V
+    iget-object v7, v0, Lzu5;->p:Lsv5;
+    invoke-static {v3, v2, v7}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;
+    move-result-object v3
+    new-instance v2, Lsu5;
+    iget-object v3, v0, Lzu5;->j:Lpv5;
+    const/4 v9, 0x1
+    invoke-direct {v2, v3, v9}, Lsu5;-><init>(Lpv5;B)V
+    new-instance v9, Lx65;
+    invoke-direct {v9, v4, v6}, Lx65;-><init>(Lw82;B)V
+    iget-object v8, v0, Lzu5;->p:Lsv5;
+    invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;
+    move-result-object v2
+    return-object v2
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -334,9 +362,15 @@ class Stage6RepairTest(unittest.TestCase):
                           broken_ij4)
             self.assertLess(broken_ij4.index('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;'),
                             broken_ij4.index('iput-object p9, p0, Lij4;->s:Ljava/lang/Object;'))
+            broken_zu5 = (root / 'smali/zu5.smali').read_text()
+            self.assertEqual(broken_zu5.count('CfgNav;->wrap('), 2)
+            self.assertIn('invoke-static {v3, v2, v7}, Lcom/box/app/cfg/CfgNav;->wrap(',
+                          broken_zu5)
+            self.assertIn('invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(',
+                          broken_zu5)
 
             changed = repair(root)
-            self.assertEqual(len(changed), 11)
+            self.assertEqual(len(changed), 12)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
             self.assertIn('uu0 core-version script register', changed)
@@ -344,6 +378,7 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('eu0 battery-toggle Compose register order', changed)
             self.assertIn('y75 enum-key invoke result order', changed)
             self.assertIn('ij4 RestoreCfg e65 constructor argument', changed)
+            self.assertIn('zu5 CfgNav wrapper argument registers', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -455,13 +490,34 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertEqual(restore_call, p9_store + 1)
             self.assertNotIn('invoke-static {p8}, Lcom/box/app/vpn/RestoreCfg;->vm(Le65;)V',
                              ij4_instructions)
+
+            zu5 = (root / 'smali/zu5.smali').read_text()
+            zu5_method = zu5.split('.method public final invoke(', 1)[1].split('.end method', 1)[0]
+            zu5_instructions = [line.strip() for line in zu5_method.splitlines()
+                                if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+            wrap_indices = [i for i, line in enumerate(zu5_instructions)
+                            if 'CfgNav;->wrap(' in line]
+            self.assertEqual(
+                [zu5_instructions[i] for i in wrap_indices],
+                [
+                    'invoke-static {v3, v7, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
+                    'invoke-static {v2, v3, v8}, Lcom/box/app/cfg/CfgNav;->wrap(Ll92;Lpv5;Landroid/content/Context;)Ll92;',
+                ],
+            )
+            self.assertEqual([zu5_instructions[i - 1] for i in wrap_indices], [
+                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
+                'iget-object v8, v0, Lzu5;->l:Landroid/content/Context;',
+            ])
+            self.assertNotIn('iget-object v7, v0, Lzu5;->p:Lsv5;', zu5_instructions)
+            self.assertNotIn('iget-object v8, v0, Lzu5;->p:Lsv5;', zu5_instructions)
+            self.assertIn('iget-object v7, v0, Lzu5;->j:Lpv5;', zu5_instructions)
             self.assertEqual(repair(root), [])
 
     def test_upgrades_legacy_eu0_fix_that_clobbered_nn3_flag_mask(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.make_candidate(root)
-            self.assertEqual(len(repair(root)), 11)
+            self.assertEqual(len(repair(root)), 12)
 
             eu0_path = root / 'smali/eu0.smali'
             eu0 = eu0_path.read_text()
