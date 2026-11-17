@@ -27,7 +27,7 @@
 `stubs/` 是编译占位（`CfgGlue`、`Toast`、`Immutable`）、`app/` 是原生 View 界面。生成物在 `decompiled/smali/`
 （`com/box/app/cfg`、`top/yukonga`、`kotlin`、`androidx/compose/runtime`）；一键重新生成：`tools/build-cfg.sh`（环境变量见脚本头部）。
 流程：kotlinc（`-Xlambdas=class -Xsam-conversions=class`）→ `prune.py` 裁 stdlib 类 → D8（`--no-desugaring`）→ baksmali（`tools/Bk.java`）→ `prune_smali.py` 方法级裁剪。
-真实的 `CfgGlue`、`CfgNav`、`CfgIcon`、`CfgClick` 是手写 smali（要碰混淆后的 Compose 与编辑器视图模型 `Lxk5`），不会被脚本覆盖。
+真实的 `CfgGlue`、`CfgNav`、`CfgIcon`、`CfgClick` 是手写 smali（要碰混淆后的 Compose 与编辑器视图模型 `Lxk5`），不会被脚本覆盖。编辑器顶栏只保留 Mihomo / Sing-Box 共用的「可视化修改」入口；Mihomo 锚点面板按钮位于 Mihomo 可视化首页右上角，替换原来的「整理」动作。
 
 ### 工具链（不提交二进制）
 

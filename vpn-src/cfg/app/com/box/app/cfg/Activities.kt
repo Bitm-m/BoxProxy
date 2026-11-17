@@ -156,10 +156,19 @@ object BackCompat {
 
 class FormActivity : CfgBaseActivity() {
     private var ui: FormUi? = null
+    private var editorToken: Any? = null
 
     override fun build(token: Any, text: String, path: String) {
+        editorToken = token
         val f = File(path)
         ui = FormUi(this, sc, text, f.name, f.parent) { t -> CfgGlue.setText(token, t) }.also { it.render(false) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val token = editorToken ?: return
+        val latest = CfgGlue.getText(token) ?: return
+        ui?.refreshFromEditor(latest)
     }
 
     override fun onBackAction() {

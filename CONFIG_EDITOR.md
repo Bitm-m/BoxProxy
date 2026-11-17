@@ -13,8 +13,7 @@ Mishka 的界面是 Compose + Miuix，没法直接放进这个 apktool 工程，
 
 ## 入口
 
-编辑 mihomo 配置（`.yaml` / `.yml`）的页面，左上角返回键右边多了两个图标按钮：船锚图标 = 可视化修改，滑杆图标 = 锚点面板。打开时拿的是编辑器里**当前的实时文本**
-（包括没保存的改动）；面板里每一步改动都立即写回编辑器草稿（可在顶栏撤销），**仍然要在编辑器里点保存**才落盘。非 YAML 文件会提示不支持。
+编辑器对 Mihomo YAML 和 Sing-Box JSON / JSONC 都保留左上角返回键右边的「可视化修改」入口。Mihomo 的锚点面板按钮移到可视化修改首页右上角（原「整理」位置）；编辑器工具栏不再放锚点按钮，首页顶栏也不再显示「整理」，但「整理配置」仍保留在首页的工具区。面板打开时读取编辑器里**当前的实时文本**（包括未保存的改动）；每一步改动都会写回编辑器草稿，**仍然要在编辑器里点保存**才落盘。
 
 ## 锚点面板
 
@@ -37,8 +36,8 @@ Mishka 的界面是 Compose + Miuix，没法直接放进这个 apktool 工程，
 
 ## 实现
 
-* `decompiled/smali/yi5.smali`：顶栏 navigationIcon 的两处 `new Lm05(onBack, B)` 后面各加一次 `CfgNav.wrap(...)`。
-* `com/box/app/cfg/CfgNav`（手写 smali，实现 `Lv52`）：先原样画返回键，再画两个图标按钮（`CfgIcon`：用 `moveTo/lineTo/close` 拼的实心 `ImageVector`，经 Icon composable 画出）（navigationIcon 槽子项叠放，用 padding-start 错开）。
+* `decompiled/smali/em5.smali`：顶栏 navigationIcon 包装为 `CfgNav.wrap(...)`；Mihomo 和 Sing-Box 都只挂一个「可视化修改」图标。
+* `com/box/app/cfg/CfgNav`（手写 smali，实现 `Lt62`）：先原样画返回键，再画滑杆图标；起点 24dp，让滑杆与返回键形成紧凑的一组，视觉间隔贴近右侧相邻操作按钮；原 56dp 间隔过大。
 * `CfgGlue`（手写 smali）：`mj5.b()` 读实时文本、`mj5.m(String)` + `mj5.k()` 整篇替换；`CfgClick` / `CfgIcon` 同属胶水层。
 * `CfgLauncher.open(kind, token, ctx)`：0 = `AnchorActivity`，1 = `FormActivity`；两个 Activity 已在 `AndroidManifest.xml` 注册（`exported=false`）。
 * 其余 `com/box/app/cfg/*`、`top/yukonga/*`、`kotlin/*`、`androidx/compose/runtime/Immutable` 是 `vpn-src/tools/build-cfg.sh` 的生成物，见 `vpn-src/README.md`。
@@ -89,18 +88,17 @@ Compose 不再重组，于是一直灰到下一次打字。修法：`mj5.m` 把�
 再 +1，`ij5.a/b`（canRedo/canUndo）开头多读一次 `q`，所以下一帧底栏重新算。第二轮 `replaceKeep` 里编辑器文本和 `p` 一致，`plan` 返回 null，不会循环。
 真机未验证。
 
-## 只在 mihomo 的配置里显示 & 回到编辑器后的光标位置
+## 编辑器入口、锚点位置 & 回到编辑器后的光标位置
 
-- 顶栏的「可视化修改 / 锚点面板」两个图标只在**mihomo 的配置**里出现：`EditorGlue.isMihomo(path)` 从配置文件往上找第一个叫核心名
-  （mihomo / sing-box / xray / v2fly / hysteria）的工作目录，是 `mihomo` 才显示；其它核心和认不出的目录都不显示。
-  sing-box 的配置（`.json` / `.jsonc` 且目录是 `sing-box`，`EditorGlue.isSingBox`）只显示「可视化修改」一个图标（没有锚点概念）。
+- 编辑器顶栏的「可视化修改」入口分别对 Mihomo YAML 与 Sing-Box JSON / JSONC 显示；`EditorGlue.isMihomo` / `isSingBox` 按配置目录和扩展名判别。锚点面板只面向 Mihomo YAML，入口位于可视化修改首页右上角，替换原来的「整理」动作；首页工具区仍保留「整理配置」。
+- 从锚点面板返回可视化修改时，`FormActivity` 会从编辑器草稿刷新文本与解析结果，并把锚点改动加入页内撤销历史，避免继续编辑时覆盖锚点面板的改动。
 - 面板改完写回编辑器时，`CfgGlue.replaceKeep` 现在只替换**真正变了的那一段**（`EditorGlue.plan` 算公共前后缀，不拆 `\r\n`），
   然后把光标 / 滚动定位到改动所在的行（多行插入定位到新内容的第一行），不再被整篇替换带到文末。一次替换仍是撤销栈里的一步。
   逻辑由 `harness/EditTest.kt` 覆盖（随机往返 3000 例 + 行号 + CRLF + 目录判断）。
 
 ## sing-box 的可视化修改
 
-左上角同一位置的船锚图标，打开 `SbFormActivity`（`.json` / `.jsonc`，`CfgLauncher` 按扩展名分流）。**字段范围以 fork https://github.com/jieluojun/sing-box 为准**
+编辑器左上角同一位置的「可视化修改」滑杆图标打开 `SbFormActivity`（`.json` / `.jsonc`，`CfgLauncher` 按扩展名分流）；Sing-Box 不显示锚点面板入口。**字段范围以 fork https://github.com/jieluojun/sing-box 为准**
 （含最新的 `b272cc96`：订阅 `host` / `path` / `with_at`（别名 `With-At` 在可视化里不列出，保留 with_at；fork 的 `2e2223e3` 起这三个字段从 `override_transport` 迁到了 `override_dialer`，`override_transport` 只剩 `xhttp_download_enabled` / `xhttp_download_detour`；旧配置里还写在 `override_transport` 下的这三个字段，内核会拒绝，可视化里会显示在「未识别字段」行，需要手动移到 `override_dialer`）；以及 `3cc2bbf7`：`cns` 入站 / 出站、HTTP 出站的 CONNECT 相关字段、`providers`、`http_clients`、`certificate_providers`、`network_namespaces` 等）：
 
 - 数据来源是随 APK 带的 `assets/schema/sing-box-fork.json`（fork 的 `docs/schema.json`，补上了它没有的 `cns` / `del_host` / tun `stack`）

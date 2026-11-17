@@ -27,6 +27,7 @@ echo "== sing-box：JSONC 引擎 + schema"; $J -Dfile.encoding=UTF-8 -Xverify:no
 echo "== sing-box：重命名级联引用 / 复制 / 切换类型 / 撤销"; $J -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Xverify:none -cp $CP MainKt 34 10 1 sbflow /tmp/fkdata/sb.json 2>&1 | grep -v "OpenJDK\|distinct toasts\|^kind=\|^ok "
 echo "== 拖动排序"; $J -Xverify:none -cp $CP DragTestKt 2>&1 | grep -v OpenJDK
 echo "== 编辑器差量替换 / mihomo 判断"; $J -Dfile.encoding=UTF-8 -Xverify:none -cp $CP EditTestKt 2>&1 | grep -v OpenJDK
+echo "== 从锚点面板返回后刷新可视表单"; $J -Dfile.encoding=UTF-8 -Xverify:none -cp $CP MainKt 34 1 1 formrefresh /tmp/fkdata/full.yaml 2>&1 | grep -v OpenJDK
 STEPS=${1:-4000}; shift || true
 for k in form anchor sb; do for s in ${@:-1 2 3}; do for sdk in 29 34; do
   $J -Dfile.encoding=UTF-8 -Xverify:none -cp $CP MainKt $sdk $STEPS $s $k $([ $k = sb ] && echo /tmp/fkdata/sb.json || echo /tmp/fkdata/full.yaml) 2>&1 | grep -v "OpenJDK\|distinct toasts" | cut -c1-240 | head -30

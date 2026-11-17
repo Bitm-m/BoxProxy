@@ -77,11 +77,18 @@ jobs:
           curl -fsSL --retry 3 -o .tools/apktool_2.9.3.jar \
             https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
           echo '7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4  .tools/apktool_2.9.3.jar' | sha256sum -c -
-      - name: Rebuild complete pinned custom migration (unsigned)
+      - name: Rebuild complete pinned 171 migration (unsigned)
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/migrate_upstream.py --output .tools/ported
-          java -jar .tools/apktool_2.9.3.jar b .tools/ported/decompiled \
-            -p .tools/framework -o "$RUNNER_TEMP/full-migration-unsigned.apk"
-          echo 'Full implementation and host regression checks passed. Physical Android/root/VPN and signature-compatible upgrade checks require devices and the original signing key.'
+          python3 scripts/migrate_upstream.py \
+            --snapshot upstream/26.11.16.25abc84 \
+            --output .tools/ported-171
+          version_name="$(sed -n 's/^  versionName:[[:space:]]*//p' .tools/ported-171/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
+          version_code="$(sed -n 's/^  versionCode:[[:space:]]*//p' .tools/ported-171/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
+          [[ "$version_code" == "171" && "$version_name" == "26.11.16.25abc84" ]]
+          python3 scripts/check_smali_branch_offsets.py .tools/ported-171/decompiled
+          python3 scripts/check_smali_reference_moves.py .tools/ported-171/decompiled
+          java -jar .tools/apktool_2.9.3.jar b .tools/ported-171/decompiled \
+            -p .tools/framework -o "$RUNNER_TEMP/full-migration-171-unsigned.apk"
+          echo "Validated full 171 implementation ($version_name / $version_code). Physical Android/root/VPN and signature-compatible upgrade checks require devices and the original signing key."

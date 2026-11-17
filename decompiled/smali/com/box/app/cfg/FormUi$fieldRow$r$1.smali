@@ -180,7 +180,7 @@
 .method public bridge synthetic invoke()Ljava/lang/Object;
     .registers 1
 
-    .line 263
+    .line 278
     invoke-virtual {p0}, Lcom/box/app/cfg/FormUi$fieldRow$r$1;->invoke()V
 
     sget-object p0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
@@ -191,7 +191,7 @@
 .method public final invoke()V
     .registers 11
 
-    .line 266
+    .line 281
     iget-boolean v0, p0, Lcom/box/app/cfg/FormUi$fieldRow$r$1;->$bool:Z
 
     if-eqz v0, :cond_10

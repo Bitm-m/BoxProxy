@@ -102,7 +102,7 @@
         .end annotation
     .end param
 
-    .line 81
+    .line 96
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
     iput-object p1, p0, Lcom/box/app/cfg/FormUi$HubEntry;->title:Ljava/lang/String;
@@ -123,7 +123,7 @@
     .annotation build Lorg/jetbrains/annotations/Nullable;
     .end annotation
 
-    .line 81
+    .line 96
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$HubEntry;->countPath:Ljava/lang/String;
 
     return-object p0
@@ -134,7 +134,7 @@
     .annotation build Lorg/jetbrains/annotations/NotNull;
     .end annotation
 
-    .line 81
+    .line 96
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$HubEntry;->countUnit:Ljava/lang/String;
 
     return-object p0
@@ -145,7 +145,7 @@
     .annotation build Lorg/jetbrains/annotations/NotNull;
     .end annotation
 
-    .line 81
+    .line 96
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$HubEntry;->hint:Ljava/lang/String;
 
     return-object p0
@@ -156,7 +156,7 @@
     .annotation build Lorg/jetbrains/annotations/NotNull;
     .end annotation
 
-    .line 81
+    .line 96
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$HubEntry;->route:Lcom/box/app/cfg/FormRoute;
 
     return-object p0
@@ -167,7 +167,7 @@
     .annotation build Lorg/jetbrains/annotations/NotNull;
     .end annotation
 
-    .line 81
+    .line 96
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$HubEntry;->title:Ljava/lang/String;
 
     return-object p0

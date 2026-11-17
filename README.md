@@ -1,18 +1,34 @@
 # BoxProxy 定制回编译工程
 
-当前版本：**26.11.05.d5c365e / versionCode 139 / arm64-v8a**，包名 `com.boxproxy.box`。
+包名 `com.boxproxy.box`。仓库中的 `decompiled/` 是 **26.11.05.d5c365e / versionCode 139** 的迁移基线，
+不是当前 GitHub Actions APK 的输入。CI 的目标是 **26.11.16.25abc84 / versionCode 171 / arm64-v8a**：
+从固定的 `upstream/26.11.16.25abc84` 快照生成完整迁移候选后再回编译，并校验版本号为 171。
 
 已将旧定制的 VPN/非 root、root 修复、初始化/权限、配置历史与恢复、编辑器/可视化/锚点、
 内核 fork 下载、schema、内置配置、IPv6 和开机/电池设置迁入新版，同时保留上游新界面和规则功能。
 
-- [完整迁移范围、回归验证和限制](upstream/26.11.05.d5c365e/migration/README.md)
-- [原版来源及不可变快照](upstream/26.11.05.d5c365e/README.md)
+- [139 迁移基线的范围与报告](upstream/26.11.05.d5c365e/migration/README.md)
+- [171 完整迁移计划](upstream/26.11.16.25abc84/migration/full.json)
 - [VPN / 编辑器源码与工具链](vpn-src/README.md)
 
+## 本地构建
+
+要复现 **171**，先显式生成迁移候选，再将 `PROJECT_DIR` 指向它。`scripts/build.sh` 不带参数时仍默认构建 139 的 `decompiled/`。
+
 ```sh
-# apktool 2.9.3；Android build-tools 可用时会继续对齐、签名并验证
-bash scripts/build.sh
+python3 scripts/migrate_upstream.py \
+  --snapshot upstream/26.11.16.25abc84 \
+  --output .tools/local-171
+PROJECT_DIR=.tools/local-171/decompiled \
+  OUT_DIR=.tools/local-171-build bash scripts/build.sh
 ```
 
-主机测试及完整 APK 回编译已通过；**本次 139 尚未做 Android root/非 root 真机验证**。
-同签名覆盖升级需要原签名密钥，不能用临时 debug 签名替代验证。构建产物在 GitHub Actions，密钥不入库。
+本地已完成 Apktool 回编译，并从生成的 APK 重新反编译 `classes.dex` 验证 `CfgNav.e` 的 `Lla2` Composer 接收器、`S`/`V` guard、回调接口类型链及全树引用/分支/对象寄存器检查。该 APK 为 `.tools/BoxProxy-26.11.16.25abc84-cfgnav-fixed-unsigned.apk`（versionCode 171；APK SHA-256 `f50ea39ea808325bbe6ee25d1d542a5c8ef6e2320d1336bff759219836313a60`；`classes.dex` SHA-256 `8a6679a886b6ebefeba729d690cf99c62652f583ba7ebeba95e13021263b8563`）。它也包含已修复的 `zu5.invoke`，但仍是**未对齐、未签名**的本地回编译产物，不等同于 GitHub Actions 的签名 APK，也尚未在 Redmi 真机上验证。
+
+## CI 产物与设备验证
+
+`Build APK` 工作流也会自行从固定 171 快照生成迁移候选（不会读取 `decompiled/`），然后执行回编译、对齐、签名并上传 APK。
+CI artifact 是签名后的产物：使用仓库签名 Secrets（若已配置），否则使用临时 debug 密钥；签名模式会写入构建摘要。
+这与本地 unsigned APK 的对齐/签名状态不同，也不代表真机兼容性已经验证。
+
+**Android root/非 root 真机、VPN/DNS/IPv6/开机与电池限制，以及同签名覆盖升级验证仍待设备和原签名密钥验证。**

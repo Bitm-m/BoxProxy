@@ -128,7 +128,7 @@
 .method public final invoke(Ljava/lang/Object;)Ljava/lang/Boolean;
     .registers 5
 
-    .line 266
+    .line 281
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$fieldRow$r$1$1;->$intercept:Lkotlin/jvm/functions/Function3;
 
     iget-object v1, p0, Lcom/box/app/cfg/FormUi$fieldRow$r$1$1;->$field:Ltop/yukonga/mishka/custom/forms/FormField;
@@ -151,7 +151,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 266
+    .line 281
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$fieldRow$r$1$1;->invoke(Ljava/lang/Object;)Ljava/lang/Boolean;
 
     move-result-object p0

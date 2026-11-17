@@ -30,7 +30,7 @@
 .end annotation
 
 .annotation system Ldalvik/annotation/SourceDebugExtension;
-    value = "SMAP\nFormUi.kt\nKotlin\n*S Kotlin\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n+ 2 _Collections.kt\nkotlin/collections/CollectionsKt___CollectionsKt\n*L\n1#1,359:1\n1549#2:360\n1620#2,3:361\n*S KotlinDebug\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n*L\n296#1:360\n296#1:361,3\n*E\n"
+    value = "SMAP\nFormUi.kt\nKotlin\n*S Kotlin\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n+ 2 _Collections.kt\nkotlin/collections/CollectionsKt___CollectionsKt\n*L\n1#1,374:1\n1549#2:375\n1620#2,3:376\n*S KotlinDebug\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n*L\n311#1:375\n311#1:376,3\n*E\n"
 .end annotation
 
 .annotation runtime Lkotlin/Metadata;
@@ -56,7 +56,7 @@
 
 .annotation build Lkotlin/jvm/internal/SourceDebugExtension;
     value = {
-        "SMAP\nFormUi.kt\nKotlin\n*S Kotlin\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n+ 2 _Collections.kt\nkotlin/collections/CollectionsKt___CollectionsKt\n*L\n1#1,359:1\n1549#2:360\n1620#2,3:361\n*S KotlinDebug\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n*L\n296#1:360\n296#1:361,3\n*E\n"
+        "SMAP\nFormUi.kt\nKotlin\n*S Kotlin\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n+ 2 _Collections.kt\nkotlin/collections/CollectionsKt___CollectionsKt\n*L\n1#1,374:1\n1549#2:375\n1620#2,3:376\n*S KotlinDebug\n*F\n+ 1 FormUi.kt\ncom/box/app/cfg/FormUi$openEditor$4\n*L\n311#1:375\n311#1:376,3\n*E\n"
     }
 .end annotation
 
@@ -108,7 +108,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 291
+    .line 306
     check-cast p1, Ljava/util/List;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$4;->invoke(Ljava/util/List;)V
@@ -129,14 +129,14 @@
         }
     .end annotation
 
-    .line 292
+    .line 307
     check-cast p1, Ljava/lang/Iterable;
 
     invoke-static {p1}, Lkotlin/collections/CollectionsKt;->distinct(Ljava/lang/Iterable;)Ljava/util/List;
 
     move-result-object p1
 
-    .line 294
+    .line 309
     invoke-interface {p1}, Ljava/util/List;->isEmpty()Z
 
     move-result v0
@@ -165,7 +165,7 @@
 
     goto/16 :goto_9f
 
-    .line 295
+    .line 310
     :cond_22
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$openEditor$4;->$field:Ltop/yukonga/mishka/custom/forms/FormField;
 
@@ -221,7 +221,7 @@
 
     goto :goto_9f
 
-    .line 296
+    .line 311
     :cond_51
     iget-object v0, p0, Lcom/box/app/cfg/FormUi$openEditor$4;->$field:Ltop/yukonga/mishka/custom/forms/FormField;
 
@@ -237,7 +237,7 @@
 
     check-cast p1, Ljava/lang/Iterable;
 
-    .line 360
+    .line 375
     new-instance v0, Ljava/util/ArrayList;
 
     const/16 v1, 0xa
@@ -250,7 +250,7 @@
 
     check-cast v0, Ljava/util/Collection;
 
-    .line 361
+    .line 376
     invoke-interface {p1}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
 
     move-result-object p1
@@ -266,10 +266,10 @@
 
     move-result-object v1
 
-    .line 362
+    .line 377
     check-cast v1, Ljava/lang/String;
 
-    .line 296
+    .line 311
     invoke-static {v1}, Lkotlin/text/StringsKt;->toLongOrNull(Ljava/lang/String;)Ljava/lang/Long;
 
     move-result-object v2
@@ -281,17 +281,17 @@
     :cond_83
     move-object v1, v2
 
-    .line 362
+    .line 377
     :goto_84
     invoke-interface {v0, v1}, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
 
     goto :goto_70
 
-    .line 363
+    .line 378
     :cond_88
     check-cast v0, Ljava/util/List;
 
-    .line 296
+    .line 311
     invoke-interface {p0, v0}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
 
     move-result-object p0
@@ -302,7 +302,7 @@
 
     goto :goto_9f
 
-    .line 297
+    .line 312
     :cond_94
     iget-object p0, p0, Lcom/box/app/cfg/FormUi$openEditor$4;->$write:Lkotlin/jvm/functions/Function1;
 

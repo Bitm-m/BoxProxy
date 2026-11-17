@@ -94,7 +94,7 @@
 .method public bridge synthetic invoke(Ljava/lang/Object;)Ljava/lang/Object;
     .registers 2
 
-    .line 325
+    .line 340
     check-cast p1, Ljava/lang/String;
 
     invoke-virtual {p0, p1}, Lcom/box/app/cfg/FormUi$openEditor$15;->invoke(Ljava/lang/String;)V
@@ -107,7 +107,7 @@
 .method public final invoke(Ljava/lang/String;)V
     .registers 3
 
-    .line 327
+    .line 342
     move-object v0, p1
 
     check-cast v0, Ljava/lang/CharSequence;
