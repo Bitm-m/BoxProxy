@@ -265,6 +265,54 @@ def fix_xl4_callback_receiver(text):
     return update_method(text, signature, transform)
 
 
+def fix_uu0_core_version_script_register(text):
+    """Pass the custom version script in uu0's String argument register."""
+    signature = 'invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;'
+    marker = "Match the root service's executable path"
+    qc0_load = 'sget-object v11, Lqc0;->a:Lqc0;'
+    string_call = ('invoke-static {v13, v7, v11, v2, v12}, '
+                   'Lly1;->s(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;'
+                   'Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;')
+
+    def transform(block):
+        lines = block.splitlines()
+        bad_strings = [i for i, line in enumerate(lines)
+                       if line.strip().startswith('const-string v5, "') and marker in line]
+        fixed_strings = [i for i, line in enumerate(lines)
+                         if line.strip().startswith('const-string v11, "') and marker in line]
+        qc0_loads = [i for i, line in enumerate(lines) if line.strip() == qc0_load]
+        calls = [i for i, line in enumerate(lines) if line.strip() == string_call]
+        if len(qc0_loads) != 1 or len(calls) != 1:
+            raise ValueError('uu0.invokeSuspend no longer has the reviewed qc0/string-builder hunk')
+        if len(bad_strings) == 1 and not fixed_strings:
+            string_index = bad_strings[0]
+            if not qc0_loads[0] < string_index < calls[0]:
+                raise ValueError('uu0 core-version string is outside the reviewed call sequence')
+            for line in lines[string_index + 1:calls[0]]:
+                value = line.strip()
+                if (value and not value.startswith(DEBUG_PREFIXES)
+                        and re.search(r'\bv5\b', value)):
+                    raise ValueError('uu0 v5 is used after the core-version literal assignment')
+                if (value and not value.startswith(DEBUG_PREFIXES)
+                        and re.search(r'\bv11\b', value)):
+                    raise ValueError('uu0 v11 is overwritten before the StringBuilder call')
+            lines[string_index] = lines[string_index].replace('const-string v5,',
+                                                               'const-string v11,', 1)
+            return '\n'.join(lines)
+        if (not bad_strings and len(fixed_strings) == 1
+                and qc0_loads[0] < fixed_strings[0] < calls[0]):
+            for line in lines[fixed_strings[0] + 1:calls[0]]:
+                value = line.strip()
+                if (value and not value.startswith(DEBUG_PREFIXES)
+                        and (re.search(r'\bv5\b', value)
+                             or re.search(r'\bv11\b', value))):
+                    raise ValueError('uu0 core-version String register is reused before its call')
+            return block
+        raise ValueError('uu0 core-version String register differs from both known forms')
+
+    return update_method(text, signature, transform)
+
+
 def public_string_ids(public_xml):
     resources = {}
     root = ET.parse(public_xml).getroot()
@@ -519,6 +567,7 @@ def repair(root):
         (root / 'smali/g65.smali', lambda text: fix_g65(text), 'g65 range-call field register'),
         (root / 'smali/r6.smali', lambda text: fix_r6_tar_matcher(text), 'r6 tar entry matcher'),
         (root / 'smali/xl4.smali', lambda text: fix_xl4_callback_receiver(text), 'xl4 callback receiver'),
+        (root / 'smali/uu0.smali', lambda text: fix_uu0_core_version_script_register(text), 'uu0 core-version script register'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )

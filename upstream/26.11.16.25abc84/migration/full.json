@@ -122,7 +122,7 @@
     "smali/ub3.smali": "e8041b8479c2899c82a9b1673c156e416bb7533526088b25ad683dac7f2c6384",
     "smali/uh1.smali": "0f6b030d7d942fc40e89a32d79eeb0de9b173f0d1f274d3f1eee8e70bb64fdec",
     "smali/uk4.smali": "ad0c4644ec61e1907598b1317f683023c2845918132564bd18de33b31a81217a",
-    "smali/uu0.smali": "d290e172c2c3bd798a659b843fcb64382ec25310add6aea863743e76ac134ad3",
+    "smali/uu0.smali": "2d8096f1e23ca088d675e33fadc39ea2371f26473c9ea24a97b5536b4adc4cbc",
     "smali/vx2.smali": "37694770a8a9467bd7bf205666a4cc47018eea25205d7af3f6f5ad2abbe20e5e",
     "smali/w61.smali": "a8a84df9d7bf69cd53bf17a0b5544801a84af25bcfa433592576ae559fdb835a",
     "smali/w75.smali": "8a5764199c02765284d4285e69cb3fede735c1d99fe17d664a81c05e76896259",
@@ -11312,11 +11312,15 @@
       {
         "name": "xl4 Compose callback receiver preservation",
         "detail": "Save the xl4 receiver in a dedicated local before p0 is reused for Compose keys; load the stored receiver for Lxl4.p."
+      },
+      {
+        "name": "uu0 coroutine core-version String register",
+        "detail": "Put the custom version-probing script in v11, the String argument consumed by Lly1.s; do not pass the qc0 singleton."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "656022968a598a1b3a488d87f392d004257cab84beb229571f494e27b4d05cc1",
+  "runtimeArchiveSha256": "4a69d62a6a10412509c6a300cbc4d1b0eb5a7fe0b898c1bada6cee231ed5ba85",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527144
+  "runtimeArchiveBytes": 20527145
 }

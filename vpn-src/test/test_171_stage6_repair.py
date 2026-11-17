@@ -160,6 +160,19 @@ class Stage6RepairTest(unittest.TestCase):
 .end method
 ''')
 
+        (root / 'smali/uu0.smali').write_text('''\
+.class public final Luu0;
+.method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 23
+    sget-object v11, Lqc0;->a:Lqc0;
+    const-string v5, "Match the root service's executable path (emulated storage may be noexec)."
+    const-string v12, "separator"
+    const-string v13, "core_path"
+    invoke-static {v13, v7, v11, v2, v12}, Lly1;->s(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    return-object v2
+.end method
+''')
+
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
 .method public final g(Ljava/lang/String;Lda1;)Ljava/lang/Object;
@@ -211,11 +224,14 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertEqual(len(reference_errors), 1)
             self.assertIn('xl4.smali', reference_errors[0])
             self.assertIn('aliases v11', reference_errors[0])
+            broken_uu0 = (root / 'smali/uu0.smali').read_text()
+            self.assertIn('const-string v5, "Match the root service', broken_uu0)
 
             changed = repair(root)
-            self.assertEqual(len(changed), 6)
+            self.assertEqual(len(changed), 7)
             self.assertIn('r6 tar entry matcher', changed)
             self.assertIn('xl4 callback receiver', changed)
+            self.assertIn('uu0 core-version script register', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -241,6 +257,12 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertNotIn('move-object/from16 p0, p0', xl4)
             self.assertIn('iget-object v7, v9, Lxl4;->p:Lw82;', xl4)
             self.assertEqual(reference_moves.scan_project(root)[1], [])
+
+            uu0 = (root / 'smali/uu0.smali').read_text()
+            self.assertIn('const-string v11, "Match the root service', uu0)
+            self.assertNotIn('const-string v5, "Match the root service', uu0)
+            self.assertLess(uu0.index('const-string v11, "Match the root service'),
+                            uu0.index('invoke-static {v13, v7, v11, v2, v12},'))
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)

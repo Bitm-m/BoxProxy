@@ -27,6 +27,7 @@ class Full171MigrationTest(unittest.TestCase):
         semantic_fixes = {item['name'] for item in plan['stage6Report']['semanticFixes']}
         self.assertIn('r6 tar-entry matching and nonzero branch offsets', semantic_fixes)
         self.assertIn('xl4 Compose callback receiver preservation', semantic_fixes)
+        self.assertIn('uu0 coroutine core-version String register', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -53,6 +54,16 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertIn('move-object/from16 v9, p0', xl4)
             self.assertIn('iget-object v7, v9, Lxl4;->p:Lw82;', xl4)
             self.assertNotIn('move-object/from16 p0, p0', xl4)
+
+            uu0 = (project / 'smali/uu0.smali').read_text()
+            script_lines = [line.strip() for line in uu0.splitlines()
+                            if "Match the root service's executable path" in line]
+            self.assertEqual(len(script_lines), 1)
+            self.assertTrue(script_lines[0].startswith('const-string v11, "'))
+            self.assertIn(
+                'invoke-static {v13, v7, v11, v2, v12}, '
+                'Lly1;->s(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;'
+                'Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;', uu0)
 
             r6 = (project / 'smali/r6.smali').read_text()
             self.assertIn('if-nez v6, :boxproxy_match', r6)
