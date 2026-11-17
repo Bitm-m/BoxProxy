@@ -882,7 +882,7 @@ def adapt_cfg_icon_builder(custom_root, out_root):
 
 
 def validate_cfg_nav_composable_lambda_target(new_root):
-    """Check the pinned 171 wrapper factory and reserve the custom group key."""
+    """Check the 171 wrapper, Composer guards, callback types, and group key."""
     helper_path = new_root / 'smali/tj.smali'
     if not helper_path.is_file():
         raise ValueError('171 Compose lambda helper is missing: ' + str(helper_path))
@@ -897,6 +897,24 @@ def validate_cfg_nav_composable_lambda_target(new_root):
             or 'const/4 v1, 0x1' not in factory
             or 'Lla2;->k0(Ljava/lang/Object;)V' not in factory):
         raise ValueError('171 Ltj.J no longer creates and remembers a tracked Lyz0 wrapper')
+
+    composer_path = new_root / 'smali/la2.smali'
+    if not composer_path.is_file():
+        raise ValueError('171 Composer class Lla2 is missing')
+    composer = composer_path.read_text(errors='replace')
+    if composer.count('.class public final Lla2;') != 1:
+        raise ValueError('171 Composer class file does not declare Lla2')
+    for method in ('.method public final S(IZ)Z', '.method public final V()V'):
+        if composer.count(method) != 1:
+            raise ValueError(f'171 Composer method {method} is missing or ambiguous')
+
+    callback_path = new_root / 'smali/l92.smali'
+    if not callback_path.is_file():
+        raise ValueError('171 function interface Ll92 is missing')
+    callback = callback_path.read_text(errors='replace')
+    if (callback.count('.class public interface abstract Ll92;') != 1
+            or callback.count('.implements Lt92;') != 1):
+        raise ValueError('171 Ll92 callback interface is not a subtype of Lt92')
 
     key = int(CFG_ICON_LAMBDA_KEY, 0)
     if not -(1 << 31) <= key < (1 << 31):
@@ -928,21 +946,150 @@ def validate_cfg_nav_composable_lambda_target(new_root):
                     f'CfgNav lambda key {CFG_ICON_LAMBDA_KEY} collides with a '
                     f'171 integer constant at {smali}:{line_no}'
                 )
-    return (f'171 Ltj.J factory verified; custom key {CFG_ICON_LAMBDA_KEY} '
-            'is unused by the pinned 171 Smali tree')
+    return (f'171 Ltj.J factory, Lla2.S/V Composer methods, and '
+            f'Ll92-to-Lt92 callback interface verified; custom key '
+            f'{CFG_ICON_LAMBDA_KEY} is unused by the pinned 171 Smali tree')
+
+
+def adapt_cfg_nav_composer_api(text):
+    """Map CfgNav's legacy Composer alias and guard methods to version 171."""
+    old_signature = (
+        '.method private static e(Lt72;Ljava/lang/Object;Landroid/content/Context;'
+        'ILjava/lang/String;F)V'
+    )
+    new_signature = (
+        '.method private static e(Lla2;Ljava/lang/Object;Landroid/content/Context;'
+        'ILjava/lang/String;F)V'
+    )
+    old_call = (
+        'invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e('
+        'Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V'
+    )
+    new_call = (
+        'invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e('
+        'Lla2;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V'
+    )
+    legacy = (
+        text.count('Lt72;') == 8
+        and text.count(old_signature) == 1
+        and text.count('check-cast v6, Lt72;') == 1
+        and text.count('invoke-virtual {v6, v3, v4}, Lt72;->T(IZ)Z') == 1
+        and text.count('invoke-virtual {v6}, Lt72;->W()V') == 1
+        and text.count(old_call) == 3
+    )
+    fixed = (
+        'Lt72;' not in text
+        and text.count(new_signature) == 1
+        and text.count('check-cast v6, Lla2;') == 1
+        and text.count('invoke-virtual {v6, v3, v4}, Lla2;->S(IZ)Z') == 1
+        and text.count('invoke-virtual {v6}, Lla2;->V()V') == 1
+        and text.count(new_call) == 3
+    )
+    if fixed:
+        return text, False
+    if not legacy:
+        raise ValueError('CfgNav Composer references differ from both reviewed 139 and 171 forms')
+
+    text = text.replace('Lt72;', 'Lla2;')
+    text = text.replace('Lla2;->T(IZ)Z', 'Lla2;->S(IZ)Z')
+    text = text.replace('Lla2;->W()V', 'Lla2;->V()V')
+    text = text.replace('Lla2;->T / W', 'Lla2;->S / V')
+    if ('Lt72;' in text or text.count(new_signature) != 1
+            or text.count('check-cast v6, Lla2;') != 1
+            or text.count('invoke-virtual {v6, v3, v4}, Lla2;->S(IZ)Z') != 1
+            or text.count('invoke-virtual {v6}, Lla2;->V()V') != 1
+            or text.count(new_call) != 3):
+        raise ValueError('CfgNav Composer API mapping did not produce the reviewed 171 form')
+    return text, True
+
+
+def validate_cfg_nav_composable_lambda_register_flow(text):
+    """Prove the factory arguments and wrapped h-call keep their DEX types."""
+    call = ('invoke-static/range {v4 .. v16}, '
+            'Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V')
+    factory_call = 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;'
+    methods = [match.group(0) for match in METHOD_RE.finditer(text)
+               if call in match.group(0)]
+    if len(methods) != 1:
+        raise ValueError(f'expected one CfgNav.e -> Lhq.h call, found {len(methods)}')
+    lines = methods[0].splitlines()
+    expected_header = (
+        '.method private static e(Lla2;Ljava/lang/Object;Landroid/content/Context;'
+        'ILjava/lang/String;F)V'
+    )
+    if not lines or lines[0].strip() != expected_header:
+        raise ValueError('CfgNav lambda adapter must run in the Lla2-typed CfgNav.e method')
+    locals_matches = [re.match(r'^\s*\.locals\s+(\d+)\s*$', line)
+                      for line in lines]
+    locals_matches = [match for match in locals_matches if match]
+    if len(locals_matches) != 1 or int(locals_matches[0].group(1)) < 17:
+        raise ValueError('CfgNav.e does not reserve the reviewed v13/v14 adapter registers')
+
+    instructions = [line.strip() for line in lines
+                    if line.strip() and not line.strip().startswith(('.', '#', ':'))]
+    expected = (
+        'new-instance v13, Lcom/box/app/cfg/CfgIcon;',
+        'invoke-direct {v13, v2}, Lcom/box/app/cfg/CfgIcon;-><init>(I)V',
+        'move-object/from16 v14, p0',
+        f'const v3, {CFG_ICON_LAMBDA_KEY}',
+        factory_call,
+        'move-result-object v13',
+        call,
+    )
+    positions = []
+    for instruction in expected:
+        matches = [i for i, line in enumerate(instructions) if line == instruction]
+        if len(matches) != 1:
+            raise ValueError(f'CfgNav lambda adapter instruction is missing or ambiguous: {instruction}')
+        positions.append(matches[0])
+    if positions != sorted(positions):
+        raise ValueError('CfgNav lambda adapter instructions are out of type-safe order')
+
+    def writes_register(instruction, register):
+        match = re.match(r'^([A-Za-z][A-Za-z0-9_/-]*)\s+(v\d+)(?:,|\s|$)', instruction)
+        if not match or match.group(2) != register:
+            return False
+        opcode = match.group(1)
+        return not opcode.startswith((
+            'if-', 'invoke-', 'iput', 'sput', 'aput', 'return', 'throw',
+            'monitor-', 'goto', 'packed-switch', 'sparse-switch', 'fill-array-data',
+        ))
+
+    ctor_index, composer_index, factory_index = positions[1], positions[2], positions[4]
+    if any(writes_register(line, 'v13')
+           for line in instructions[ctor_index + 1:factory_index]):
+        raise ValueError('CfgIcon callback register v13 is overwritten before Ltj.J')
+    if any(writes_register(line, 'v14')
+           for line in instructions[composer_index + 1:factory_index]):
+        raise ValueError('Lla2 Composer register v14 is overwritten before Ltj.J')
+    if positions[5] != factory_index + 1 or positions[6] != positions[5] + 1:
+        raise ValueError('Ltj.J result is not immediately passed to the Lhq.h Composable slot')
+    return 'CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified'
 
 
 def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
     """Use 171's tracked ComposableLambda factory for the custom icon callback."""
     target_root = target_root or out_root
     validation = validate_cfg_nav_composable_lambda_target(target_root)
+    icon_path = out_root / 'smali/com/box/app/cfg/CfgIcon.smali'
+    if not icon_path.is_file():
+        raise ValueError('mapped CfgIcon callback class is missing')
+    icon_text = icon_path.read_text(errors='replace')
+    if icon_text.count('.implements Ll92;') != 1 or 'Lt62;' in icon_text:
+        raise ValueError('CfgIcon does not implement the mapped 171 Ll92 callback interface')
+
     path = out_root / 'smali/com/box/app/cfg/CfgNav.smali'
     text = path.read_text(errors='replace')
+    text, composer_api_changed = adapt_cfg_nav_composer_api(text)
     call = ('invoke-static/range {v4 .. v16}, '
             'Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V')
     factory_call = 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;'
     if text.count(factory_call) == 1 and call in text:
-        return 'already wraps CfgIcon with Ltj.J; ' + validation
+        flow = validate_cfg_nav_composable_lambda_register_flow(text)
+        if composer_api_changed:
+            path.write_text(text)
+        return ('already wraps CfgIcon with Ltj.J and uses the 171 Lla2 Composer API; '
+                + flow + '; ' + validation)
     matches = [match for match in METHOD_RE.finditer(text) if call in match.group(0)]
     if len(matches) != 1:
         raise ValueError(f'expected one mapped CfgNav -> Lhq.h call, found {len(matches)}')
@@ -975,8 +1122,11 @@ def adapt_cfg_nav_composable_lambda(out_root, target_root=None):
     new_block = '\n'.join(lines)
     if text.count(block) != 1:
         raise ValueError('CfgNav.e method block is missing or ambiguous')
-    path.write_text(text.replace(block, new_block, 1))
-    return ('wrapped CfgIcon with 171 Ltj.J; ' + validation)
+    updated = text.replace(block, new_block, 1)
+    flow = validate_cfg_nav_composable_lambda_register_flow(updated)
+    path.write_text(updated)
+    return ('wrapped CfgIcon with 171 Ltj.J and mapped the Composer API to Lla2/S/V; '
+            + flow + '; ' + validation)
 
 
 def main():

@@ -109,9 +109,27 @@ class Full171MigrationTest(unittest.TestCase):
             self.assertIn('if-ltz v6, :cond_7', r6)
 
             cfg_nav = (project / 'smali/com/box/app/cfg/CfgNav.smali').read_text()
-            self.assertIn(
-                'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;',
-                cfg_nav)
+            self.assertNotIn('Lt72;', cfg_nav)
+            self.assertIn('.method private static e(Lla2;', cfg_nav)
+            self.assertIn('check-cast v6, Lla2;', cfg_nav)
+            self.assertIn('Lla2;->S(IZ)Z', cfg_nav)
+            self.assertIn('Lla2;->V()V', cfg_nav)
+            self.assertEqual(cfg_nav.count('CfgNav;->e(Lla2;'), 3)
+            cfg_nav_e = cfg_nav.split('.method private static e(Lla2;', 1)[1].split(
+                '.end method', 1)[0]
+            composer_load = 'move-object/from16 v14, p0'
+            lambda_factory = 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;'
+            self.assertEqual(cfg_nav_e.count(composer_load), 1)
+            self.assertLess(cfg_nav_e.index(composer_load), cfg_nav_e.index(lambda_factory))
+            self.assertIn(lambda_factory, cfg_nav_e)
+            cfg_icon = (project / 'smali/com/box/app/cfg/CfgIcon.smali').read_text()
+            self.assertIn('.implements Ll92;', cfg_icon)
+            callback = (project / 'smali/l92.smali').read_text()
+            self.assertIn('.implements Lt92;', callback)
+            composer = (project / 'smali/la2.smali').read_text()
+            self.assertIn('.class public final Lla2;', composer)
+            self.assertIn('.method public final S(IZ)Z', composer)
+            self.assertIn('.method public final V()V', composer)
 
             pd1 = (project / 'smali/pd1.smali').read_text()
             pd1_method = pd1.split('.method public final g(', 1)[1].split('.end method', 1)[0]

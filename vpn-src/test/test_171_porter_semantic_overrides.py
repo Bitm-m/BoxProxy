@@ -120,6 +120,20 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
     return-object v0
 .end method
 ''')
+        composer = root / 'smali/la2.smali'
+        composer.write_text('''\
+.class public final Lla2;
+.method public final S(IZ)Z
+.end method
+.method public final V()V
+.end method
+''')
+        callback = root / 'smali/l92.smali'
+        callback.write_text('''\
+.class public interface abstract Ll92;
+.super Ljava/lang/Object;
+.implements Lt92;
+''')
         return path
 
     def test_cfg_nav_lambda_key_is_available_in_pinned_171(self):
@@ -128,7 +142,9 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
             target = root / '171'
             self.write_compose_lambda_target(target)
             detail = porter.validate_cfg_nav_composable_lambda_target(target)
-            self.assertIn('171 Ltj.J factory verified', detail)
+            self.assertIn('171 Ltj.J factory', detail)
+            self.assertIn('Lla2.S/V Composer methods', detail)
+            self.assertIn('Ll92-to-Lt92 callback interface', detail)
             self.assertIn(porter.CFG_ICON_LAMBDA_KEY, detail)
 
             collision = target / 'smali/collision.smali'
@@ -141,16 +157,50 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
             root = Path(temporary)
             target = root / '171'
             self.write_compose_lambda_target(target)
+            icon = root / 'smali/com/box/app/cfg/CfgIcon.smali'
+            icon.parent.mkdir(parents=True)
+            icon.write_text('''.class public final Lcom/box/app/cfg/CfgIcon;\n.implements Ll92;\n''')
             path = root / 'smali/com/box/app/cfg/CfgNav.smali'
-            path.parent.mkdir(parents=True)
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('''\
 .class public final Lcom/box/app/cfg/CfgNav;
-.method private static e()V
+# Guard copied from the legacy Composer API (Lt72;->T / W).
+.method private static e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
     .locals 20
+    new-instance v13, Lcom/box/app/cfg/CfgIcon;
+    const/4 v2, 0x0
+    invoke-direct {v13, v2}, Lcom/box/app/cfg/CfgIcon;-><init>(I)V
+    move-object/from16 v14, p0
+    const/4 v15, 0x0
+    const/16 v16, 0xfc
     invoke-static/range {v4 .. v16}, Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V
     return-void
 .end method
+.method public final invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 12
+    check-cast v6, Lt72;
+    invoke-virtual {v6, v3, v4}, Lt72;->T(IZ)Z
+    invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
+    invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
+    invoke-static/range {v6 .. v11}, Lcom/box/app/cfg/CfgNav;->e(Lt72;Ljava/lang/Object;Landroid/content/Context;ILjava/lang/String;F)V
+    invoke-virtual {v6}, Lt72;->W()V
+    return-object v0
+.end method
 ''')
+
+            legacy_text = path.read_text()
+            mapped, changed = porter.adapt_cfg_nav_composer_api(legacy_text)
+            self.assertTrue(changed)
+            self.assertNotIn('Lt72;', mapped)
+            self.assertIn('.method private static e(Lla2;', mapped)
+            self.assertIn('Lla2;->S(IZ)Z', mapped)
+            self.assertIn('Lla2;->V()V', mapped)
+            mapped_again, changed_again = porter.adapt_cfg_nav_composer_api(mapped)
+            self.assertFalse(changed_again)
+            self.assertEqual(mapped_again, mapped)
+            unexpected = legacy_text.replace('Lt72;->T(IZ)Z', 'Lt72;->R(IZ)Z')
+            with self.assertRaisesRegex(ValueError, 'differ from both reviewed'):
+                porter.adapt_cfg_nav_composer_api(unexpected)
 
             detail = porter.adapt_cfg_nav_composable_lambda(root, target)
             text = path.read_text()
@@ -160,12 +210,31 @@ iget-object v3, v3, Lhw;->a:Ljava/util/ArrayList;
                 'invoke-static {v3, v13, v14}, Ltj;->J(ILt92;Lla2;)Lyz0;', text)
             self.assertIn('move-result-object v13', text)
             self.assertNotIn('new-instance v17, Lyz0;', text)
+            self.assertNotIn('Lt72;', text)
+            self.assertIn('.method private static e(Lla2;', text)
+            self.assertIn('check-cast v6, Lla2;', text)
+            self.assertIn('Lla2;->S(IZ)Z', text)
+            self.assertIn('Lla2;->V()V', text)
+            self.assertEqual(text.count('CfgNav;->e(Lla2;'), 3)
+            cfg_nav_e = text.split('.method private static e(Lla2;', 1)[1].split(
+                '.end method', 1)[0]
+            self.assertLess(
+                cfg_nav_e.index('move-object/from16 v14, p0'),
+                cfg_nav_e.index('invoke-static {v3, v13, v14}, Ltj;->J('))
             self.assertIn('wrapped CfgIcon with 171 Ltj.J', detail)
+            self.assertIn('mapped the Composer API to Lla2/S/V', detail)
+            self.assertIn('factory arguments and Lyz0 result register flow verified', detail)
             self.assertIn('unused by the pinned 171 Smali tree', detail)
             self.assertEqual(
                 porter.adapt_cfg_nav_composable_lambda(root, target),
-                'already wraps CfgIcon with Ltj.J; ' +
+                'already wraps CfgIcon with Ltj.J and uses the 171 Lla2 Composer API; '
+                'CfgIcon/Lla2 factory arguments and Lyz0 result register flow verified; ' +
                 porter.validate_cfg_nav_composable_lambda_target(target))
+            bad_flow = path.read_text().replace(
+                'move-object/from16 v14, p0', 'move-object/from16 v14, p1')
+            path.write_text(bad_flow)
+            with self.assertRaisesRegex(ValueError, 'adapter instruction is missing or ambiguous'):
+                porter.adapt_cfg_nav_composable_lambda(root, target)
 
 
 if __name__ == '__main__':

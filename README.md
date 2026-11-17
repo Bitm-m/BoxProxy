@@ -23,9 +23,7 @@ PROJECT_DIR=.tools/local-171/decompiled \
   OUT_DIR=.tools/local-171-build bash scripts/build.sh
 ```
 
-本地已完成回编译、包完整性检查与 `zu5.invoke` DEX 寄存器检查的 APK 是 `.tools/build-171/BoxProxy-26.11.16.25abc84-unsigned.apk`（versionCode 171；SHA-256
-`1d5c43a3420d0b66dcf376ca5f8a5d245174833ddc7bffeb4cf3f01b313651e6`）。它包含本次 `zu5.invoke` VerifyError 修复，但仍是**未对齐、未签名**的本地回编译产物，
-不等同于 GitHub Actions 的 APK artifact，也尚未在 Redmi 真机上验证。
+本地已完成 Apktool 回编译，并从生成的 APK 重新反编译 `classes.dex` 验证 `CfgNav.e` 的 `Lla2` Composer 接收器、`S`/`V` guard、回调接口类型链及全树引用/分支/对象寄存器检查。该 APK 为 `.tools/BoxProxy-26.11.16.25abc84-cfgnav-fixed-unsigned.apk`（versionCode 171；APK SHA-256 `f50ea39ea808325bbe6ee25d1d542a5c8ef6e2320d1336bff759219836313a60`；`classes.dex` SHA-256 `8a6679a886b6ebefeba729d690cf99c62652f583ba7ebeba95e13021263b8563`）。它也包含已修复的 `zu5.invoke`，但仍是**未对齐、未签名**的本地回编译产物，不等同于 GitHub Actions 的签名 APK，也尚未在 Redmi 真机上验证。
 
 ## CI 产物与设备验证
 
