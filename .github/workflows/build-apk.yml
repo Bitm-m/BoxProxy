@@ -101,6 +101,9 @@ jobs:
       - name: Reject zero-offset Smali branches
         run: python3 scripts/check_smali_branch_offsets.py "$PROJECT_DIR"
 
+      - name: Reject verifier-unsafe object register moves
+        run: python3 scripts/check_smali_reference_moves.py "$PROJECT_DIR"
+
       - name: Build unsigned APK with apktool
         shell: bash
         run: |

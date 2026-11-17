@@ -3,13 +3,15 @@
 
 The stage-6 smali porter works in a disposable tree. This deterministic post-pass
 protects sensitive R8/API deltas where text/register alignment is insufficient:
-the VPN enum, core registry, range-call argument, coroutine states, and the
-custom tar-entry matcher. It never edits the source decompile.
+the VPN enum, core registry, range-call argument, coroutine states, tar-entry
+matcher, and callback receiver preservation. It never edits the source decompile.
 """
 import argparse
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import check_smali_reference_moves as reference_moves
 
 METHOD_RE = re.compile(r"^\.method[^\n]*$.*?^\.end method[ \t]*$", re.M | re.S)
 LABEL_RE = re.compile(r"^(:\S+)\s*$")
@@ -190,6 +192,75 @@ def fix_r6_tar_matcher(text):
         start = compare_index + 1
         lines[start:end] = replacement
         return '\n'.join(lines)
+
+    return update_method(text, signature, transform)
+
+
+def fix_xl4_callback_receiver(text):
+    """Preserve xl4's receiver before its Compose-key register is reused."""
+    signature = 'k(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;'
+    bad_copy = 'move-object/from16 p0, p0'
+    bad_field = 'iget-object v7, p0, Lxl4;->p:Lw82;'
+    receiver_copy = 'move-object/from16 v9, p0'
+    fixed_field = 'iget-object v7, v9, Lxl4;->p:Lw82;'
+
+    def check_v9_scratch(lines, receiver_index, field_index):
+        resets = [i for i, line in enumerate(lines)
+                  if line.strip() == 'const/4 v9, 0x0']
+        calls = [i for i, line in enumerate(lines)
+                 if re.match(r'^\s*invoke-static/range \{v0 \.\. v9\}, ', line)]
+        if (len(resets) != 2 or len(calls) != 2
+                or not (receiver_index < resets[0] < calls[0] < field_index
+                        < resets[1] < calls[1])):
+            raise ValueError('xl4.k v9 is not free for the saved receiver on the reviewed callback path')
+        allowed = {receiver_index, field_index, *resets, *calls}
+        for index, line in enumerate(lines):
+            value = line.strip()
+            if (index not in allowed and value
+                    and not value.startswith(DEBUG_PREFIXES)
+                    and not value.startswith('#')
+                    and re.search(r'\bv9\b', value)):
+                raise ValueError('xl4.k v9 has an unreviewed use: ' + value)
+
+    def transform(block):
+        lines = block.splitlines()
+        locals_hits = [i for i, line in enumerate(lines)
+                       if re.match(r'^\s*\.locals\s+\d+\s*$', line)]
+        if len(locals_hits) != 1:
+            raise ValueError('xl4.k must have exactly one .locals directive')
+        locals_index = locals_hits[0]
+        local_count = int(re.match(r'^\s*\.locals\s+(\d+)', lines[locals_index])[1])
+        bad_copies = [i for i, line in enumerate(lines) if line.strip() == bad_copy]
+        saved_receivers = [i for i, line in enumerate(lines) if line.strip() == receiver_copy]
+        fixed_fields = [i for i, line in enumerate(lines) if line.strip() == fixed_field]
+
+        if bad_copies:
+            if (len(bad_copies) != 1 or saved_receivers or fixed_fields
+                    or local_count != 11):
+                raise ValueError('xl4.k receiver hunk differs from the known broken form')
+            if re.search(r'\bv11\b', block):
+                raise ValueError('xl4.k local v11 is already in use; cannot save the receiver safely')
+            bad_field_index = bad_copies[0] + 1
+            while (bad_field_index < len(lines)
+                   and (not lines[bad_field_index].strip()
+                        or lines[bad_field_index].lstrip().startswith(DEBUG_PREFIXES)
+                        or lines[bad_field_index].lstrip().startswith('#'))):
+                bad_field_index += 1
+            if bad_field_index >= len(lines) or lines[bad_field_index].strip() != bad_field:
+                raise ValueError('xl4.k self-copy is not followed by the reviewed receiver field load')
+            indent = re.match(r'^\s*', lines[locals_index]).group(0)
+            lines.insert(locals_index + 1, indent + receiver_copy)
+            lines[bad_field_index + 1] = (
+                re.match(r'^\s*', lines[bad_field_index + 1]).group(0) + fixed_field)
+            del lines[bad_copies[0] + 1]
+            check_v9_scratch(lines, locals_index + 1, bad_field_index)
+            return '\n'.join(lines)
+
+        if (local_count == 11 and len(saved_receivers) == 1 and len(fixed_fields) == 1
+                and saved_receivers[0] < fixed_fields[0]):
+            check_v9_scratch(lines, saved_receivers[0], fixed_fields[0])
+            return block
+        raise ValueError('xl4.k receiver hunk differs from both the known broken and repaired forms')
 
     return update_method(text, signature, transform)
 
@@ -447,6 +518,7 @@ def repair(root):
         (root / 'smali/ne5.smali', lambda text: fix_ne5(text), 'ne5 VPN enum register'),
         (root / 'smali/g65.smali', lambda text: fix_g65(text), 'g65 range-call field register'),
         (root / 'smali/r6.smali', lambda text: fix_r6_tar_matcher(text), 'r6 tar entry matcher'),
+        (root / 'smali/xl4.smali', lambda text: fix_xl4_callback_receiver(text), 'xl4 callback receiver'),
         (root / 'smali/r57.smali', lambda text: fix_r57(text, ids), 'r57 nine-entry core registry'),
         (root / 'smali/pd1.smali', lambda text: fix_pd1(text), 'pd1 coroutine dispatch labels'),
     )
@@ -461,6 +533,9 @@ def repair(root):
     errors = duplicate_labels(root, replacements)
     if errors:
         raise ValueError('duplicate executable smali labels remain: ' + '; '.join(errors[:10]))
+    _, errors = reference_moves.scan_project(root, replacements)
+    if errors:
+        raise ValueError('verifier-unsafe object register moves remain: ' + '; '.join(errors[:10]))
 
     # Stage each replacement beside its source, then atomically publish all edits
     # only after every structural check has passed.

@@ -130,7 +130,7 @@
     "smali/x51.smali": "182dff5ffdd2fdc33509882a93d533369a23d38a879fe236670cb8f05d4d02e9",
     "smali/x61.smali": "3bb0288161b19819a38323491ba4301afb5e2af3d7c5a6459c280e10e8513fe9",
     "smali/xb0.smali": "7c29065e4bd8b1fca4372c4e52a8009b287d64ea01e8a3da133f6b7184eefc3a",
-    "smali/xl4.smali": "bc22b8a070e922ce5aafeefc4f74096c22e007898c81968355c0a97b3f27faa1",
+    "smali/xl4.smali": "e80cdaed09eb9d57e12ec6aa4f11ae61f0241688428b7e200b13fc8946407efa",
     "smali/xv5.smali": "7e4ce41e500e9cc242439c6dc7aee11f60bf7eeb32eb9a6b95ed938eb6024bb1",
     "smali/y75.smali": "353b0242f8bbc7afb590d4797e12a837b7f929225e2a69f2935aa108b470ce15",
     "smali/yb1.smali": "2ad9376a8d2d8f2a8fc3ff23f093276c3579b79fcdee9c14f81611bb880fe358",
@@ -11308,11 +11308,15 @@
       {
         "name": "r6 tar-entry matching and nonzero branch offsets",
         "detail": "Preserve exact-name matches; accept prefix-dash split entries only at >= 1 MiB; use a nonzero branch target."
+      },
+      {
+        "name": "xl4 Compose callback receiver preservation",
+        "detail": "Save the xl4 receiver in a dedicated local before p0 is reused for Compose keys; load the stored receiver for Lxl4.p."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "fc9e6aed821817bf0a9ee18aeb3085dbf89677426eadd39c8aa49834012892d8",
+  "runtimeArchiveSha256": "656022968a598a1b3a488d87f392d004257cab84beb229571f494e27b4d05cc1",
   "runtimeArchiveFileCount": 1429,
   "runtimeArchiveBytes": 20527144
 }

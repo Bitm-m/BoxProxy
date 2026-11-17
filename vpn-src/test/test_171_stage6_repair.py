@@ -7,7 +7,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import check_smali_branch_offsets as branch_offsets  # noqa: E402
+import check_smali_reference_moves as reference_moves  # noqa: E402
 from repair_171_stage6_candidate import repair  # noqa: E402
+
+
+class ReferenceMoveCheckTest(unittest.TestCase):
+    def test_resolves_parameter_register_aliases(self):
+        method = '''\
+.method public final callback(Ljava/lang/Object;)V
+    .locals 11
+    move-object/from16 v11, p0
+.end method
+'''
+        errors = reference_moves.scan_text(method)
+        self.assertEqual(len(errors), 1)
+        self.assertIn('aliases v11', errors[0])
+
+        reserved = method.replace('.locals 11', '.locals 12')
+        self.assertEqual(reference_moves.scan_text(reserved), [])
 
 
 class Stage6RepairTest(unittest.TestCase):
@@ -124,6 +141,24 @@ class Stage6RepairTest(unittest.TestCase):
     return-void
 .end method
 ''')
+        (root / 'smali/xl4.smali').write_text('''\
+.class public final Lxl4;
+.method public final k(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .locals 11
+    if-eqz p1, :cond_a
+    const/4 v9, 0x0
+    invoke-static/range {v0 .. v9}, Lxl4;->first()V
+    goto :done
+    :cond_a
+    const/16 p0, 0xf
+    move-object/from16 p0, p0
+    iget-object v7, p0, Lxl4;->p:Lw82;
+    const/4 v9, 0x0
+    invoke-static/range {v0 .. v9}, Lxl4;->second()V
+    :done
+    return-object v7
+.end method
+''')
 
         (root / 'smali/pd1.smali').write_text('''\
 .class public final Lpd1;
@@ -172,10 +207,15 @@ class Stage6RepairTest(unittest.TestCase):
             before_errors = branch_offsets.scan_project(root)[1]
             self.assertEqual(len(before_errors), 1)
             self.assertIn('r6.smali', before_errors[0])
+            reference_errors = reference_moves.scan_project(root)[1]
+            self.assertEqual(len(reference_errors), 1)
+            self.assertIn('xl4.smali', reference_errors[0])
+            self.assertIn('aliases v11', reference_errors[0])
 
             changed = repair(root)
-            self.assertEqual(len(changed), 5)
+            self.assertEqual(len(changed), 6)
             self.assertIn('r6 tar entry matcher', changed)
+            self.assertIn('xl4 callback receiver', changed)
 
             ne5 = (root / 'smali/ne5.smali').read_text()
             self.assertIn('.locals 10', ne5)
@@ -192,6 +232,15 @@ class Stage6RepairTest(unittest.TestCase):
             self.assertIn('if-eqz v6, :cond_7', r6)
             self.assertIn('if-ltz v6, :cond_7', r6)
             self.assertEqual(branch_offsets.scan_project(root)[1], [])
+
+            xl4 = (root / 'smali/xl4.smali').read_text()
+            self.assertIn('.locals 11', xl4)
+            self.assertIn('move-object/from16 v9, p0', xl4)
+            self.assertLess(xl4.index('move-object/from16 v9, p0'),
+                            xl4.index('const/16 p0, 0xf'))
+            self.assertNotIn('move-object/from16 p0, p0', xl4)
+            self.assertIn('iget-object v7, v9, Lxl4;->p:Lw82;', xl4)
+            self.assertEqual(reference_moves.scan_project(root)[1], [])
 
             r57 = (root / 'smali/r57.smali').read_text()
             self.assertIn('filled-new-array/range {v0 .. v8}, [Ljava/lang/String;', r57)
