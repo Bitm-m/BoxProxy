@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -18,6 +19,103 @@ SNAPSHOT = ROOT / 'upstream/26.11.16.25abc84'
 
 
 class Full171MigrationTest(unittest.TestCase):
+    @staticmethod
+    def containing_method(text, reference):
+        reference_at = text.index(reference)
+        method_start = text.rfind('.method ', 0, reference_at)
+        method_end = text.index('.end method', reference_at)
+        return text[method_start:method_end]
+
+    def assert_builtin_config_copy_contract(self, project):
+        mihomo_path = project / 'assets/box/mihomo/mianliu.yaml'
+        mihomo = mihomo_path.read_text()
+        self.assertTrue(mihomo.strip())
+        self.assertIn('mixed-port: 7890', mihomo)
+        self.assertIn('proxy-groups:', mihomo)
+        self.assertIn('rules:', mihomo)
+
+        singbox_path = project / 'assets/box/sing-box/mianliu.json'
+        singbox = json.loads(singbox_path.read_text())
+        self.assertTrue(singbox['inbounds'])
+        self.assertTrue(singbox['outbounds'])
+        self.assertTrue(any(item.get('tag') == '钉钉直连'
+                            for item in singbox['providers']))
+
+        old_copy = 'Lcs;->u(Ljava/io/InputStream;Ljava/io/OutputStream;)J'
+        copy = 'Loq;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J'
+        restore = (project / 'smali/com/box/app/vpn/RestoreCfg.smali').read_text()
+        seed = (project / 'smali/com/box/app/vpn/VpnSeed.smali').read_text()
+        self.assertNotIn(old_copy, restore)
+        self.assertNotIn(old_copy, seed)
+        self.assertEqual(restore.count(copy), 1)
+        self.assertEqual(seed.count(copy), 2)
+        for asset in ('box/mihomo/mianliu.yaml', 'box/sing-box/mianliu.json'):
+            self.assertIn(asset, restore)
+            self.assertIn(asset, seed)
+
+        helper = (project / 'smali/oq.smali').read_text()
+        self.assertIn(
+            '.method public static D(Ljava/io/InputStream;Ljava/io/OutputStream;)J',
+            helper)
+
+        seed_method = seed.split('.method private static seed(', 1)[1].split(
+            '.end method', 1)[0]
+        self.assertIn('Ljava/io/File;->exists()Z', seed_method)
+        self.assertIn('Ljava/io/File;->length()J', seed_method)
+        self.assertLess(seed_method.index('Ljava/io/File;->length()J'),
+                        seed_method.index('if-nez v2, :cond_done'))
+        self.assertIn('goto :cond_copy', seed_method)
+        self.assertEqual(seed_method.count('if-nez v2, :cond_done'), 2)
+
+    def assert_update_core_dingtalk_choices(self, project):
+        expected_cores = [
+            'mihomo', 'mihomo_smart', 'mihomo_dingtalk', 'sing-box',
+            'sing-box_ref1nd', 'sing-box_dingtalk', 'xray', 'v2fly', 'hysteria',
+        ]
+        expected_ids = [
+            '0x7f0f034a', '0x7f0f034b', '0x7f0f0554', '0x7f0f034c',
+            '0x7f0f034d', '0x7f0f0555', '0x7f0f0350', '0x7f0f034f', '0x7f0f0349',
+        ]
+        r57 = (project / 'smali/r57.smali').read_text()
+        self.assertEqual(re.findall(r'^\s*const-string v\d+, "([^"]+)"$', r57, re.M),
+                         expected_cores)
+        self.assertEqual(re.findall(r'^\s*const v\d+, (0x7f0f[0-9a-f]{4})$', r57, re.M),
+                         expected_ids)
+
+        public = ET.parse(project / 'res/values/public.xml').getroot()
+        resource_names = {item.attrib['id']: item.attrib['name']
+                          for item in public if item.tag == 'public'
+                          and item.attrib.get('type') == 'string'}
+        expected_labels = [
+            'proxy_core_mihomo', 'proxy_core_mihomo_smart',
+            'proxy_core_mihomo_dingtalk', 'proxy_core_sing_box',
+            'proxy_core_sing_box_ref1nd', 'proxy_core_sing_box_dingtalk',
+            'proxy_core_xray', 'proxy_core_v2fly', 'proxy_core_hysteria',
+        ]
+        self.assertEqual([resource_names[resource_id] for resource_id in expected_ids],
+                         expected_labels)
+        strings = ET.parse(project / 'res/values/strings.xml').getroot()
+        localized = {item.attrib['name']: ''.join(item.itertext())
+                     for item in strings if item.tag == 'string'}
+        self.assertIn('钉钉直连', localized['proxy_core_mihomo_dingtalk'])
+        self.assertIn('钉钉直连', localized['proxy_core_sing_box_dingtalk'])
+
+        ba7 = (project / 'smali/ba7.smali').read_text()
+        ui = self.containing_method(ba7, 'Lr57;->b:Ljava/util/List;')
+        self.assertIn('0x7f0f051c', ui)  # tools_update_core_title
+        self.assertIn('Lr57;->a:Ljava/util/List;', ui)
+        self.assertIn('Lr57;->b:Ljava/util/List;', ui)
+
+        p57 = (project / 'smali/p57.smali').read_text()
+        self.assertIn('Lr57;->a:Ljava/util/List;', p57)
+        self.assertIn('selected_core_id', p57)
+        self.assertIn('indexOf(Ljava/lang/Object;)I', p57)
+        o57 = (project / 'smali/o57.smali').read_text()
+        self.assertIn('Lr57;->a:Ljava/util/List;', o57)
+        pd1 = (project / 'smali/pd1.smali').read_text()
+        self.assertIn('mihomo_dingtalk', pd1)
+        self.assertIn('sing-box_dingtalk', pd1)
+
     def test_pinned_candidate_rebuilds_with_stage6_and_reference_checks(self):
         plan = json.loads((SNAPSHOT / 'migration/full.json').read_text())
         coverage = json.loads((SNAPSHOT / 'migration/coverage.json').read_text())
@@ -35,6 +133,7 @@ class Full171MigrationTest(unittest.TestCase):
         self.assertIn('ij4 RestoreCfg e65 constructor argument', semantic_fixes)
         self.assertIn('zu5 CfgNav wrapper argument registers', semantic_fixes)
         self.assertIn('pd1 resumed sing-box DingTalk constructor register', semantic_fixes)
+        self.assertIn('RestoreCfg/VpnSeed v171 stream-copy and empty-seed recovery', semantic_fixes)
         self.assertEqual(coverage['inventory']['wholeMethods'], 16)
         self.assertEqual(coverage['inventory']['patchedMethods'], 35)
 
@@ -47,7 +146,7 @@ class Full171MigrationTest(unittest.TestCase):
 
             result = references.check(project)
             self.assertEqual(result['classes'], 9879)
-            self.assertEqual(result['references'], 578921)
+            self.assertEqual(result['references'], 578922)
             self.assertEqual(result['errors'], [])
             smali_files, branch_errors = branch_offsets.scan_project(project)
             self.assertEqual(smali_files, 9879)
@@ -137,6 +236,9 @@ class Full171MigrationTest(unittest.TestCase):
             sd_name = pd1_method.index('const-string v15, "sing-box_dingtalk"', sd_start)
             sd_call = pd1_method.index('invoke-direct/range {v14 .. v21}, Lfd1;-><init>(', sd_start)
             self.assertLess(sd_name, sd_call)
+
+            self.assert_builtin_config_copy_contract(project)
+            self.assert_update_core_dingtalk_choices(project)
 
             y75 = (project / 'smali/y75.smali').read_text()
             y75_method = y75.split(

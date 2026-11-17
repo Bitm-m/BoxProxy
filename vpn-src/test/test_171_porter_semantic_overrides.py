@@ -43,6 +43,7 @@ class Stage6SemanticOverridesTest(unittest.TestCase):
                 'Liv;': ['.field public static final g:Lq9;'],
                 'Lod6;': ['.method public static b()Ljava/io/File;'],
                 'Lhq;': ['.method public static final h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V'],
+                'Loq;': ['.method public static D(Ljava/io/InputStream;Ljava/io/OutputStream;)J'],
             }
             for descriptor, declarations in targets.items():
                 self.write_class(new, descriptor, declarations)
@@ -73,6 +74,26 @@ class Stage6SemanticOverridesTest(unittest.TestCase):
         self.assertIn(
             'Lbb1;->c(Ljava/lang/String;Ljava/lang/String;Lda1;)Ljava/lang/Object;',
             same_named_other_overload)
+
+    def test_legacy_stream_copy_call_maps_to_v171_helper(self):
+        mapper = porter.Mapper(
+            {},
+            {
+                'types': {},
+                'fields': {},
+                'members': {key: {'new': value}
+                            for key, value in porter.MANUAL_MEMBER_OVERRIDES.items()},
+            },
+        )
+        mapped = mapper.line(
+            'invoke-static {v2, v3}, '
+            'Lcs;->u(Ljava/io/InputStream;Ljava/io/OutputStream;)J'
+        )
+        self.assertEqual(
+            mapped,
+            'invoke-static {v2, v3}, '
+            'Loq;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J')
+        self.assertNotIn('Lcs;->u(', mapped)
 
     def test_cfg_icon_builder_rewrite_is_scoped_to_custom_icon(self):
         with tempfile.TemporaryDirectory() as temporary:

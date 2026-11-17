@@ -58,6 +58,10 @@ MANUAL_MEMBER_OVERRIDES = {
     'Lza0;->o(Lp62;)Ljava/lang/Object;': 'Lfb0;->p(Lh92;)Ljava/lang/Object;',
     # File helper moved its cache-directory getter from l46.c to od6.b.
     'Ll46;->c()Ljava/io/File;': 'Lod6;->b()Ljava/io/File;',
+    # 139's Kotlin stream-copy helper Lcs.u collides with unrelated 171 class Lcs;
+    # 171 provides the same InputStream.copyTo implementation as Loq.D.
+    'Lcs;->u(Ljava/io/InputStream;Ljava/io/OutputStream;)J':
+        'Loq;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J',
     # The Compose function moved and now requires a 171 ComposableLambda wrapper.
     'Lpr;->h(Le62;Lwp3;ZZJFFFLt62;Lz11;II)V':
         'Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V',

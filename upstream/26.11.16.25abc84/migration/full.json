@@ -837,7 +837,7 @@
     "smali/com/box/app/vpn/FToast.smali": "776b486c6de4f129a1067d9aa6fb492e3a039e2b3c14f21b210b7010a0c21b49",
     "smali/com/box/app/vpn/HyConfig.smali": "d7852455add9c6b6caf62891f393c6827365d1a76379be7fbf7846877f070078",
     "smali/com/box/app/vpn/PanelToggle.smali": "05d7652b214733cd1ee12a37ca257867330321980d5aeb48a8e8098302c2ada2",
-    "smali/com/box/app/vpn/RestoreCfg.smali": "11e87dcddb0a57d1ce84a7846b23513474262d2bf4c66c264fb6fe2b3f68594a",
+    "smali/com/box/app/vpn/RestoreCfg.smali": "188f921f5eabb053f5efda8e820be46b70a172cb6b79d02cb2aef40e89aa0c70",
     "smali/com/box/app/vpn/SbConfig$Result.smali": "b4eb09f7ed2b299ed8806524f7f67050bebdc1ff356a4f8faf04b41a197f3bcc",
     "smali/com/box/app/vpn/SbConfig$Tags.smali": "4c91b04d8671bd057c804d394ef736620bea2b9553825957ad6f60b4b33fa547",
     "smali/com/box/app/vpn/SbConfig.smali": "55e9bf524429aeb5646a3bf750e865c96fb3506040166f8e4350fd9fc94b9851",
@@ -869,7 +869,7 @@
     "smali/com/box/app/vpn/VpnSb$3.smali": "14cd08300771b8be3c4cc90c614e2530e3ba997fca71278b2257ee23e91ae8ba",
     "smali/com/box/app/vpn/VpnSb$OsTun.smali": "7b7b670b1f4630165e87eff58178c3bf4dc96819923f888379387efdeb33f346",
     "smali/com/box/app/vpn/VpnSb.smali": "69111da16c8c061f6aca6901a39fe21c985a7c198b69f2831d620eb202124ae7",
-    "smali/com/box/app/vpn/VpnSeed.smali": "958995e94d2f08f53edd95852c0c3b0f472403a1295984e4a8a0142fbd6e36b5",
+    "smali/com/box/app/vpn/VpnSeed.smali": "4c4684945afc3f1aff638ebe43a8602401806cd0bf0f2333e26cffd0507b721f",
     "smali/com/box/app/vpn/VpnShell.smali": "a6aaf8d6e01300ecc864822618cbe204f834167c0182cc74cf3032fea9ec88e2",
     "smali/com/box/app/vpn/VpnTags.smali": "c65733ae7db68e2ce5804da9d86cc41710628885acbd9e32676893e391a19f03",
     "smali/com/box/app/vpn/VpnTask.smali": "4642663746bffd37e8659b81d63bfc6f9fdd1f1e918ccac4f04ef8e86ddaad9f",
@@ -11340,11 +11340,15 @@
       {
         "name": "pd1 resumed sing-box DingTalk constructor register",
         "detail": "Initialize v15 to sing-box_dingtalk at :goto_sd before the Lfd1 constructor, so both synchronous and coroutine-resumed state-10 paths pass a String in the first constructor argument."
+      },
+      {
+        "name": "RestoreCfg/VpnSeed v171 stream-copy and empty-seed recovery",
+        "detail": "Call the declared v171 Loq.D(InputStream, OutputStream) helper in restore/seeding; repair zero-length seeded configs even when the one-time seed flag is already set, without overwriting non-empty files or recreating deleted files."
       }
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "25acb73ed563f0ffbb2b3733c85e62dc878982d0824df2b085b6743b38534be9",
+  "runtimeArchiveSha256": "34612a9da79407272f719f5b0859a7383176ffd22ebe29e9c4fe963c587de849",
   "runtimeArchiveFileCount": 1429,
-  "runtimeArchiveBytes": 20527390
+  "runtimeArchiveBytes": 20527801
 }
