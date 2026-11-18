@@ -45,7 +45,9 @@ the call, as in
             expected Integer
 """
 import argparse
+import os
 import re
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 METHOD_RE = re.compile(r'^\.method[^\n]*$.*?^\.end method[ \t]*$', re.M | re.S)
@@ -1141,6 +1143,11 @@ def check_file(path):
     return problems, kind_problems
 
 
+def _check_file_entry(path):
+    """Picklable worker entry for the process pool."""
+    return check_file(path)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -1153,10 +1160,20 @@ def main():
     problems = []
     kind_problems = []
     files = sorted(args.root.rglob('*.smali'))
-    for path in files:
-        undefined, kinds = check_file(path)
-        problems.extend(undefined)
-        kind_problems.extend(kinds)
+    # The two passes are independent per file: spread them over the cores so
+    # the full-tree scan stays cheap enough to run twice per pipeline run.
+    workers = max(1, min(os.cpu_count() or 1, 4))
+    if workers > 1 and len(files) > 200:
+        with ProcessPoolExecutor(max_workers=workers) as pool:
+            results = pool.map(_check_file_entry, files, chunksize=16)
+            for undefined, kinds in results:
+                problems.extend(undefined)
+                kind_problems.extend(kinds)
+    else:
+        for path in files:
+            undefined, kinds = check_file(path)
+            problems.extend(undefined)
+            kind_problems.extend(kinds)
     for path, index, header, code, register in problems[:args.limit]:
         print('%s  %s' % (path, header))
         print('    %r' % code)
