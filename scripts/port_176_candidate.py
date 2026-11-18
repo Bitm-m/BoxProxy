@@ -401,6 +401,17 @@ def dest_reg(line):
 
 
 def advance_chain(lines, position):
+    """Keep an insertion point out of an invoke / move-result pair.
+
+    The only critical region is the space *between* an ``invoke-*`` and its
+    ``move-result*``: inserting there would detach the result move from the
+    call that produces it.  A position directly *after* a move-result is a
+    perfectly valid boundary and must not be advanced - pushing it past the
+    following instruction moved the ``:cond_external_files_ready`` label of
+    qc0.k() behind the ``const-string``/``new-instance`` pair, so the external
+    files branch skipped the File construction and the ART verifier rejected
+    uc0 with an undefined v1.
+    """
     position = max(0, min(position, len(lines)))
     significant = [i for i, line in enumerate(lines)
                    if line.strip() and not line.strip().startswith(DEBUG_PREFIXES)]
@@ -411,9 +422,6 @@ def advance_chain(lines, position):
     bi, ai = before[-1], after[0]
     if lines[ai].strip().startswith('move-result') and lines[bi].strip().startswith('invoke-'):
         return (after[1] + 1) if len(after) > 1 else ai + 1
-    if (lines[bi].strip().startswith('move-result') and len(before) > 1
-            and lines[before[-2]].strip().startswith('invoke-')):
-        return after[0] + 1 if after else ai + 1
     return position
 
 

@@ -108,6 +108,9 @@ jobs:
       - name: Reject verifier-unsafe object register moves
         run: python3 scripts/check_smali_reference_moves.py "$PROJECT_DIR"
 
+      - name: Reject undefined register reads on any control flow path
+        run: python3 scripts/check_smali_register_flow.py "$PROJECT_DIR"
+
       - name: Build unsigned APK with apktool
         shell: bash
         run: |

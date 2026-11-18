@@ -113,6 +113,12 @@ def main():
              '--maps', maps,
              '--output', project])
 
+        # ART rejects a class whose verifier finds a register that is read on
+        # a path where it was never written; the shape comparison above is
+        # order-insensitive and cannot see that, so run the control flow
+        # analysis before the tree is published.
+        run([sys.executable, 'scripts/check_smali_register_flow.py', project])
+
         shutil.copytree(project, output / 'decompiled')
         if args.keep_scratch:
             keep = output.with_name(output.name + '-scratch')

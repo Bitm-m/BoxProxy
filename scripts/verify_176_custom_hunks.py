@@ -389,6 +389,56 @@ def check_176_contracts(output, problems):
         problems.append(('Lyu0;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;',
                          'expected exactly one wrapped probe script, found %d' % wrapped))
 
+    # The external files fallback branch has to build the base directory on
+    # both of its paths.  The 176 port once advanced the
+    # :cond_external_files_ready label behind the const-string / new-instance
+    # pair, so the non-null path jumped straight to File.<init> with an
+    # undefined v1 and the ART verifier rejected the class with a VerifyError
+    # during AppApplication.onCreate.  The label must stay in front of the
+    # literal and the allocation, and the null path must keep falling through
+    # the getFilesDir fallback.
+    external = in_file('uc0.smali', 'k()Ljc0;', 'Luc0;->k()')
+    if external is not None:
+        lines = significant(external)
+        anchors = {
+            'branch': 'if-nez v0, :cond_external_files_ready',
+            'label': ':cond_external_files_ready',
+            'fallback': 'invoke-virtual {v0}, Landroid/content/Context;'
+                        '->getFilesDir()Ljava/io/File;',
+            'literal': 'const-string v2, "box"',
+            'allocate': 'new-instance v1, Ljava/io/File;',
+            'construct': 'invoke-direct {v1, v0, v2}, Ljava/io/File;'
+                         '-><init>(Ljava/io/File;Ljava/lang/String;)V',
+        }
+        positions = {}
+        for name, needle in anchors.items():
+            hits = [i for i, line in enumerate(lines) if line == needle]
+            if len(hits) != 1:
+                problems.append(('Luc0;->k()',
+                                 '%s appears %d times, expected exactly once'
+                                 % (needle, len(hits))))
+            else:
+                positions[name] = hits[0]
+        if len(positions) == len(anchors):
+            # Non-null path: the branch jumps straight to the label, so the
+            # label has to dominate the literal and the allocation.
+            for name in ('literal', 'allocate'):
+                if not positions['branch'] < positions['label'] < positions[name]:
+                    problems.append(('Luc0;->k()',
+                                     'the external files branch skips the %s; the '
+                                     'label must precede it' % name))
+            # Null path: the branch falls through the getFilesDir fallback
+            # before reaching the same label.
+            if not (positions['branch'] < positions['fallback']
+                    < positions['label']):
+                problems.append(('Luc0;->k()',
+                                 'the getFilesDir fallback must sit between the '
+                                 'branch and the label'))
+            for name in ('literal', 'allocate'):
+                if positions[name] >= positions['construct']:
+                    problems.append(('Luc0;->k()',
+                                     'File.<init> runs before the %s' % name))
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

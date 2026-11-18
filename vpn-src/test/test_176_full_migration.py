@@ -130,6 +130,42 @@ class Full176MigrationTest(unittest.TestCase):
         self.assertIn('-0x7fc2cadc -> :sswitch_6', states)
         self.assertIn('-0x54707cda -> :sswitch_6_custom', states)
 
+    def test_external_files_branch_builds_the_base_on_both_paths(self):
+        import re
+        text = self.smali('uc0.smali')
+        match = re.search(r'\.method public static k\(\)Ljc0;\n(.*?)\.end method',
+                          text, re.S)
+        self.assertIsNotNone(match, 'uc0.k() is missing')
+        lines = [line.strip() for line in match.group(1).splitlines()
+                 if line.strip() and not line.strip().startswith('.')]
+
+        def index(needle):
+            hits = [i for i, line in enumerate(lines) if line == needle]
+            self.assertEqual(len(hits), 1, '%r appears %d times' % (needle, len(hits)))
+            return hits[0]
+
+        branch = index('if-nez v0, :cond_external_files_ready')
+        label = index(':cond_external_files_ready')
+        fallback = index('invoke-virtual {v0}, Landroid/content/Context;'
+                         '->getFilesDir()Ljava/io/File;')
+        literal = index('const-string v2, "box"')
+        allocate = index('new-instance v1, Ljava/io/File;')
+        construct = index('invoke-direct {v1, v0, v2}, Ljava/io/File;'
+                          '-><init>(Ljava/io/File;Ljava/lang/String;)V')
+        # The non-null external files path jumps straight to the label, so the
+        # label has to sit in front of the literal and the allocation; moving
+        # it behind them leaves v1 undefined and ART rejects uc0 with a
+        # VerifyError during AppApplication.onCreate.
+        self.assertLess(branch, label)
+        self.assertLess(label, literal)
+        self.assertLess(label, allocate)
+        # The null path falls through the getFilesDir fallback to the label.
+        self.assertLess(branch, fallback)
+        self.assertLess(fallback, label)
+        # Both paths construct the File from the prepared registers.
+        self.assertLess(literal, construct)
+        self.assertLess(allocate, construct)
+
     def test_coverage_plan_is_fully_migrated(self):
         coverage = json.loads((SNAPSHOT_176 / 'migration/coverage.json').read_text())
         self.assertEqual(len(coverage['completed']), 51)
