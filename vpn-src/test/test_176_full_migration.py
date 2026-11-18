@@ -180,6 +180,171 @@ class Full176MigrationTest(unittest.TestCase):
         self.assertEqual(class_map['mapped'], len(class_map['candidates']))
         self.assertEqual(class_map['mapped'], 8467)
 
+    @staticmethod
+    def _significant(text):
+        return [line.strip() for line in text.splitlines()
+                if line.strip() and not line.strip().startswith('.')]
+
+    def test_battery_unrestricted_row_lands_in_wq4(self):
+        """The row follows the page: wq4.a, not iu0.a, with wq4's registers.
+
+        The 176 upstream dropped the171 case3 auto-start service page from
+        the iu0 compose factory and rebuilt it as wq4, so a row inserted into
+        iu0.a would hand a boolean register to the row invoke and ART rejects
+        iu0 with a VerifyError during UI composition.
+        """
+        iu0 = self.smali('iu0.smali')
+        self.assertNotIn('BattToggle', iu0)
+        self.assertNotIn('0x13f2fb70', iu0)
+        self.assertNotIn('VpnPrefs;->battOn', iu0)
+
+        lines = self._significant(self.smali('wq4.smali'))
+        anchor = 'const v9, -0x5325d91'
+        hits = [i for i, line in enumerate(lines) if line == anchor]
+        self.assertEqual(len(hits), 1,
+                         'wq4.a battery anchor appears %d times' % len(hits))
+        row = [
+            'const v9, 0x13f2fb70',
+            'invoke-virtual {v4, v9}, Lub2;->b0(I)V',
+            'const v9, 0x7f0f0597',
+            'invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            'move-result-object v18',
+            'const v9, 0x7f0f0598',
+            'invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            'move-result-object v19',
+            'invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()'
+            'Lcom/box/app/vpn/BattToggle;',
+            'move-result-object v17',
+            'invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z',
+            'move-result v16',
+            'move-object/from16 v20, v15',
+            'const/16 v24, 0x0',
+            'const/16 v25, 0x3f58',
+            'const/16 v21, 0x0',
+            'const/high16 v23, 0xc00000',
+            'move-object/from16 v22, v4',
+            'invoke-static/range {v16 .. v25}, Lat6;->c(ZLqa2;'
+            'Ljava/lang/String;Ljava/lang/String;Lc01;ZLub2;III)V',
+            'invoke-virtual {v4, v3}, Lub2;->r(Z)V',
+            'const/16 v9, 0xe',
+        ]
+        start = hits[0] - len(row)
+        self.assertGreaterEqual(start, 0, 'battery row missing before anchor')
+        self.assertEqual(lines[start:hits[0]], row,
+                         'the battery unrestricted row must sit directly in '
+                         'front of the wq4.a anchor in wq4 registers')
+        self.assertEqual(sum(1 for line in lines if 'BattToggle' in line), 1)
+
+    def test_vpn_mode_res_shortcut_keeps_the_mode_result_register(self):
+        """modeRes lands in v15, not in the enum register v13.
+
+        The generic delta spelled the shortcut with `move-result v13`, which
+        both clobbers the enum on the fall-through path and leaves the row
+        lookup's third argument unset on the jump path, so the verifier
+        rejects the merge at :goto_6 with `register v15 ... expected Integer`.
+        """
+        lines = self._significant(self.smali('ra1.smali'))
+        shortcut = [
+            'check-cast v13, Ljg5;',
+            'invoke-static {v13}, Lcom/box/app/vpn/VpnBridge;'
+            '->modeRes(Ljg5;)I',
+            'move-result v15',
+            'if-eqz v15, :cond_pv_novpn',
+            'const v13, -0x1c301169',
+            'const/4 v14, 0x0',
+            'goto :goto_6',
+            ':cond_pv_novpn',
+        ]
+        found = any(lines[i:i + len(shortcut)] == shortcut
+                    for i in range(len(lines) - len(shortcut) + 1))
+        self.assertTrue(found, 'the modeRes shortcut block is missing or has '
+                               'the wrong register layout')
+        for index, line in enumerate(lines):
+            if 'VpnBridge;->modeRes' in line:
+                self.assertEqual(lines[index + 1], 'move-result v15',
+                                 'the modeRes result must land in v15')
+
+    def test_register_flow_checker_accepts_the_migrated_tree(self):
+        result = subprocess.run(
+            [sys.executable, 'scripts/check_smali_register_flow.py',
+             str(self.project)],
+            cwd=ROOT, capture_output=True, text=True, timeout=600)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('0 undefined register reads, 0 type conflicts',
+                      result.stdout)
+
+    @staticmethod
+    def _flow_module():
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import check_smali_register_flow as flow
+        return flow
+
+    def test_register_flow_checker_detects_type_conflicts(self):
+        """The kind pass must keep catching the two device VerifyErrors."""
+        flow = self._flow_module()
+
+        # iu0 shape: a boolean register handed to a reference receiver.
+        boolean_receiver = (
+            '.method public final a(Lub2;)V\n'
+            '    .locals 1\n'
+            '    iget-boolean v0, p0, Lx;->flag:Z\n'
+            '    invoke-virtual {v0, v0}, Lub2;->b0(I)V\n'
+            '    return-void\n'
+            '.end method')
+        findings, _ = flow.analyze_kinds(boolean_receiver)
+        self.assertTrue(any(f[2] == 'v0' and f[4] == 'Reference'
+                            for f in findings),
+                        'boolean receiver must be reported')
+
+        # ra1 shape: the mode result and the row id disagree at the join.
+        conflicting_join = (
+            '.method public static a(Z)V\n'
+            '    .locals 2\n'
+            '    if-eqz p0, :alt\n'
+            '    invoke-static {}, Lx;->it()Ljava/util/Iterator;\n'
+            '    move-result-object v1\n'
+            '    goto :join\n'
+            '    :alt\n'
+            '    const/4 v1, 0x1\n'
+            '    :join\n'
+            '    invoke-static {v1}, Lx;->n(I)V\n'
+            '    return-void\n'
+            '.end method')
+        findings, _ = flow.analyze_kinds(conflicting_join)
+        self.assertTrue(any(f[2] == 'v1' and f[4] == 'Int'
+                            for f in findings),
+                        'the reference/integer join must be reported')
+
+        clean = (
+            '.method public static a(I)V\n'
+            '    .locals 1\n'
+            '    invoke-static {}, Lx;->it()Ljava/util/Iterator;\n'
+            '    move-result-object v0\n'
+            '    invoke-static {v0}, Lx;->m(Ljava/util/Iterator;)V\n'
+            '    invoke-static {p0}, Lx;->n(I)V\n'
+            '    return-void\n'
+            '.end method')
+        findings, _ = flow.analyze_kinds(clean)
+        self.assertEqual(findings, [])
+
+    def test_register_flow_checker_still_reports_undefined_reads(self):
+        flow = self._flow_module()
+        undefined_shape = (
+            '.method public static a(Z)V\n'
+            '    .locals 1\n'
+            '    if-eqz p0, :alt\n'
+            '    const/4 v0, 0x1\n'
+            '    :alt\n'
+            '    invoke-static {v0}, Lx;->n(I)V\n'
+            '    return-void\n'
+            '.end method')
+        findings, _ = flow.analyze(undefined_shape)
+        self.assertTrue(any(f[2] == 'v0' for f in findings),
+                        'the undefined pass must keep working')
+        kind_findings, _ = flow.analyze_kinds(undefined_shape)
+        self.assertEqual(kind_findings, [],
+                         'undefined reads belong to the first pass')
+
 
 if __name__ == '__main__':
     unittest.main()

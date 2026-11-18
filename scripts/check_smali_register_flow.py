@@ -31,6 +31,18 @@ This checker performs the data flow analysis the dex verifier performs:
 
 A register that is read at a reachable instruction without being assigned on
 every path is reported.
+
+A second pass tracks the *kind* of the value in every register - Int, Long,
+Float, Double or Reference - merges conflicting kinds at joins and checks
+the reads the verifier types strictly: an invoke receiver and every invoke
+argument against the declared signature, the object receiver of iget/iput,
+check-cast, move-object, array accesses and switch selectors.  This is the
+class of defect where every register is defined but the wrong value reaches
+the call, as in
+
+    [0xB6] tried to get class from non-reference register v7 (type=Boolean)
+    [0x190] register v15 has type Reference: java.util.Iterator but
+            expected Integer
 """
 import argparse
 import re
@@ -153,6 +165,41 @@ def parameter_count(signature):
     return words
 
 
+def signature_arg_kinds(arg_string):
+    """The kind of every declared argument: I, J, F, D or R (reference)."""
+    kinds = []
+    index = 0
+    while index < len(arg_string):
+        char = arg_string[index]
+        if char == 'L':
+            kinds.append('R')
+            end = arg_string.find(';', index)
+            index = len(arg_string) if end < 0 else end + 1
+        elif char == '[':
+            kinds.append('R')
+            index += 1
+            while index < len(arg_string) and arg_string[index] == '[':
+                index += 1
+            if index < len(arg_string) and arg_string[index] == 'L':
+                end = arg_string.find(';', index)
+                index = len(arg_string) if end < 0 else end + 1
+            else:
+                index += 1
+        elif char == 'J':
+            kinds.append('J')
+            index += 1
+        elif char == 'F':
+            kinds.append('F')
+            index += 1
+        elif char == 'D':
+            kinds.append('D')
+            index += 1
+        else:
+            kinds.append('I')
+            index += 1
+    return kinds
+
+
 def classify(instruction):
     """Return (registers written, registers read) for one instruction."""
     parts = instruction.split(None, 1)
@@ -273,6 +320,8 @@ class Method:
         self.payload_next = {}
         self.handler_ranges = {}
         self.always = set()
+        # Declared kind of every parameter register (pN and its v alias).
+        self.param_kinds = {}
 
 
 def _skip_block(body, start, end_re):
@@ -291,23 +340,18 @@ def _payload_cases(body, start):
     if cursor >= len(body):
         return [], cursor
     if PACKED_RE.match(body[cursor]):
-        cursor += 1
-        while cursor < len(body) and not body[cursor].strip():
-            cursor += 1
-        if cursor >= len(body):
-            return [], cursor
-        try:
-            count = int(body[cursor].strip().split()[0])
-        except (ValueError, IndexError):
-            return [], cursor + 1
+        # Smali lists the case labels until ".end packed-switch"; there is
+        # no separate count line the way the dex encoding has one.
         cursor += 1
         cases = []
-        for _ in range(count):
-            while cursor < len(body) and not body[cursor].strip():
+        while cursor < len(body):
+            text = body[cursor].strip()
+            if not text:
                 cursor += 1
-            if cursor >= len(body):
+                continue
+            if not text.startswith(':'):
                 break
-            cases.append(body[cursor].strip().lstrip(':').split()[0])
+            cases.append(text.lstrip(':').split()[0])
             cursor += 1
         return cases, cursor
     if SPARSE_RE.match(body[cursor]):
@@ -342,7 +386,7 @@ def _payload_label(body, index):
     if look >= len(body):
         return None, index
     if PACKED_RE.match(body[look]) or SPARSE_RE.match(body[look]):
-        _cases, end = _payload_cases(body, look + 1)
+        _cases, end = _payload_cases(body, look)
         return name, end
     if ARRAY_DATA_RE.match(body[look]):
         return name, _skip_block(body, look, END_ARRAY_DATA_RE)
@@ -372,7 +416,7 @@ def parse_method(block):
             cursor = index + 1
             while cursor < len(body) and not body[cursor].strip():
                 cursor += 1
-            cases, _ = _payload_cases(body, cursor + 1)
+            cases, _ = _payload_cases(body, cursor)
             method.payload_cases[name] = cases
             index = end
             continue
@@ -435,13 +479,27 @@ def parse_method(block):
     declared = parameter_count(header)
     is_static = ' static ' in ' ' + header + ' '
     total = declared if is_static else declared + 1
+    open_paren = header.find('(')
+    close_paren = header.find(')', open_paren + 1)
+    arg_kinds = (signature_arg_kinds(header[open_paren + 1:close_paren])
+                 if 0 <= open_paren < close_paren else [])
+    # One kind per register slot: a wide argument occupies two slots.
+    slot_kinds = [] if is_static else ['R']
+    for kind in arg_kinds:
+        slot_kinds.append(kind)
+        if kind in ('J', 'D'):
+            slot_kinds.append(kind)
     for index in range(total):
         method.always.add('p' + str(index))
+        kind = slot_kinds[index] if index < len(slot_kinds) else 'I'
+        method.param_kinds['p' + str(index)] = kind
     if registers_count and total:
         base = (registers_count - total if registers_directive == 'registers'
                 else registers_count)
         for index in range(total):
             method.always.add('v' + str(base + index))
+            method.param_kinds['v' + str(base + index)] = \
+                method.param_kinds['p' + str(index)]
     return method
 
 
@@ -470,6 +528,9 @@ def successors(method, index):
             for case in method.payload_cases.get(target[0], []):
                 if case in method.labels:
                     found.append(method.labels[case])
+        # No matching key falls through to the next instruction.
+        if index + 1 < len(method.ops):
+            found.append(index + 1)
         return found
     if opcode == 'fill-array-data':
         target = TARGET_RE.findall(code)
@@ -640,8 +701,432 @@ def analyze(block):
     return findings, method
 
 
+KIND_NAMES = {'I': 'Int', 'J': 'Long', 'F': 'Float', 'D': 'Double',
+              'R': 'Reference', 'N': 'Zero', 'C': 'Const', 'CW': 'WideConst'}
+
+NUMBER_RE = re.compile(r'(-?0[xX][0-9a-fA-F]+|-?\d+)')
+
+
+def const_value_is_zero(code):
+    """Whether a numeric const loads the all-zero literal."""
+    operands = code.split(None, 1)
+    if len(operands) < 2:
+        return False
+    value_token = operands[1].split(',')[1] if ',' in operands[1] else operands[1]
+    match = NUMBER_RE.search(value_token)
+    if not match:
+        return False
+    try:
+        return int(match.group(1), 0) == 0
+    except ValueError:
+        return False
+
+
+def satisfies(kind, required):
+    """Whether a value of *kind* may reach a slot declared *required*.
+
+    The zero constant is the null / 0.0f / 0L literal and fits anywhere.  A
+    non-zero 32-bit const carries int and float bits at once - the verifier
+    accepts it in either slot, as production code relies on - and a wide
+    const carries long and double bits at once.
+    """
+    if kind == 'N' or kind == required:
+        return True
+    if kind == 'C':
+        return required in ('I', 'F')
+    if kind == 'CW':
+        return required in ('J', 'D')
+    return False
+
+
+def merge_kind_states(states):
+    """Registers live on every incoming path, with the union of the kinds."""
+    merged = dict(states[0])
+    for other in states[1:]:
+        for register in [reg for reg in merged if reg not in other]:
+            del merged[register]
+        for register in merged:
+            merged[register] = merged[register] | other[register]
+    return merged
+
+
+def suffix_kind(opcode):
+    """The kind an iget/sget/aget style opcode writes or reads."""
+    if opcode.endswith('-object'):
+        return 'R'
+    if opcode.endswith('-wide'):
+        return 'J'
+    if opcode.endswith('-float'):
+        return 'F'
+    if opcode.endswith('-double'):
+        return 'D'
+    return 'I'
+
+
+def field_kind(code):
+    """The kind a bare iget/sget loads: Dalvik has no iget-float, the
+    field descriptor decides between int and float."""
+    match = re.search(r'->[^:]+:([^\s#]+)', code)
+    if not match:
+        return 'I'
+    descriptor = match.group(1)
+    if descriptor.startswith(('L', '[')):
+        return 'R'
+    if descriptor == 'J':
+        return 'J'
+    if descriptor == 'D':
+        return 'D'
+    if descriptor == 'F':
+        return 'F'
+    return 'I'
+
+
+def conversion_kind(opcode):
+    if opcode.endswith(('-byte', '-char', '-short', '-int')):
+        return 'I'
+    if opcode.endswith('-long'):
+        return 'J'
+    if opcode.endswith('-float'):
+        return 'F'
+    if opcode.endswith('-double'):
+        return 'D'
+    return 'I'
+
+
+def binary_kind(opcode):
+    base = opcode.split('/')[0]
+    if base.endswith('-long'):
+        return 'J'
+    if base.endswith('-float'):
+        return 'F'
+    if base.endswith('-double'):
+        return 'D'
+    return 'I'
+
+
+def invoke_signature(code):
+    """The declared argument string of an invoke, or None."""
+    match = re.search(r'\(([^)]*)\)', code)
+    return match.group(1) if match else None
+
+
+def invoke_return_kind(code):
+    match = re.search(r'\)(\S+)', code)
+    if not match:
+        return None
+    descriptor = match.group(1)
+    if descriptor.startswith(('L', '[')):
+        return 'R'
+    if descriptor == 'J':
+        return 'J'
+    if descriptor == 'F':
+        return 'F'
+    if descriptor == 'D':
+        return 'D'
+    if descriptor == 'V':
+        return None
+    return 'I'
+
+
+def write_kinds(method, index, in_state):
+    """The kinds one instruction writes into its destination registers.
+
+    Every value is a *set* of possible kinds: the data flow merges paths by
+    taking the union, and a read is legal only when every member of the set
+    satisfies the declared requirement.
+    """
+    opcode = method.ops[index]
+    code = method.codes[index]
+    dests = method.dest[index]
+    if opcode in ('const-string', 'const-string/jumbo', 'const-class',
+                  'const-method-handle', 'const-method-type'):
+        operands = operands_of(code.split(None, 1)[1]) if ' ' in code else []
+        return {operands[0]: {'R'}} if operands else {}
+    if not dests:
+        return {}
+    first = dests[0]
+
+    if opcode.startswith('move-object'):
+        return {register: {'R'} for register in dests}
+    if opcode in ('move', 'move/from16', 'move/16',
+                  'move-wide', 'move-wide/from16', 'move-wide/16'):
+        reads = method.reads[index]
+        if not reads or reads[0] not in in_state:
+            return {}
+        kinds = set(in_state[reads[0]])
+        return {register: kinds for register in dests}
+    if opcode == 'move-exception':
+        return {first: {'R'}}
+    if opcode in ('move-result', 'move-result-wide', 'move-result-object'):
+        if opcode == 'move-result-object':
+            return {first: {'R'}}
+        if index == 0 or not method.codes[index - 1].startswith('invoke'):
+            return {}
+        kind = invoke_return_kind(method.codes[index - 1])
+        if kind is None:
+            return {}
+        if opcode == 'move-result-wide':
+            kind = 'J' if kind == 'J' else 'D'
+        return {register: {kind} for register in dests}
+    if opcode.startswith(('const-wide', 'const')):
+        if const_value_is_zero(code):
+            # const/4 vN, 0x0 is the legal null / 0.0f / 0L literal.
+            return {register: {'N'} for register in dests}
+        # Non-zero const bits are int and float at once (long and double for
+        # const-wide); the verifier accepts either reading, and production
+        # code relies on that in both directions.
+        kind = 'CW' if opcode.startswith('const-wide') else 'C'
+        return {register: {kind} for register in dests}
+    if opcode == 'new-instance':
+        return {first: {'R'}}
+    if opcode == 'new-array':
+        return {first: {'R'}}
+    if opcode.startswith(('iget', 'sget', 'aget')):
+        if opcode == 'aget':
+            # Bare aget reads an int or a float element: the array decides,
+            # so the register becomes int-or-float and must drop its old
+            # kind - a stale reference would otherwise survive the load.
+            return {register: {'C'} for register in dests}
+        if opcode == 'aget-wide':
+            # Long or double element, same ambiguity as const-wide.
+            return {register: {'CW'} for register in dests}
+        if opcode in ('iget', 'sget', 'iget-wide', 'sget-wide'):
+            kind = field_kind(code)
+        else:
+            kind = suffix_kind(opcode)
+        return {register: {kind} for register in dests}
+    if opcode == 'array-length':
+        return {first: {'I'}}
+    if opcode == 'instance-of':
+        return {first: {'I'}}
+    if opcode == 'check-cast':
+        return {first: {'R'}}
+    if opcode in CONVERSIONS:
+        kind = conversion_kind(opcode)
+        return {register: {kind} for register in dests}
+    if opcode in UNARY_OPS:
+        kind = conversion_kind(opcode)
+        return {register: {kind} for register in dests}
+    for prefix in BINARY_PREFIXES:
+        if opcode.startswith(prefix):
+            kind = binary_kind(opcode)
+            return {register: {kind} for register in dests}
+    if opcode.startswith('cmp'):
+        return {first: {'I'}}
+    return {}
+
+
+def checked_reads(method, index):
+    """The (register, required kind) reads the dex verifier enforces."""
+    opcode = method.ops[index]
+    code = method.codes[index]
+    reads = method.reads[index]
+    checked = []
+
+    if opcode.startswith('invoke'):
+        args = invoke_signature(code)
+        if args is None:
+            return checked
+        registers = brace_regs(code)
+        position = 0
+        if not opcode.startswith(('invoke-static', 'invoke-custom')):
+            if registers:
+                checked.append((registers[0], 'R'))
+            position = 1
+        for kind in signature_arg_kinds(args):
+            if position >= len(registers):
+                break
+            checked.append((registers[position], kind))
+            position += 2 if kind in ('J', 'D') else 1
+        return checked
+
+    if opcode.startswith(('iget', 'iput')):
+        operands = operands_of(code.split(None, 1)[1])
+        if len(operands) >= 2:
+            checked.append((operands[1], 'R'))
+        return checked
+
+    if opcode == 'check-cast' and reads:
+        return [(reads[0], 'R')]
+    if opcode.startswith('move-object') and reads:
+        return [(reads[0], 'R')]
+    if opcode in ('throw', 'monitor-enter', 'monitor-exit') and reads:
+        return [(reads[0], 'R')]
+    if opcode.startswith(('aget', 'aput')):
+        operands = operands_of(code.split(None, 1)[1])
+        if len(operands) >= 3:
+            checked.append((operands[1], 'R'))
+            checked.append((operands[2], 'I'))
+        return checked
+    if opcode == 'array-length' and len(reads) >= 1:
+        return [(reads[0], 'R')]
+    if opcode == 'instance-of':
+        operands = operands_of(code.split(None, 1)[1])
+        if len(operands) >= 2:
+            checked.append((operands[1], 'R'))
+        return checked
+    if opcode == 'new-array':
+        operands = operands_of(code.split(None, 1)[1])
+        if len(operands) >= 2:
+            checked.append((operands[1], 'I'))
+        return checked
+    if opcode in ('packed-switch', 'sparse-switch') and reads:
+        return [(reads[0], 'I')]
+    if opcode == 'fill-array-data' and reads:
+        return [(reads[0], 'R')]
+    if opcode.startswith('filled-new-array'):
+        args = code.split('],', 1)
+        if len(args) == 2:
+            array_type = args[1].strip()
+            if array_type.startswith('['):
+                component = signature_arg_kinds(array_type[1:])
+                if component:
+                    for register in brace_regs(code):
+                        checked.append((register, component[0]))
+        return checked
+    return checked
+
+
+def analyze_kinds(block):
+    """The type kind conflicts of one method block.
+
+    Every register carries the kind of the value last written to it: I for
+    the32-bit integer family (Z/B/C/S/I), J, F, D for the other primitives,
+    R for references.  Paths that disagree merge to a conflicting marker.
+    A checked read - an invoke argument or receiver, an object receiver of
+    iget/iput, a check-cast, ... - whose merged kind does not satisfy the
+    declared requirement is reported, mirroring the verifier errors
+
+        tried to get class from non-reference register v7 (type=Boolean)
+        register v15 has type Reference: java.util.Iterator but expected Integer
+    """
+    method = parse_method(block)
+    count = len(method.ops)
+    if not count:
+        return [], method
+
+    edges = [successors(method, index) for index in range(count)]
+    predecessors = [[] for _ in range(count)]
+    for index in range(count):
+        for target in edges[index]:
+            if 0 <= target < count:
+                predecessors[target].append(index)
+
+    handler_positions = {}
+    covering = [[] for _ in range(count)]
+    for handler, ranges in method.handler_ranges.items():
+        position = method.labels.get(handler)
+        if position is None:
+            continue
+        handler_positions[position] = ranges
+        for start_label, end_label in ranges:
+            start = method.labels.get(start_label)
+            end = method.labels.get(end_label)
+            if start is None or end is None:
+                continue
+            for covered in range(max(0, start), min(end, count)):
+                covering[covered].append(position)
+
+    reachable = [False] * count
+    stack = [0] + sorted(handler_positions)
+    while stack:
+        index = stack.pop()
+        if index < 0 or index >= count or reachable[index]:
+            continue
+        reachable[index] = True
+        stack.extend(edges[index])
+
+    def handler_state(position):
+        # A throwing instruction never commits its write, so the handler
+        # sees the register kinds as they were *before* the faulting
+        # instruction - not the post-write state the definedness pass uses.
+        incoming = []
+        fallback = []
+        pending_throwing = False
+        for start_label, end_label in handler_positions[position]:
+            start = method.labels.get(start_label)
+            end = method.labels.get(end_label)
+            if start is None or end is None:
+                continue
+            for covered in range(max(0, start), min(end, count)):
+                if not reachable[covered]:
+                    continue
+                throwing = can_throw(method.ops[covered])
+                if in_state[covered] is None:
+                    if throwing:
+                        pending_throwing = True
+                    continue
+                if throwing:
+                    incoming.append(in_state[covered])
+                else:
+                    fallback.append(in_state[covered])
+        if not incoming:
+            if pending_throwing:
+                return None
+            incoming = fallback
+        if not incoming:
+            return None
+        return merge_kind_states(incoming)
+
+    in_state = [None] * count
+    out_state = [None] * count
+    in_state[0] = {register: {kind}
+                   for register, kind in method.param_kinds.items()}
+    pending = list(range(count)) + sorted(handler_positions)
+    while pending:
+        index = pending.pop()
+        if not reachable[index]:
+            continue
+        if index in handler_positions:
+            current = handler_state(index)
+            if current is None:
+                continue
+        elif index == 0:
+            current = {register: {kind}
+                       for register, kind in method.param_kinds.items()}
+        else:
+            incoming = [out_state[source] for source in predecessors[index]
+                        if reachable[source] and out_state[source] is not None]
+            if not incoming:
+                continue
+            current = merge_kind_states(incoming)
+        if in_state[index] == current and out_state[index] is not None:
+            continue
+        in_state[index] = current
+        produced = dict(current)
+        for register, kind in write_kinds(method, index, current).items():
+            produced[register] = kind
+        if out_state[index] == produced:
+            continue
+        out_state[index] = produced
+        for target in edges[index]:
+            if 0 <= target < count and reachable[target]:
+                pending.append(target)
+        for handler in covering[index]:
+            pending.append(handler)
+
+    findings = []
+    for index in range(count):
+        if not reachable[index] or in_state[index] is None:
+            continue
+        state = in_state[index]
+        for register, required in checked_reads(method, index):
+            kinds = state.get(register)
+            if not kinds:
+                continue  # undefined reads belong to the first pass
+            if all(satisfies(kind, required) for kind in kinds):
+                continue
+            reported = next(kind for kind in sorted(kinds)
+                            if not satisfies(kind, required))
+            findings.append((index, method.codes[index], register,
+                             KIND_NAMES.get(reported, reported),
+                             KIND_NAMES[required]))
+    return findings, method
+
+
 def check_file(path):
     problems = []
+    kind_problems = []
     text = path.read_text(errors='replace')
     for match in METHOD_RE.finditer(text):
         block = match.group(0)
@@ -649,7 +1134,11 @@ def check_file(path):
         findings, _method = analyze(block)
         for index, code, register in findings:
             problems.append((path, index, header, code, register))
-    return problems
+        kind_findings, _method = analyze_kinds(block)
+        for index, code, register, actual, required in kind_findings:
+            kind_problems.append((path, index, header, code, register,
+                                  actual, required))
+    return problems, kind_problems
 
 
 def main():
@@ -662,16 +1151,25 @@ def main():
     args = parser.parse_args()
 
     problems = []
+    kind_problems = []
     files = sorted(args.root.rglob('*.smali'))
     for path in files:
-        problems.extend(check_file(path))
+        undefined, kinds = check_file(path)
+        problems.extend(undefined)
+        kind_problems.extend(kinds)
     for path, index, header, code, register in problems[:args.limit]:
         print('%s  %s' % (path, header))
         print('    %r' % code)
         print('    register %s is not assigned on every path' % register)
-    print('checked %d files, %d undefined register reads'
-          % (len(files), len(problems)))
-    return 1 if problems else 0
+    for path, index, header, code, register, actual, required in \
+            kind_problems[:args.limit]:
+        print('%s  %s' % (path, header))
+        print('    %r' % code)
+        print('    register %s has type %s but %s is required'
+              % (register, actual, required))
+    print('checked %d files, %d undefined register reads, %d type conflicts'
+          % (len(files), len(problems), len(kind_problems)))
+    return 1 if problems or kind_problems else 0
 
 
 if __name__ == '__main__':

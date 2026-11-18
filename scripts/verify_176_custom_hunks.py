@@ -55,6 +55,15 @@ ALLOWED_DIFFERENCES = {
                   'Lsb1.c(repo, tag, ctx)',
         'checks': ['dingtalk_release_lookup'],
     },
+    'Leu0;->a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
+        'reason': 'the 176 upstream dropped the171 case3 auto-start service '
+                  'page from this compose factory and moved the page into its '
+                  'own wq4 class, so the customized battery row cannot be '
+                  'inserted into iu0.a at all; the port relocates the row '
+                  'into wq4.a (checked by check_176_contracts) and this check '
+                  'only proves that iu0.a carries no residue of it',
+        'checks': ['battery_row_relocated_out_of_iu0'],
+    },
 }
 
 # The 171 core version probe script, byte for byte, as the 171 customization
@@ -133,9 +142,25 @@ def check_dingtalk_release_lookup(custom, migrated, problems, name):
     ), 'removed release URL', problems, name)
 
 
+def check_battery_row_relocated_out_of_iu0(custom, migrated, problems, name):
+    """The171 battery row belongs to the page iu0.a no longer hosts.
+
+    ``custom`` is the customized 171 eu0.a, ``migrated`` the migrated iu0.a.
+    The row itself is asserted inside wq4.a by ``check_176_contracts``; here
+    only the absence from iu0.a is proven, so a future regression that
+    re-runs the generic delta against iu0.a fails even if the wq4 row is
+    still present.
+    """
+    require(custom, ('BattToggle', 'VpnPrefs;->battOn()Z'),
+            '171 battery row', problems, name)
+    forbid(migrated, ('BattToggle', '0x13f2fb70', 'VpnPrefs;->battOn()Z'),
+           'relocated battery row residue', problems, name)
+
+
 ALLOWED_CHECKS = {
     'core_version_probe': check_core_version_probe,
     'dingtalk_release_lookup': check_dingtalk_release_lookup,
+    'battery_row_relocated_out_of_iu0': check_battery_row_relocated_out_of_iu0,
 }
 
 
@@ -438,6 +463,105 @@ def check_176_contracts(output, problems):
                 if positions[name] >= positions['construct']:
                     problems.append(('Luc0;->k()',
                                      'File.<init> runs before the %s' % name))
+
+    # The customized "unrestricted battery" row moved with its host page: the
+    # 176 upstream dropped the171 case3 auto-start service page from the iu0
+    # factory and rebuilt that page as wq4.a, so the row has to live in wq4.a
+    # between the auto-start row and the accelerated download row, spelled in
+    # wq4's own register allocation (state v4, flag v3, row object v15, dead
+    # temporaries v9 and v16..v25).  A generic re-run of the delta would put
+    # the row back into iu0.a where v7 holds a boolean, which the verifier
+    # rejects as a non-reference register.
+    iu0_row = in_file('iu0.smali',
+                      'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                      'Liu0;->a(...)')
+    if iu0_row is not None:
+        for residue in ('BattToggle', '0x13f2fb70', 'VpnPrefs;->battOn'):
+            if residue in iu0_row:
+                problems.append(('Liu0;->a(...)',
+                                 'the relocated battery row left %r in iu0.a'
+                                 % residue))
+    wq4_row = in_file('wq4.smali',
+                      'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                      'Lwq4;->a(...)')
+    if wq4_row is not None:
+        lines = significant(wq4_row)
+        row = [
+            'const v9, 0x13f2fb70',
+            'invoke-virtual {v4, v9}, Lub2;->b0(I)V',
+            'const v9, 0x7f0f0597',
+            'invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            'move-result-object v18',
+            'const v9, 0x7f0f0598',
+            'invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            'move-result-object v19',
+            'invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()'
+            'Lcom/box/app/vpn/BattToggle;',
+            'move-result-object v17',
+            'invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z',
+            'move-result v16',
+            'move-object/from16 v20, v15',
+            'const/16 v24, 0x0',
+            'const/16 v25, 0x3f58',
+            'const/16 v21, 0x0',
+            'const/high16 v23, 0xc00000',
+            'move-object/from16 v22, v4',
+            'invoke-static/range {v16 .. v25}, Lat6;->c(ZLqa2;'
+            'Ljava/lang/String;Ljava/lang/String;Lc01;ZLub2;III)V',
+            'invoke-virtual {v4, v3}, Lub2;->r(Z)V',
+            'const/16 v9, 0xe',
+        ]
+        anchor = 'const v9, -0x5325d91'
+        hits = [i for i, line in enumerate(lines) if line == anchor]
+        if len(hits) != 1:
+            problems.append(('Lwq4;->a(...)',
+                             'battery row anchor %r appears %d times, expected '
+                             'exactly once' % (anchor, len(hits))))
+        else:
+            start = hits[0] - len(row)
+            if start < 0 or lines[start:hits[0]] != row:
+                problems.append(('Lwq4;->a(...)',
+                                 'the battery unrestricted row is not the '
+                                 'block directly in front of %r' % anchor))
+        if sum(1 for line in lines if 'BattToggle' in line) != 1:
+            problems.append(('Lwq4;->a(...)',
+                             'BattToggle must appear exactly once in wq4.a'))
+
+    # The VPN modeRes shortcut has to keep the mode result in the register
+    # the shared row lookup reads as its third argument (v15), not in the
+    # enum register v13: the jump path into :goto_6 must arrive with v13 as
+    # the row id, v14 as the flag and v15 as the string resource, and the
+    # fall through path has to keep the enum in v13 for the dispatch.
+    ra1_mode = in_file('ra1.smali',
+                       'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;',
+                       'Lra1;->a(...)')
+    if ra1_mode is not None:
+        lines = significant(ra1_mode)
+        shortcut = [
+            'check-cast v13, Ljg5;',
+            'invoke-static {v13}, Lcom/box/app/vpn/VpnBridge;->modeRes(Ljg5;)I',
+            'move-result v15',
+            'if-eqz v15, :cond_pv_novpn',
+            'const v13, -0x1c301169',
+            'const/4 v14, 0x0',
+            'goto :goto_6',
+            ':cond_pv_novpn',
+        ]
+        found = None
+        for index in range(len(lines) - len(shortcut) + 1):
+            if lines[index:index + len(shortcut)] == shortcut:
+                found = index
+                break
+        if found is None:
+            problems.append(('Lra1;->a(...)',
+                             'the modeRes shortcut block is missing or has '
+                             'the wrong register layout'))
+        for index, line in enumerate(lines):
+            if 'VpnBridge;->modeRes' in line and index + 1 < len(lines) \
+                    and lines[index + 1] != 'move-result v15':
+                problems.append(('Lra1;->a(...)',
+                                 'the modeRes result must land in v15, found '
+                                 '%r' % lines[index + 1]))
 
 
 def main():

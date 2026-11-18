@@ -69,6 +69,8 @@ EXPECTED_MANUAL_HITS = {
     'probe wrapper': 1,
     'archive matcher': 1,
     'field h register': 1,
+    'battery unrestricted row': 1,
+    'vpn mode res shortcut': 1,
 }
 # CfgNav is custom-only. Use an unused, stable 32-bit Compose group key for its
 # icon lambda; validate the pinned 171 factory contract and key uniqueness.
@@ -455,6 +457,106 @@ def patch_method(plan, mapper, old_root, custom_root, out_root, r_old, r_new, au
     if not (custom and base and target):
         return False, 'method block missing'
     custom_body, base_body, target_body = body_of(custom), body_of(base), body_of(target)
+
+    # The customized "unrestricted battery" row sits in the 171 auto-start
+    # service page (eu0 case3).  The 176 upstream removed that case from the
+    # iu0 compose factory and moved the page into its own wq4 class, so the
+    # row has to be transplanted into wq4.a - between the auto-start row and
+    # the accelerated download row, exactly where the 171 customization put
+    # it - instead of into iu0.a, whose register file and case layout have
+    # nothing to do with the page any more.  wq4 keeps the page state in v4,
+    # the row flag in v3, the row object in v15 and has v9 plus v16..v25
+    # dead at the anchor, which is what the row body below is written for.
+    if plan['old'].startswith('Leu0;->a('):
+        wq4_path = out_root / 'smali' / 'wq4.smali'
+        if not wq4_path.is_file():
+            return False, 'wq4.smali missing for the battery unrestricted row'
+        wq4_text = wq4_path.read_text(errors='replace')
+        wq4_block = find_block(
+            wq4_path,
+            'a(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;')
+        if wq4_block is None:
+            return False, 'wq4.a missing for the battery unrestricted row'
+        wq4_body = body_of(wq4_block)
+        if any('BattToggle' in line for line in wq4_body):
+            return False, 'battery unrestricted row already present in wq4.a'
+        anchor = 'const v9, -0x5325d91'
+        hits = [i for i, line in enumerate(wq4_body) if line.strip() == anchor]
+        if len(hits) != 1:
+            return False, 'battery row anchor missing or ambiguous in wq4.a'
+        row = [
+            '    const v9, 0x13f2fb70',
+            '    invoke-virtual {v4, v9}, Lub2;->b0(I)V',
+            '    const v9, 0x7f0f0597',
+            '    invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            '    move-result-object v18',
+            '    const v9, 0x7f0f0598',
+            '    invoke-static {v9, v4}, Lkb3;->d0(ILub2;)Ljava/lang/String;',
+            '    move-result-object v19',
+            '    invoke-static {}, Lcom/box/app/vpn/BattToggle;->create()Lcom/box/app/vpn/BattToggle;',
+            '    move-result-object v17',
+            '    invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->battOn()Z',
+            '    move-result v16',
+            '    move-object/from16 v20, v15',
+            '    const/16 v24, 0x0',
+            '    const/16 v25, 0x3f58',
+            '    const/16 v21, 0x0',
+            '    const/high16 v23, 0xc00000',
+            '    move-object/from16 v22, v4',
+            '    invoke-static/range {v16 .. v25}, Lat6;->c(ZLqa2;Ljava/lang/String;Ljava/lang/String;Lc01;ZLub2;III)V',
+            '    invoke-virtual {v4, v3}, Lub2;->r(Z)V',
+            '    const/16 v9, 0xe',
+        ]
+        wq4_body[hits[0]:hits[0]] = row
+        new_block = (wq4_block.splitlines()[0] + '\n'
+                     + '\n'.join(wq4_body) + '\n.end method')
+        if wq4_text.count(wq4_block) != 1:
+            return False, 'wq4.a block ambiguous'
+        wq4_path.write_text(wq4_text.replace(wq4_block, new_block, 1))
+        audit.append({'old': plan['old'], 'new': plan['new'],
+                      'manual': 'battery unrestricted row relocated to wq4.a'})
+        MANUAL_HITS['battery unrestricted row'] += 1
+        return True, {'inserts': len(row), 'deletes': 0,
+                      'unmappedRegisters': [], 'alignment': 1.0}
+
+    # The VPN modeRes shortcut of the 171 customization checks the mode
+    # right after the enum cast and, when the mode maps to a resource, jumps
+    # straight to the shared row lookup with the resource in the register the
+    # 176 lookup reads as its third argument.  The generic delta lands the
+    # seven lines at the right place but votes the modeRes result onto v13 -
+    # the enum register itself - which both clobbers the enum on the fall
+    # through path and leaves the third argument register unset on the jump
+    # path, so the verifier rejects the merge at :goto_6.  The176 target
+    # already spells the same register layout in its own :cond_e block:
+    # id in v13, flag in v14, string resource in v15.
+    if plan['old'].startswith('Lw75;->a('):
+        anchor = 'check-cast v13, Ljg5;'
+        hits = [i for i, line in enumerate(target_body) if line.strip() == anchor]
+        if len(hits) != 1:
+            return False, 'vpn mode anchor missing or ambiguous in ra1.a'
+        if any('VpnBridge;->modeRes' in line for line in target_body):
+            return False, 'vpn modeRes shortcut already present in ra1.a'
+        if any(line.strip() == ':cond_pv_novpn' for line in target_body):
+            return False, 'cond_pv_novpn label already present in ra1.a'
+        shortcut = [
+            '    invoke-static {v13}, Lcom/box/app/vpn/VpnBridge;->modeRes(Ljg5;)I',
+            '    move-result v15',
+            '    if-eqz v15, :cond_pv_novpn',
+            '    const v13, -0x1c301169',
+            '    const/4 v14, 0x0',
+            '    goto :goto_6',
+            '    :cond_pv_novpn',
+        ]
+        target_body[hits[0] + 1:hits[0] + 1] = shortcut
+        new_block = (target.splitlines()[0] + '\n'
+                     + '\n'.join(target_body) + '\n.end method')
+        if not replace_block(out_root / plan['targetFile'], target_sig, new_block):
+            return False, 'vpn mode shortcut replacement failed'
+        audit.append({'old': plan['old'], 'new': plan['new'],
+                      'manual': 'vpn modeRes shortcut before the ordinal dispatch'})
+        MANUAL_HITS['vpn mode res shortcut'] += 1
+        return True, {'inserts': len(shortcut), 'deletes': 0,
+                      'unmappedRegisters': [], 'alignment': 1.0}
 
     # 176 upstream moved the core version probe of the 171 tree into the Lxe1
     # coroutine, so the 171 shell hunk has no counterpart to be transplanted
