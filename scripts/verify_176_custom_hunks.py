@@ -75,6 +75,19 @@ ALLOWED_DIFFERENCES = {
                   'name',
         'checks': ['entry_filter_prefix'],
     },
+    'Lqc0;->k()Lfc0;': {
+        'reason': 'the reviewed 171 diff replaced the private getFilesDir '
+                  'base with an unconditional Android/data external base, but '
+                  'the reviewed directory split needs a third shape: a '
+                  'per-process sticky choice between the private files '
+                  'directory (root granted, the stock BoxProxy layout) and '
+                  'the external Android/data directory (no root), read from '
+                  'the grant the VpnRoot probe persists and from a PATH scan '
+                  'for an executable su while no grant is stored yet; the '
+                  'port replaces the head of the target method wholesale, so '
+                  'the transplanted instruction shapes cannot match',
+        'checks': ['root_directory_selection'],
+    },
 }
 
 # The 171 core version probe script, byte for byte, as the 171 customization
@@ -185,6 +198,81 @@ def check_entry_filter_prefix(custom, migrated, problems, name):
                          'comparison no longer guards the prefix path'))
 
 
+def check_root_directory_selection(custom, migrated, problems, name):
+    """uc0.k picks the private directory with a grant, Android/data without.
+
+    The method has to decide once per process (sticky gate), read the grant
+    the VpnRoot probe persists (SharedPreferences "box_dir"/"private"),
+    fall back to a PATH scan for an executable "su" while no grant is stored
+    (the same rule the root probe uses, so a rooted device picks the private
+    directory from its first launch), and finally build the box/ File from
+    whichever base the branch selected.  Every consumer (box.db via jb0.a,
+    bin/run/state, boxctl/boxbpf, the bridge and the seed) derives from this
+    one builder, so the two modes get fully separate trees.
+    """
+    match = re.search(r'\.method public static k\(\)Ljc0;\n(.*?)\.end method',
+                      migrated, re.S)
+    if not match:
+        problems.append((name, 'root directory selection: uc0.k() is missing'))
+        return
+    block = match.group(1)
+    required = (
+        'sget-boolean v1, Luc0;->g:Z',
+        'const-string v1, "box_dir"',
+        'const-string v2, "private"',
+        'invoke-interface {v1, v2}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z',
+        'const-string v3, "PATH"',
+        'const-string v8, "su"',
+        'invoke-direct {v7, v6, v8}, Ljava/io/File;-><init>(Ljava/lang/String;Ljava/lang/String;)V',
+        'invoke-virtual {v7}, Ljava/io/File;->canExecute()Z',
+        'sput-boolean v3, Luc0;->h:Z',
+        'sput-boolean v3, Luc0;->g:Z',
+        ':box_dir_branch',
+        'sget-boolean v1, Luc0;->h:Z',
+        'if-nez v1, :box_dir_external',
+        ':box_dir_external',
+        'invoke-virtual {v0, v1}, Landroid/content/Context;->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;',
+        ':box_dir_ready',
+    )
+    for needle in required:
+        if needle not in block:
+            problems.append((name,
+                             'root directory selection: %r is missing from uc0.k'
+                             % needle))
+    # The branch has to select before either base is resolved: the private
+    # getFilesDir follows the sticky gate, the external call sits inside the
+    # external arm, and the null-external fallback getFilesDir comes last.
+    # Labels are matched as their own line so the branch's forward reference
+    # does not shadow the label it jumps to.
+    body_lines = [line.strip() for line in block.splitlines()]
+    order = [
+        'sget-boolean v1, Luc0;->g:Z',
+        'if-nez v1, :box_dir_branch',
+        'sget-boolean v1, Luc0;->h:Z',
+        'if-nez v1, :box_dir_external',
+        'invoke-virtual {v0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;',
+        ':box_dir_external',
+        'invoke-virtual {v0, v1}, Landroid/content/Context;->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;',
+        ':box_dir_ready',
+    ]
+    positions = []
+    for needle in order:
+        hits = [i for i, line in enumerate(body_lines) if line == needle]
+        if not hits:
+            return  # already reported as missing above
+        positions.append(hits[0])
+    if positions != sorted(positions):
+        problems.append((name,
+                         'root directory selection: the sticky gate, the branch '
+                         'and the two base resolutions are out of order: %r'
+                         % positions))
+    if block.count('invoke-virtual {v0}, Landroid/content/Context;'
+                   '->getFilesDir()Ljava/io/File;') != 2:
+        problems.append((name,
+                         'root directory selection: expected the private arm and '
+                         'the null-external fallback to call getFilesDir'))
+
+
 def check_battery_row_relocated_out_of_iu0(custom, migrated, problems, name):
     """The171 battery row belongs to the page iu0.a no longer hosts.
 
@@ -205,6 +293,7 @@ ALLOWED_CHECKS = {
     'dingtalk_release_lookup': check_dingtalk_release_lookup,
     'battery_row_relocated_out_of_iu0': check_battery_row_relocated_out_of_iu0,
     'entry_filter_prefix': check_entry_filter_prefix,
+    'root_directory_selection': check_root_directory_selection,
 }
 
 
@@ -458,22 +547,34 @@ def check_176_contracts(output, problems):
         problems.append(('Lyu0;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;',
                          'expected exactly one wrapped probe script, found %d' % wrapped))
 
-    # The external files fallback branch has to build the base directory on
-    # both of its paths.  The 176 port once advanced the
-    # :cond_external_files_ready label behind the const-string / new-instance
-    # pair, so the non-null path jumped straight to File.<init> with an
-    # undefined v1 and the ART verifier rejected the class with a VerifyError
-    # during AppApplication.onCreate.  The label must stay in front of the
-    # literal and the allocation, and the null path must keep falling through
-    # the getFilesDir fallback.
+    # The root / no-root directory split has to build the base directory on
+    # every path.  The 176 port once advanced a join label behind the
+    # const-string / new-instance pair, so a path jumped straight to
+    # File.<init> with an undefined v1 and the ART verifier rejected the
+    # class with a VerifyError during AppApplication.onCreate.  The same
+    # invariant now guards the split: the sticky gate decides first, the
+    # branch selects private (root granted) or external (no root), the
+    # external arm keeps its null fallback, and :box_dir_ready has to sit in
+    # front of the literal and the allocation on every path.
     external = in_file('uc0.smali', 'k()Ljc0;', 'Luc0;->k()')
     if external is not None:
+        # The sticky decision fields are class-level, so they are checked
+        # against the whole file rather than the method block.
+        uc0_text = (output / 'smali/uc0.smali').read_text(errors='replace')
+        for declaration in ('.field public static volatile g:Z',
+                            '.field public static volatile h:Z'):
+            if declaration not in uc0_text:
+                problems.append(('Luc0;->k()',
+                                 'the sticky decision field %r is not declared '
+                                 'on uc0' % declaration))
         lines = significant(external)
         anchors = {
-            'branch': 'if-nez v0, :cond_external_files_ready',
-            'label': ':cond_external_files_ready',
-            'fallback': 'invoke-virtual {v0}, Landroid/content/Context;'
-                        '->getFilesDir()Ljava/io/File;',
+            'gate': 'sget-boolean v1, Luc0;->g:Z',
+            'branch': 'if-nez v1, :box_dir_external',
+            'arm': ':box_dir_external',
+            'external': 'invoke-virtual {v0, v1}, Landroid/content/Context;'
+                        '->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;',
+            'label': ':box_dir_ready',
             'literal': 'const-string v2, "box"',
             'allocate': 'new-instance v1, Ljava/io/File;',
             'construct': 'invoke-direct {v1, v0, v2}, Ljava/io/File;'
@@ -488,25 +589,57 @@ def check_176_contracts(output, problems):
                                  % (needle, len(hits))))
             else:
                 positions[name] = hits[0]
-        if len(positions) == len(anchors):
-            # Non-null path: the branch jumps straight to the label, so the
-            # label has to dominate the literal and the allocation.
-            for name in ('literal', 'allocate'):
-                if not positions['branch'] < positions['label'] < positions[name]:
-                    problems.append(('Luc0;->k()',
-                                     'the external files branch skips the %s; the '
-                                     'label must precede it' % name))
-            # Null path: the branch falls through the getFilesDir fallback
-            # before reaching the same label.
-            if not (positions['branch'] < positions['fallback']
-                    < positions['label']):
+        # The private arm resolves first; the null-external fallback is the
+        # second getFilesDir and has to reach the label by falling through
+        # it.
+        fallbacks = [i for i, line in enumerate(lines)
+                     if line == 'invoke-virtual {v0}, Landroid/content/Context;'
+                                '->getFilesDir()Ljava/io/File;']
+        if len(fallbacks) == 2:
+            positions['private'] = fallbacks[0]
+            positions['fallback'] = fallbacks[1]
+        else:
+            problems.append(('Luc0;->k()',
+                             'expected the private arm and the null-external '
+                             'fallback to call getFilesDir twice, found %d'
+                             % len(fallbacks)))
+        wanted = ['gate', 'branch', 'private', 'arm', 'external',
+                  'fallback', 'label', 'literal', 'allocate', 'construct']
+        if all(name in positions for name in wanted):
+            sequence = [positions[name] for name in wanted]
+            if sequence != sorted(sequence):
                 problems.append(('Luc0;->k()',
-                                 'the getFilesDir fallback must sit between the '
-                                 'branch and the label'))
-            for name in ('literal', 'allocate'):
-                if positions[name] >= positions['construct']:
-                    problems.append(('Luc0;->k()',
-                                     'File.<init> runs before the %s' % name))
+                                 'the sticky gate, the branch, both base arms and '
+                                 'the join label are out of order: %r'
+                                 % list(zip(wanted, sequence))))
+
+    # The root probe has to persist its settled answer so the next launch's
+    # directory choice follows the actual grant: uc0.k reads the "box_dir"
+    # preferences first and only scans PATH for su while no grant is stored.
+    # The write belongs right after the probe stores its state (1 = granted),
+    # and it must not disturb v2, which the finally block passes to
+    # access$1(Z).
+    root_probe = in_file('com/box/app/vpn/VpnRoot$1.smali', 'run()V',
+                         'Lcom/box/app/vpn/VpnRoot$1;->run()V')
+    if root_probe is not None:
+        require(root_probe, (
+            'invoke-static {v1}, Lcom/box/app/vpn/VpnRoot;->access$3(I)V',
+            'invoke-static {}, Lpn;->Q()Landroid/content/Context;',
+            'const-string v4, "box_dir"',
+            'if-ne v1, v0, :box_dir_probe_no',
+            'const-string v4, "private"',
+            'invoke-interface {v3, v4, v0}, Landroid/content/SharedPreferences$Editor;'
+            '->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;',
+            'invoke-interface {v3}, Landroid/content/SharedPreferences$Editor;->apply()V',
+        ), 'root probe directory persistence', problems,
+            'Lcom/box/app/vpn/VpnRoot$1;->run()V')
+        state = root_probe.find(
+            'invoke-static {v1}, Lcom/box/app/vpn/VpnRoot;->access$3(I)V')
+        store = root_probe.find('putBoolean(Ljava/lang/String;Z)')
+        if not (0 <= state < store):
+            problems.append(('Lcom/box/app/vpn/VpnRoot$1;->run()V',
+                             'the directory choice must be persisted after the '
+                             'probe stores its state'))
 
     # The customized "unrestricted battery" row moved with its host page: the
     # 176 upstream dropped the171 case3 auto-start service page from the iu0
