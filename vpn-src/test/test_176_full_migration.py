@@ -130,6 +130,44 @@ class Full176MigrationTest(unittest.TestCase):
         self.assertIn('-0x7fc2cadc -> :sswitch_6', states)
         self.assertIn('-0x54707cda -> :sswitch_6_custom', states)
 
+    def test_archive_entry_filter_falls_back_to_core_prefixes(self):
+        """The jieluojun tarball entry is a full release name, not "sing-box".
+
+        The DingTalk sing-box tarball stores its single binary as
+        "sing-box-<version>-android-arm64-v8a-ebpf", so the j-blank branch of
+        the 176 entry filter must keep the exact basename check first and then
+        fall back to "<core>-" prefix matching; otherwise the update throws
+        "Archive entry missing or ambiguous: " with an empty entry list.
+        """
+        lines = self._significant(self.smali('yu0.smali'))
+        label = ':boxproxy_entry_match'
+        hits = [i for i, line in enumerate(lines) if line == label]
+        self.assertEqual(len(hits), 1,
+                         'entry filter label appears %d times' % len(hits))
+        expected = [
+            'invoke-virtual {v15, v8}, Ljava/lang/Object;'
+            '->equals(Ljava/lang/Object;)Z',
+            'move-result v10',
+            'if-nez v10, :boxproxy_entry_match',
+            'const-string v10, "-"',
+            'invoke-virtual {v8, v10}, Ljava/lang/String;'
+            '->concat(Ljava/lang/String;)Ljava/lang/String;',
+            'move-result-object v10',
+            'invoke-virtual {v15, v10}, Ljava/lang/String;'
+            '->startsWith(Ljava/lang/String;)Z',
+            'move-result v10',
+            'if-eqz v10, :cond_47',
+            ':boxproxy_entry_match',
+            'invoke-virtual {v4, v13}, Ljava/util/ArrayList;'
+            '->add(Ljava/lang/Object;)Z',
+        ]
+        start = hits[0] - (len(expected) - 2)
+        self.assertGreaterEqual(start, 0, 'entry filter fallback missing')
+        self.assertEqual(lines[start:hits[0] + 2], expected,
+                         'the entry filter must check the exact basename '
+                         'first and only then fall back to "<core>-" prefix '
+                         'matching')
+
     def test_external_files_branch_builds_the_base_on_both_paths(self):
         import re
         text = self.smali('uc0.smali')

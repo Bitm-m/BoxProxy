@@ -64,6 +64,17 @@ ALLOWED_DIFFERENCES = {
                   'only proves that iu0.a carries no residue of it',
         'checks': ['battery_row_relocated_out_of_iu0'],
     },
+    'Luu0;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;': {
+        'reason': 'the 171 dynamic core install bypassed the generic updater '
+                  'entry filter (the pd1 branch went straight to the '
+                  'prefix-tolerant r6.l extractor), so the reviewed 171 diff '
+                  'carries no counterpart for relaxing the 176 filter; the '
+                  'port adds a "<core>-<suffix>" fallback to the j-blank '
+                  'branch of the 176 entry filter because the jieluojun '
+                  'sing-box tarballs store the binary under its full release '
+                  'name',
+        'checks': ['entry_filter_prefix'],
+    },
 }
 
 # The 171 core version probe script, byte for byte, as the 171 customization
@@ -142,6 +153,38 @@ def check_dingtalk_release_lookup(custom, migrated, problems, name):
     ), 'removed release URL', problems, name)
 
 
+def check_entry_filter_prefix(custom, migrated, problems, name):
+    """The j-blank entry filter falls back to "<core>-<suffix>" prefixes.
+
+    The jieluojun sing-box tarballs store the binary under its full release
+    name ("sing-box-<version>-android-arm64-v8a-ebpf"), so an exact basename
+    comparison never matches; the filter must keep the exact check first and
+    then accept a "<core>-" prefixed basename, mirroring the 171 archive
+    matcher.  The probe wrapper in the same method is asserted by
+    check_176_contracts.
+    """
+    require(migrated, (
+        'invoke-virtual {v15, v8}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z',
+        'move-result v10',
+        'if-nez v10, :boxproxy_entry_match',
+        'const-string v10, "-"',
+        'invoke-virtual {v8, v10}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;',
+        'move-result-object v10',
+        'invoke-virtual {v15, v10}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z',
+        'if-eqz v10, :cond_47',
+        ':boxproxy_entry_match',
+    ), 'entry filter prefix fallback', problems, name)
+    # The exact comparison has to stay the first guard: the prefix path may
+    # only run when the basename is not already equal to the core name.
+    exact = migrated.find(
+        'invoke-virtual {v15, v8}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z')
+    fallback = migrated.find('if-nez v10, :boxproxy_entry_match')
+    if not (0 <= exact < fallback):
+        problems.append((name,
+                         'entry filter prefix fallback: the exact basename '
+                         'comparison no longer guards the prefix path'))
+
+
 def check_battery_row_relocated_out_of_iu0(custom, migrated, problems, name):
     """The171 battery row belongs to the page iu0.a no longer hosts.
 
@@ -161,6 +204,7 @@ ALLOWED_CHECKS = {
     'core_version_probe': check_core_version_probe,
     'dingtalk_release_lookup': check_dingtalk_release_lookup,
     'battery_row_relocated_out_of_iu0': check_battery_row_relocated_out_of_iu0,
+    'entry_filter_prefix': check_entry_filter_prefix,
 }
 
 

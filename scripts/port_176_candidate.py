@@ -67,6 +67,7 @@ EXPECTED_MANUAL_HITS = {
     'coroutine states': 1,
     'core path probe': 1,
     'probe wrapper': 1,
+    'entry filter': 1,
     'archive matcher': 1,
     'field h register': 1,
     'battery unrestricted row': 1,
@@ -946,6 +947,50 @@ def patch_method(plan, mapper, old_root, custom_root, out_root, r_old, r_new, au
         reg_map.update({'v2': 'v2'})
         manual = 'wrap the probe script with LdFix so bpld and _bp_seed are defined'
         MANUAL_HITS['probe wrapper'] += 1
+        # The DingTalk tarballs published by jieluojun/sing-box store the
+        # binary under its full release name, e.g.
+        # "sing-box-1.15-alpha.13-e6b0dd59d-android-arm64-v8a-ebpf", while the
+        # 176 entry filter only accepts an entry whose basename equals the
+        # requested core name.  The 171 install path never hit this filter (the
+        # dynamic core flow went straight to the prefix-tolerant r6.l
+        # extractor), but the 176 generic updater runs every core through it,
+        # so the j-blank branch has to fall back to "<core>-<suffix>" prefix
+        # matching exactly like the ported archive matcher does.  The fallback
+        # reuses v10, which still holds the dead "v2fly" literal at this point,
+        # so no new locals are needed.
+        anchor = 'invoke-virtual {v15, v8}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z'
+        hits = [i for i, line in enumerate(target_body) if line.strip() == anchor]
+        if len(hits) != 1:
+            return False, 'archive entry filter anchor missing or ambiguous'
+        start = hits[0]
+        significant = [i for i in range(start + 1, len(target_body))
+                       if target_body[i].strip()
+                       and not target_body[i].strip().startswith(DEBUG_PREFIXES)]
+        if len(significant) < 2:
+            return False, 'archive entry filter body truncated'
+        move, branch_index = significant[0], significant[1]
+        if target_body[move].strip() != 'move-result v8':
+            return False, 'archive entry filter result move missing'
+        branch = target_body[branch_index].strip()
+        if not branch.startswith('if-eqz v8, :'):
+            return False, 'archive entry filter branch missing'
+        skip = branch.split()[-1]
+        matcher = [
+            '    invoke-virtual {v15, v8}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z',
+            '    move-result v10',
+            '    if-nez v10, :boxproxy_entry_match',
+            '    const-string v10, "-"',
+            '    invoke-virtual {v8, v10}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;',
+            '    move-result-object v10',
+            '    invoke-virtual {v15, v10}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z',
+            '    move-result v10',
+            '    if-eqz v10, ' + skip,
+            '    :boxproxy_entry_match',
+        ]
+        target_body[start:branch_index + 1] = matcher
+        manual += ('; the j-blank entry filter falls back to '
+                   '"<core>-<suffix>" prefix matching')
+        MANUAL_HITS['entry filter'] += 1
     elif old_ref.startswith('Lr6;->l('):
         # The 176 upstream only accepts an archive whose name matches the
         # requested core exactly.  The 171 customization also accepts an
