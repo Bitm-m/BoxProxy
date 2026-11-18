@@ -1,0 +1,27 @@
+{
+  "versionName": "26.11.17.73f2816",
+  "versionCode": 176,
+  "packageName": "com.boxproxy.box",
+  "abi": "arm64-v8a",
+  "inputFile": "BoxProxy-26.11.17.73f2816-arm64-v8a.apk",
+  "inputSha256": "d5beb42e6461f738022d7a456357b93a24b200fa98be4ff7441d08f3d25c8213",
+  "apktoolVersion": "2.9.3",
+  "apktoolSha256": "7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4",
+  "baselineCommit": "9249511a81889afbd9990979d45bec93a8cf6169",
+  "customizedCommit": "9249511a81889afbd9990979d45bec93a8cf6169",
+  "sourceArchive": "apktool-source.tar.gz",
+  "sourceArchiveSha256": "1d35ea164a06da62509567426cb80aacd62b773f5f111b59e1f1767c120ae20f",
+  "sourceFileCount": 9893,
+  "sourceBytes": 118103438,
+  "status": "decoded-and-customized-host-validated-device-validation-pending",
+  "migration": {
+    "status": "full-custom-migration-host-validated-device-validation-pending",
+    "plan": "migration/coverage.json",
+    "classMap": "migration/class-map.json",
+    "classMapOverrides": "migration/class-map-overrides.json",
+    "generator": "scripts/migrate_176.py",
+    "sourceSnapshot": "upstream/26.11.16.25abc84",
+    "runtimeProjectReplaced": true,
+    "androidDeviceVerified": false
+  }
+}

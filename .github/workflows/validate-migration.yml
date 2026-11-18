@@ -92,3 +92,18 @@ jobs:
           java -jar .tools/apktool_2.9.3.jar b .tools/ported-171/decompiled \
             -p .tools/framework -o "$RUNNER_TEMP/full-migration-171-unsigned.apk"
           echo "Validated full 171 implementation ($version_name / $version_code). Physical Android/root/VPN and signature-compatible upgrade checks require devices and the original signing key."
+      - name: Rebuild complete pinned 176 migration (unsigned)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/migrate_176.py --output .tools/ported-176
+          version_name="$(sed -n 's/^  versionName:[[:space:]]*//p' .tools/ported-176/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
+          version_code="$(sed -n 's/^  versionCode:[[:space:]]*//p' .tools/ported-176/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
+          [[ "$version_code" == "176" && "$version_name" == "26.11.17.73f2816" ]]
+          python3 scripts/check_smali_branch_offsets.py .tools/ported-176/decompiled
+          python3 scripts/check_smali_reference_moves.py .tools/ported-176/decompiled
+          python3 scripts/check_smali_labels.py .tools/ported-176/decompiled
+          python3 scripts/check_smali_move_result.py .tools/ported-176/decompiled
+          java -jar .tools/apktool_2.9.3.jar b .tools/ported-176/decompiled \
+            -p .tools/framework -o "$RUNNER_TEMP/full-migration-176-unsigned.apk"
+          echo "Validated full 176 implementation ($version_name / $version_code). Physical Android/root/VPN and signature-compatible upgrade checks require devices and the original signing key."
