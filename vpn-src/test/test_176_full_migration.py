@@ -168,132 +168,51 @@ class Full176MigrationTest(unittest.TestCase):
                          'first and only then fall back to "<core>-" prefix '
                          'matching')
 
-    def test_root_mode_directory_split_builds_the_base_on_both_paths(self):
-        """Granted root builds from getFilesDir, no root from Android/data.
+    def test_working_directory_stays_private_in_both_modes(self):
+        """Root and no-root alike build the box/ tree from getFilesDir.
 
-        The directory choice is sticky per process (uc0.g/uc0.h), reads the
-        grant the VpnRoot probe persists in the "box_dir" preferences and
-        falls back to a PATH scan for an executable su while no grant is
-        stored, so a rooted device picks the private stock layout from its
-        first launch and an unrooted one keeps the Android/data directory.
-        Every consumer (box.db, bin/run/state, boxctl/boxbpf) derives from
-        this builder, so both modes get fully separate trees.
+        The final decision drops the Android/data external directory
+        entirely: uc0.k is the stock straight-line private head, so every
+        consumer (box.db via jb0.a, bin/run/state, boxctl/boxbpf, the
+        bridge and the seed) derives from the private files dir in both
+        modes.  Nothing may reintroduce the external arm or the discarded
+        sticky decision (uc0.g/uc0.h, the box_dir preferences, the PATH su
+        scan).
         """
         import re
         text = self.smali('uc0.smali')
-        # The sticky decision lives in two dedicated static fields; ART
-        # rejects the sget/sput pair when they are not declared.
-        for declaration in ('.field public static volatile g:Z',
-                            '.field public static volatile h:Z'):
-            self.assertIn(declaration, text,
-                          'the directory split needs the sticky field %r'
-                          % declaration)
+        for residue in ('getExternalFilesDir', 'box_dir', 'const-string v3, "PATH"',
+                        'Luc0;->g:Z', 'Luc0;->h:Z', ':box_dir_',
+                        '.field public static volatile g:Z',
+                        '.field public static volatile h:Z'):
+            self.assertNotIn(residue, text,
+                             'uc0 must not carry %r any more' % residue)
         match = re.search(r'\.method public static k\(\)Ljc0;\n(.*?)\.end method',
                           text, re.S)
         self.assertIsNotNone(match, 'uc0.k() is missing')
         lines = [line.strip() for line in match.group(1).splitlines()
                  if line.strip() and not line.strip().startswith('.')]
 
-        def index(needle, occurrence=1):
-            hits = [i for i, line in enumerate(lines) if line == needle]
-            self.assertGreaterEqual(len(hits), occurrence,
-                                    '%r appears %d times' % (needle, len(hits)))
-            return hits[occurrence - 1]
-
         def exact(needle):
             hits = [i for i, line in enumerate(lines) if line == needle]
             self.assertEqual(len(hits), 1, '%r appears %d times' % (needle, len(hits)))
             return hits[0]
 
-        # Sticky gate: the first call decides, later calls reuse the choice.
-        gate = exact('sget-boolean v1, Luc0;->g:Z')
-        decide = exact('if-nez v1, :box_dir_branch')
-        stored = exact('sput-boolean v3, Luc0;->g:Z')
-        self.assertLess(gate, decide)
-        self.assertLess(decide, stored)
-        # Persisted grant and PATH scan feed the decision.
-        exact('const-string v1, "box_dir"')
-        exact('const-string v2, "private"')
-        exact('const-string v3, "PATH"')
-        exact('const-string v8, "su"')
-        exact('invoke-virtual {v7}, Ljava/io/File;->canExecute()Z')
-        sput_private = exact('sput-boolean v3, Luc0;->h:Z')
-        self.assertLess(decide, sput_private)
-        self.assertLess(sput_private, stored)
-        # Branch: private arm first, external arm with its null fallback,
-        # join label in front of the literal and the allocation so no path
-        # reaches File.<init> with an undefined v1 (the historic VerifyError).
-        branch = exact('if-nez v1, :box_dir_external')
-        private = index('invoke-virtual {v0}, Landroid/content/Context;'
-                        '->getFilesDir()Ljava/io/File;')
-        arm = exact(':box_dir_external')
-        external = exact('invoke-virtual {v0, v1}, Landroid/content/Context;'
-                         '->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;')
-        fallback = index('invoke-virtual {v0}, Landroid/content/Context;'
-                         '->getFilesDir()Ljava/io/File;', 2)
-        label = exact(':box_dir_ready')
-        literal = exact('const-string v2, "box"')
+        # The historic VerifyError guard: v1 is allocated first, the base
+        # is resolved before the literal, and File.<init> runs last.
         allocate = exact('new-instance v1, Ljava/io/File;')
+        base = exact('invoke-virtual {v0}, Landroid/content/Context;'
+                     '->getFilesDir()Ljava/io/File;')
+        literal = exact('const-string v2, "box"')
         construct = exact('invoke-direct {v1, v0, v2}, Ljava/io/File;'
                           '-><init>(Ljava/io/File;Ljava/lang/String;)V')
-        self.assertEqual([gate, branch, private, arm, external, fallback,
-                          label, literal, allocate, construct],
-                         sorted([gate, branch, private, arm, external, fallback,
-                                 label, literal, allocate, construct]))
-        # The private arm must come from the sticky branch, not from the
-        # unconditional getFilesDir the stock method had.
-        self.assertLess(branch, private)
-        self.assertLess(private, arm)
-        # The null path falls through the getFilesDir fallback to the label.
-        self.assertLess(arm, external)
-        self.assertLess(external, fallback)
-        self.assertLess(fallback, label)
-        # Both paths construct the File from the prepared registers.
-        self.assertLess(literal, construct)
-        self.assertLess(allocate, construct)
-
-    def test_root_probe_persists_the_directory_choice(self):
-        """VpnRoot$1 stores the settled grant right after the probe state.
-
-        uc0.k decides once per process, so the asynchronous probe answer has
-        to be persisted for the next launch: state 1 (granted) stores
-        private=true, anything else stores false.  The write must follow
-        access$3 and must not disturb v2, which the finally block passes to
-        access$1(Z).
-        """
-        import re
-        text = self.smali('com/box/app/vpn/VpnRoot$1.smali')
-        match = re.search(r'\.method public run\(\)V\n(.*?)\.end method',
-                          text, re.S)
-        self.assertIsNotNone(match, 'VpnRoot$1.run() is missing')
-        block = match.group(1)
-        markers = [
-            'invoke-static {v1}, Lcom/box/app/vpn/VpnRoot;->access$3(I)V',
-            'invoke-static {}, Lpn;->Q()Landroid/content/Context;',
-            'const-string v4, "box_dir"',
-            'const-string v4, "private"',
-            'if-ne v1, v0, :box_dir_probe_no',
-            'invoke-interface {v3, v4, v0}, Landroid/content/SharedPreferences$Editor;'
-            '->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;',
-            'invoke-interface {v3}, Landroid/content/SharedPreferences$Editor;->apply()V',
-        ]
-        positions = []
-        for marker in markers:
-            hits = [i for i, line in enumerate(block.splitlines())
-                    if marker in line]
-            if marker.startswith('invoke-interface {v3, v4, v0}'):
-                # Both grant outcomes store the answer (true and false).
-                self.assertEqual(len(hits), 2,
-                                 '%r appears %d times' % (marker, len(hits)))
-            else:
-                self.assertEqual(len(hits), 1,
-                                 '%r appears %d times' % (marker, len(hits)))
-            positions.append(hits[0])
-        self.assertEqual(positions, sorted(positions),
-                         'the directory choice must be persisted after the '
-                         'probe stores its state')
-        # v2 keeps the zero the finally block relies on for access$1(Z).
-        self.assertNotIn('const-string v2,', block)
+        self.assertEqual([allocate, base, literal, construct],
+                         sorted([allocate, base, literal, construct]))
+        # Straight-line stock head: no branch rejoins the construction.
+        for line in lines:
+            self.assertFalse(line.startswith(('if-', 'goto')),
+                             'the private working directory head must stay '
+                             'straight-line, found %r' % line)
 
     def test_coverage_plan_is_fully_migrated(self):
         coverage = json.loads((SNAPSHOT_176 / 'migration/coverage.json').read_text())

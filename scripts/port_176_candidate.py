@@ -72,7 +72,7 @@ EXPECTED_MANUAL_HITS = {
     'field h register': 1,
     'battery unrestricted row': 1,
     'vpn mode res shortcut': 1,
-    'root directory split': 1,
+    'private working directory': 1,
 }
 # CfgNav is custom-only. Use an unused, stable 32-bit Compose group key for its
 # icon lambda; validate the pinned 171 factory contract and key uniqueness.
@@ -1037,108 +1037,36 @@ def patch_method(plan, mapper, old_root, custom_root, out_root, r_old, r_new, au
         manual = 'archive matcher accepts "<core>-<suffix>" archives of at least 1 MiB'
         MANUAL_HITS['archive matcher'] += 1
     elif old_ref.startswith('Lqc0;->k('):
-        # The root / no-root working-directory split.  A granted root uses the
-        # private files directory exactly like the stock BoxProxy; without a
-        # grant the base stays the Android/data external directory the 171
-        # customization used (both modes keep their own box/ tree, box.db
-        # included, because every consumer derives from this one builder).
-        # The choice is sticky for the life of the process and reads the grant
-        # the VpnRoot probe persists for the next launch; while no persisted
-        # value exists it scans PATH for an executable "su", the same rule the
-        # root probe itself uses, so a rooted device picks the private
-        # directory from its very first launch.  The head of the target
-        # method (context, getFilesDir, the box File) is replaced wholesale,
-        # so the generic delta for this plan has to be discarded.
+        # The reviewed decision keeps the private files directory for BOTH
+        # modes: a granted root always used it (the stock BoxProxy layout)
+        # and the no-root mode moves off Android/data onto the same private
+        # tree, so the reviewed 171 external-first transplant must not be
+        # carried into the 176 target at all.  The target head already is
+        # the stock private base, so this hunk only discards the generic
+        # delta; the guards prove the target still is that stock head.
         significant = [i for i, line in enumerate(target_body)
                        if line.strip()
                        and not line.strip().startswith(DEBUG_PREFIXES)
                        and not line.strip().startswith(('.locals ', '.registers '))]
-        if not significant:
-            return False, 'root directory split body missing'
-        start = significant[0]
-        if target_body[start].strip() != 'new-instance v1, Ljava/io/File;':
-            return False, 'root directory split head anchor missing'
+        if (not significant
+                or target_body[significant[0]].strip()
+                != 'new-instance v1, Ljava/io/File;'):
+            return False, 'private working directory head anchor missing'
         box_init = ('invoke-direct {v1, v0, v2}, Ljava/io/File;'
                     '-><init>(Ljava/io/File;Ljava/lang/String;)V')
-        hits = [i for i, line in enumerate(target_body) if line.strip() == box_init]
-        if len(hits) != 1:
-            return False, 'root directory split box anchor missing or ambiguous'
-        end = hits[0]
-        if end <= start:
-            return False, 'root directory split anchors out of order'
-        matcher = '''\
-    sget-object v0, Lcom/box/app/AppApplication;->i:Landroid/content/Context;
-    invoke-static {}, Lpn;->Q()Landroid/content/Context;
-    move-result-object v0
-    sget-boolean v1, Luc0;->g:Z
-    if-nez v1, :box_dir_branch
-    const-string v1, "box_dir"
-    const/4 v2, 0x0
-    invoke-virtual {v0, v1, v2}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
-    move-result-object v1
-    const-string v2, "private"
-    invoke-interface {v1, v2}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
-    move-result v3
-    if-eqz v3, :box_dir_scan
-    const/4 v3, 0x0
-    invoke-interface {v1, v2, v3}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
-    move-result v3
-    goto :box_dir_decided
-    :box_dir_scan
-    const-string v3, "PATH"
-    invoke-static {v3}, Ljava/lang/System;->getenv(Ljava/lang/String;)Ljava/lang/String;
-    move-result-object v3
-    if-nez v3, :box_dir_scan_no
-    const-string v4, ":"
-    invoke-virtual {v3, v4}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
-    move-result-object v3
-    const/4 v4, 0x0
-    array-length v5, v3
-    :box_dir_scan_loop
-    if-ge v4, v5, :box_dir_scan_no
-    aget-object v6, v3, v4
-    new-instance v7, Ljava/io/File;
-    const-string v8, "su"
-    invoke-direct {v7, v6, v8}, Ljava/io/File;-><init>(Ljava/lang/String;Ljava/lang/String;)V
-    invoke-virtual {v7}, Ljava/io/File;->canExecute()Z
-    move-result v6
-    if-nez v6, :box_dir_scan_hit
-    add-int/lit8 v4, v4, 0x1
-    goto :box_dir_scan_loop
-    :box_dir_scan_hit
-    const/4 v3, 0x1
-    goto :box_dir_decided
-    :box_dir_scan_no
-    const/4 v3, 0x0
-    :box_dir_decided
-    sput-boolean v3, Luc0;->h:Z
-    const/4 v3, 0x1
-    sput-boolean v3, Luc0;->g:Z
-    :box_dir_branch
-    sget-boolean v1, Luc0;->h:Z
-    if-nez v1, :box_dir_external
-    invoke-virtual {v0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
-    move-result-object v0
-    goto :box_dir_ready
-    :box_dir_external
-    const/4 v1, 0x0
-    invoke-virtual {v0, v1}, Landroid/content/Context;->getExternalFilesDir(Ljava/lang/String;)Ljava/io/File;
-    move-result-object v0
-    if-nez v0, :box_dir_ready
-    invoke-static {}, Lpn;->Q()Landroid/content/Context;
-    move-result-object v0
-    invoke-virtual {v0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
-    move-result-object v0
-    :box_dir_ready
-    const-string v2, "box"
-    new-instance v1, Ljava/io/File;
-    invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V'''
-        target_body[start:end + 1] = matcher.splitlines()
+        if sum(1 for line in target_body if line.strip() == box_init) != 1:
+            return False, 'private working directory box anchor missing or ambiguous'
+        get_files = ('invoke-virtual {v0}, Landroid/content/Context;'
+                     '->getFilesDir()Ljava/io/File;')
+        if sum(1 for line in target_body if line.strip() == get_files) != 1:
+            return False, 'private working directory base is not the stock getFilesDir'
+        if any('getExternalFilesDir' in line or ':box_dir_' in line
+               for line in target_body):
+            return False, 'private working directory target carries external residue'
         inserts, deletes = [], set()
-        manual = ('root working directory: private files dir when root is granted, '
-                  'Android/data otherwise (sticky per process, grant persisted '
-                  'by the VpnRoot probe)')
-        MANUAL_HITS['root directory split'] += 1
+        manual = ('working directory stays the private files dir in both root '
+                  'and no-root modes (no Android/data)')
+        MANUAL_HITS['private working directory'] += 1
 
     audit_entry = {'old': old_ref, 'new': plan['new'], 'alignment': round(alignment, 4)}
     if manual:
@@ -2645,105 +2573,6 @@ def check_core_version_rules_whitelist(out_root):
                                                                DINGTALK_SINGBOX_REPO))
 
 
-def check_root_directory_persistence(out_root):
-    """Prove VpnRoot$1 stores the settled grant for the next launch."""
-    out_root = Path(out_root)
-    path = out_root / 'smali/com/box/app/vpn/VpnRoot$1.smali'
-    if not path.is_file():
-        raise ValueError('the root probe thread class VpnRoot$1 is missing')
-    block = find_block(path, 'run()V')
-    if not block:
-        raise ValueError('the root probe thread VpnRoot$1.run is missing')
-    anchor = 'invoke-static {v1}, Lcom/box/app/vpn/VpnRoot;->access$3(I)V'
-    for marker in (
-        anchor,
-        'invoke-static {}, Lpn;->Q()Landroid/content/Context;',
-        'const-string v4, "box_dir"',
-        'if-ne v1, v0, :box_dir_probe_no',
-        'const-string v4, "private"',
-        'invoke-interface {v3, v4, v0}, Landroid/content/SharedPreferences$Editor;'
-        '->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;',
-        'invoke-interface {v3}, Landroid/content/SharedPreferences$Editor;->apply()V',
-        ':box_dir_probe_store',
-    ):
-        if marker not in block:
-            raise ValueError('the root probe directory persistence is missing %r' % marker)
-    if not (block.index(anchor) < block.index('putBoolean')
-            < block.index('apply()V')):
-        raise ValueError('the directory persistence must follow the probe state write')
-    if block.index(':box_dir_probe_no') < block.index(anchor):
-        raise ValueError('the directory persistence labels escaped the probe body')
-    return ('VpnRoot$1 persists the settled grant (private vs Android/data) '
-            'right after the probe stores its state')
-
-
-def adapt_root_directory_persistence(out_root):
-    """Persist the VpnRoot probe result for the next launch's directory choice.
-
-    ``uc0.k`` picks the working directory once per process, and the
-    authoritative grant answer only arrives asynchronously on the root probe
-    thread (VpnRoot$1.run).  Right after the probe stores its state (1 =
-    granted, anything else = denied) the settled answer is written to the
-    "box_dir" preferences; the next launch reads that value before falling
-    back to the synchronous PATH scan for an executable "su".
-
-    The insert must not touch v2: the finally block after the try region
-    passes v2 to access$1(Z), so it has to keep the zero it was initialised
-    with.  v0, v1, v3 and v4 are all dead once the state has been stored
-    (the finally block reloads v0/v1 from System.currentTimeMillis()).
-    """
-    out_root = Path(out_root)
-    path = out_root / 'smali/com/box/app/vpn/VpnRoot$1.smali'
-    if not path.is_file():
-        raise ValueError('the root probe thread class VpnRoot$1 is missing')
-    block = find_block(path, 'run()V')
-    if not block:
-        raise ValueError('the root probe thread VpnRoot$1.run is missing')
-    entries, tail = _instruction_entries(block)
-    anchor = 'invoke-static {v1}, Lcom/box/app/vpn/VpnRoot;->access$3(I)V'
-    index = _find_instruction(entries, anchor)
-    if index < 0:
-        raise ValueError('the root probe state write anchor is missing')
-    if sum(1 for _, instruction in entries if instruction.strip() == anchor) != 1:
-        raise ValueError('the root probe state write anchor is ambiguous')
-    if any('putBoolean' in instruction for _, instruction in entries):
-        return check_root_directory_persistence(out_root)
-    persist = [
-        ([], '    invoke-static {}, Lpn;->Q()Landroid/content/Context;'),
-        ([], '    move-result-object v0'),
-        ([], '    const-string v4, "box_dir"'),
-        ([], '    const/4 v3, 0x0'),
-        ([], '    invoke-virtual {v0, v4, v3}, Landroid/content/Context;'
-             '->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;'),
-        ([], '    move-result-object v0'),
-        ([], '    invoke-interface {v0}, Landroid/content/SharedPreferences;'
-             '->edit()Landroid/content/SharedPreferences$Editor;'),
-        ([], '    move-result-object v3'),
-        ([], '    const-string v4, "private"'),
-        ([], '    const/4 v0, 0x1'),
-        ([], '    if-ne v1, v0, :box_dir_probe_no'),
-        ([], '    invoke-interface {v3, v4, v0}, Landroid/content/SharedPreferences$Editor;'
-             '->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;'),
-        ([], '    move-result-object v3'),
-        ([], '    goto :box_dir_probe_store'),
-        ([], '    :box_dir_probe_no'),
-        ([], '    const/4 v0, 0x0'),
-        ([], '    invoke-interface {v3, v4, v0}, Landroid/content/SharedPreferences$Editor;'
-             '->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;'),
-        ([], '    move-result-object v3'),
-        ([], '    :box_dir_probe_store'),
-        ([], '    invoke-interface {v3}, Landroid/content/SharedPreferences$Editor;->apply()V'),
-    ]
-    entries[index + 1:index + 1] = persist
-    text = path.read_text(errors='replace')
-    if text.count(block) != 1:
-        raise ValueError('the VpnRoot$1.run method is missing or ambiguous')
-    lines = block.splitlines()
-    replacement = '\n'.join([lines[0]] + _render_entries(entries, tail) + [lines[-1]])
-    path.write_text(text.replace(block, replacement, 1))
-    return check_root_directory_persistence(out_root)
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--old', type=Path, default=Path('.tools/cmp/decompiled'))
@@ -2816,11 +2645,6 @@ def main():
     for target_class, declaration in (
         ('Ljg5;', '.field public static final enum t:Lne5;'),
         ('Lnx5;', '.field public cfgD:Z'),
-        # The root / no-root directory split keeps its sticky per-process
-        # choice on uc0: g records that the decision has been made, h
-        # records it (private files dir vs Android/data external dir).
-        ('Luc0;', '.field public static volatile g:Z'),
-        ('Luc0;', '.field public static volatile h:Z'),
     ):
         ok, detail = merge_field(args.output, mapper, target_class, declaration)
         if ok:
@@ -2850,8 +2674,6 @@ def main():
          lambda: check_update_core_dingtalk_sources(args.output)),
         ('Update Core core version rules whitelist',
          lambda: adapt_core_version_rules_whitelist(args.output)),
-        ('Root directory grant persistence',
-         lambda: adapt_root_directory_persistence(args.output)),
     ):
         try:
             detail = transform()
