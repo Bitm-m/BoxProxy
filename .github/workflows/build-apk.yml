@@ -1,7 +1,7 @@
 name: Build APK
 
-# 构建 171 完整迁移候选；仓库 decompiled/ 是 139 基线，不是本工作流的 APK 输入：
-#   pinned 171 snapshot -> verified full migration -> reference scan -> apktool b -> align/sign/upload
+# 构建 176 完整迁移候选；仓库 decompiled/ 是 139 基线，不是本工作流的 APK 输入：
+#   pinned 171 snapshot -> reviewed 171 -> 176 port -> reference scan -> apktool b -> align/sign/upload
 # Apktool 2.9.3 必须与 pinned snapshot 一致；升级时需重新反编译并同步 sha256。
 
 on:
@@ -31,7 +31,7 @@ env:
   APKTOOL_VERSION: "2.9.3"
   # 官方 apktool_2.9.3.jar 的 sha256（与发行包大小 23254968 字节对应，已交叉验证）
   APKTOOL_SHA256: "7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4"
-  PROJECT_DIR: ".tools/ci-171/decompiled"
+  PROJECT_DIR: ".tools/ci-176/decompiled"
 
 jobs:
   build:
@@ -42,13 +42,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Generate the pinned 171 migration candidate
+      - name: Generate the pinned 176 migration candidate
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/migrate_upstream.py \
-            --snapshot upstream/26.11.16.25abc84 \
-            --output .tools/ci-171
+          python3 scripts/migrate_176.py --output .tools/ci-176
           test -f "$PROJECT_DIR/apktool.yml"
 
       - name: Setup JDK 17
@@ -68,8 +66,8 @@ jobs:
             echo "::error::failed to parse versionName/versionCode from $PROJECT_DIR/apktool.yml"
             exit 1
           fi
-          if [[ "$version_code" != "171" || "$version_name" != "26.11.16.25abc84" ]]; then
-            echo "::error::refusing to build non-171 project ($version_name / $version_code)"
+          if [[ "$version_code" != "176" || "$version_name" != "26.11.17.73f2816" ]]; then
+            echo "::error::refusing to build non-176 project ($version_name / $version_code)"
             exit 1
           fi
           echo "version_name=${version_name}" >> "$GITHUB_OUTPUT"
@@ -97,6 +95,12 @@ jobs:
 
       - name: Validate internal smali member references
         run: python3 scripts/check_smali_references.py "$PROJECT_DIR"
+
+      - name: Reject duplicate or dangling Smali labels
+        run: python3 scripts/check_smali_labels.py "$PROJECT_DIR"
+
+      - name: Reject misplaced move-result instructions
+        run: python3 scripts/check_smali_move_result.py "$PROJECT_DIR"
 
       - name: Reject zero-offset Smali branches
         run: python3 scripts/check_smali_branch_offsets.py "$PROJECT_DIR"
@@ -222,4 +226,4 @@ jobs:
           gh release create "${{ github.ref_name }}" artifacts/*.apk artifacts/*.sha256 \
             --repo "${{ github.repository }}" --verify-tag \
             --title "BoxProxy ${{ github.ref_name }}" \
-            --notes "由 GitHub Actions 从 upstream/26.11.16.25abc84 的 171 完整迁移候选回编译（apktool ${APKTOOL_VERSION} + zipalign + apksigner）。签名与官方版本不同，无法覆盖安装官方版本，请先卸载后再安装。"
+            --notes "由 GitHub Actions 从 upstream/26.11.17.73f2816 的 176 完整迁移候选回编译（apktool ${APKTOOL_VERSION} + zipalign + apksigner）。签名与官方版本不同，无法覆盖安装官方版本，请先卸载后再安装。"
