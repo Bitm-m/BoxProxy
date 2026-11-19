@@ -80,8 +80,8 @@ class Stage6RepairTest(unittest.TestCase):
         (root / 'smali/com/box/app/vpn/VpnPrefs.smali').write_text('''\
 .class public final Lcom/box/app/vpn/VpnPrefs;
 .method public static items(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
-    new-instance v1, Lyr1;
-    invoke-direct/range {v1 .. v7}, Lyr1;-><init>(Ljava/lang/String;ZZLw82;Ljava/util/List;I)V
+    .locals 0
+    return-object p0
 .end method
 ''')
         (root / 'smali/com/box/app/vpn/PanelToggle.smali').write_text('''\

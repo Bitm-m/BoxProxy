@@ -848,10 +848,9 @@ def verify_ui_resources_and_types(root, resources):
 
     prefs = (root / 'smali/com/box/app/vpn/VpnPrefs.smali').read_text(errors='replace')
     items = get_method(prefs, 'items(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;')
-    if ('new-instance v1, Lyr1;' not in items
-            or 'Lyr1;-><init>(Ljava/lang/String;ZZLw82;Ljava/util/List;I)V' not in items
-            or 'Lip1;' in items or 'Le62;' in items):
-        raise ValueError('VpnPrefs.items is not mapped to the 171 Lyr1/Lw82 option types')
+    if ('return-object p0' not in items or 'new-instance' in items
+            or 'Lyr1;' in items or 'Lip1;' in items or 'Le62;' in items):
+        raise ValueError('VpnPrefs.items must pass the menu list through unchanged')
     callback = (root / 'smali/com/box/app/vpn/PanelToggle.smali').read_text(errors='replace')
     if '.implements Lw82;' not in callback or '.implements Le62;' in callback:
         raise ValueError('PanelToggle does not implement the 171 callback interface Lw82')
