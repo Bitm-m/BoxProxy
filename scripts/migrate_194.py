@@ -118,6 +118,7 @@ def main():
         # order-insensitive and cannot see that, so run the control flow
         # analysis before the tree is published.
         run([sys.executable, 'scripts/check_smali_register_flow.py', project])
+        run([sys.executable, 'scripts/check_smali_return_types.py', project])
 
         shutil.copytree(project, output / 'decompiled')
         if args.keep_scratch:

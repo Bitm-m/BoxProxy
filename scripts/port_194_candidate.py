@@ -2445,9 +2445,16 @@ def check_update_core_dingtalk_sources(out_root):
     loader_new = loader
     for tag, ret in zip('ab', returns):
         reg = ret.strip().split()[-1]
+        # h() is declared to return List (its early path returns the input
+        # list), so without a checkcast the merged value types the return
+        # register as List while d() declares ArrayList and ART rejects the
+        # whole class at verification time. Both call sites pass an ArrayList
+        # and h() only ever returns that instance or a fresh ArrayList copy,
+        # so the cast always holds.
         wrapped = ('    if-eqz ' + reg + ', :boxproxy_merge_skip_' + tag + '\n'
                    '    invoke-static {' + reg + '}, Lne1;->h(Ljava/util/List;)Ljava/util/List;\n'
                    '    move-result-object ' + reg + '\n'
+                   '    check-cast ' + reg + ', Ljava/util/ArrayList;\n'
                    '    :boxproxy_merge_skip_' + tag)
         if loader_new.count(ret) != 1:
             raise ValueError('ne1.d list return is missing or ambiguous: ' + ret.strip())

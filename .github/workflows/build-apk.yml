@@ -124,6 +124,9 @@ jobs:
       - name: Reject undefined register reads on any control flow path
         run: python3 scripts/check_smali_register_flow.py "$PROJECT_DIR"
 
+      - name: Reject return-object values that fail ART verification
+        run: python3 scripts/check_smali_return_types.py "$PROJECT_DIR"
+
       - name: Build unsigned APK with apktool
         shell: bash
         run: |
