@@ -119,9 +119,12 @@ def main():
     print('mapped methods:', len(completed), 'errors:', len(errors))
     for error in errors:
         print('  ERROR', error)
+    yml = (args.new / 'apktool.yml').read_text()
+    version_name = re.search(r'^\s*versionName:\s*(\S+)', yml, re.M).group(1)
+    version_code = int(re.search(r'^\s*versionCode:\s*(\d+)', yml, re.M).group(1))
     args.output.write_text(json.dumps({
-        'versionName': '26.11.17.73f2816',
-        'versionCode': 176,
+        'versionName': version_name,
+        'versionCode': version_code,
         'completed': completed,
         'added': coverage['added'],
         'collisions': [],
