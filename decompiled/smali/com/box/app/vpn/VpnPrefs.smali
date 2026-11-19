@@ -205,45 +205,11 @@
     return-void
 .end method
 
-# The sort / filter menu: the original items plus the "Hide unavailable nodes" switch.
+# The sort / filter menu hook: the panel page no longer shows the
+# "Hide unavailable nodes" switch, so the original items pass through unchanged.
 .method public static items(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
-    .locals 9
+    .locals 0
 
-    :try_start_0
-    new-instance v0, Ljava/util/ArrayList;
-
-    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
-
-    invoke-virtual {v0, p0}, Ljava/util/ArrayList;->addAll(Ljava/util/Collection;)Z
-
-    new-instance v1, Lip1;
-
-    move-object v2, p1
-
-    const/4 v3, 0x0
-
-    invoke-static {}, Lcom/box/app/vpn/VpnPrefs;->hideOn()Z
-
-    move-result v4
-
-    new-instance v5, Lcom/box/app/vpn/PanelToggle;
-
-    invoke-direct {v5}, Lcom/box/app/vpn/PanelToggle;-><init>()V
-
-    const/4 v6, 0x0
-
-    const/16 v7, 0x72
-
-    invoke-direct/range {v1 .. v7}, Lip1;-><init>(Ljava/lang/String;ZZLe62;Ljava/util/ArrayList;I)V
-
-    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-
-    :try_end_0
-    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
-
-    return-object v0
-
-    :catch_0
     return-object p0
 .end method
 

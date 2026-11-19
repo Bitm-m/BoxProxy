@@ -42,11 +42,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      # The candidate is fully determined by the pinned snapshots and the
+      # migration scripts; cache it so repeat builds skip the ~60s
+      # extract/replay/maps/port/verify pipeline (the key hashes every input).
+      - name: Cache pinned 176 migration candidate
+        uses: actions/cache@v6
+        with:
+          path: .tools/ci-176
+          key: ci-176-${{ hashFiles('upstream/26.11.16.25abc84/**', 'upstream/26.11.17.73f2816/**', 'scripts/**') }}
+
       - name: Generate the pinned 176 migration candidate
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/migrate_176.py --output .tools/ci-176
+          if [[ -f "$PROJECT_DIR/apktool.yml" ]]; then
+            echo ">> pinned 176 candidate restored from cache; skipping regeneration"
+          else
+            python3 scripts/migrate_176.py --output .tools/ci-176
+          fi
           test -f "$PROJECT_DIR/apktool.yml"
 
       - name: Setup JDK 17

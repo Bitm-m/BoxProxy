@@ -77,13 +77,31 @@ jobs:
           curl -fsSL --retry 3 -o .tools/apktool_2.9.3.jar \
             https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
           echo '7956eb04194300ce0d0a84ad18771eebc94b89fb8d1ddcce8ea4c056818646f4  .tools/apktool_2.9.3.jar' | sha256sum -c -
+      # Repeat validation runs reuse the assembled candidates; the key hashes
+      # every pinned input and script, so any change regenerates from scratch.
+      - name: Cache pinned 171 migration candidate
+        uses: actions/cache@v6
+        with:
+          path: .tools/ported-171
+          key: ported-171-${{ hashFiles('upstream/26.11.16.25abc84/**', 'scripts/**') }}
+
+      - name: Cache pinned 176 migration candidate
+        uses: actions/cache@v6
+        with:
+          path: .tools/ported-176
+          key: ported-176-${{ hashFiles('upstream/26.11.16.25abc84/**', 'upstream/26.11.17.73f2816/**', 'scripts/**') }}
+
       - name: Rebuild complete pinned 171 migration (unsigned)
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/migrate_upstream.py \
-            --snapshot upstream/26.11.16.25abc84 \
-            --output .tools/ported-171
+          if [[ -f .tools/ported-171/decompiled/apktool.yml ]]; then
+            echo ">> pinned 171 migration restored from cache"
+          else
+            python3 scripts/migrate_upstream.py \
+              --snapshot upstream/26.11.16.25abc84 \
+              --output .tools/ported-171
+          fi
           version_name="$(sed -n 's/^  versionName:[[:space:]]*//p' .tools/ported-171/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
           version_code="$(sed -n 's/^  versionCode:[[:space:]]*//p' .tools/ported-171/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
           [[ "$version_code" == "171" && "$version_name" == "26.11.16.25abc84" ]]
@@ -96,7 +114,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/migrate_176.py --output .tools/ported-176
+          if [[ -f .tools/ported-176/decompiled/apktool.yml ]]; then
+            echo ">> pinned 176 migration restored from cache"
+          else
+            python3 scripts/migrate_176.py --output .tools/ported-176
+          fi
           version_name="$(sed -n 's/^  versionName:[[:space:]]*//p' .tools/ported-176/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
           version_code="$(sed -n 's/^  versionCode:[[:space:]]*//p' .tools/ported-176/decompiled/apktool.yml | head -n 1 | tr -d '\r')"
           [[ "$version_code" == "176" && "$version_name" == "26.11.17.73f2816" ]]
