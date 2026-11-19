@@ -859,7 +859,7 @@
     "smali/com/box/app/vpn/VpnNet$Tun.smali": "0dc2432645ebb573d7d0c03fb5f59da343692a1fe247b4140d28e15e778b5946",
     "smali/com/box/app/vpn/VpnNet$Udp.smali": "2200790960f32e816de1af2e861356ba92a9cb4d6f03c34ae86f225ce1081f5b",
     "smali/com/box/app/vpn/VpnNet.smali": "56db64cbc05300a7d7e788f929331065ca9709a51f7d1508a1c7875596118017",
-    "smali/com/box/app/vpn/VpnPrefs.smali": "ecb9aa7409d9d4c550780a6d04a0e18d2b6b3393a09fad898941de7e85b12166",
+    "smali/com/box/app/vpn/VpnPrefs.smali": "47f59da5c5112b70063a8da1e536528abeaf5542a6ea48491af892600c3bd99a",
     "smali/com/box/app/vpn/VpnPrepareActivity.smali": "1223e825af464bafb421cfb28c71da34c32c4c137a0c6cce03e5c8f658a5fedc",
     "smali/com/box/app/vpn/VpnPump$Flow.smali": "4dadf0ecdb098c5d5a706d4f6cecc800afa661f60dd8244f38e0f4ccf709049f",
     "smali/com/box/app/vpn/VpnPump.smali": "8d09fb474e11a4dba0e096e4e44b723db7c74ed53ee226bde212e902460230f4",
@@ -11110,7 +11110,7 @@
   ],
   "followUpMethods": [],
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "340559155a9a85f9954cfe31f36ca9e5139ab44853e63daaa03c1db8068e3627",
+  "runtimeArchiveSha256": "4d8c4412f4221a49a4ffa52bc5ff1ffcb98d300a1c5504074ec08784064b5a19",
   "runtimeArchiveFileCount": 1430,
-  "runtimeArchiveBytes": 21508133
+  "runtimeArchiveBytes": 21507372
 }
