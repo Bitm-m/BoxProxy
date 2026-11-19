@@ -951,13 +951,19 @@ def patch_method(plan, mapper, old_root, custom_root, out_root, r_old, r_new, au
             '    invoke-static {v0, v1}, Lya3;->c0(ILib2;)Ljava/lang/String;',
             '    move-result-object v0',
             '    new-instance v44, Lnw4;',
-            '    sget-object v45, Lcom/box/app/vpn/RestoreCfg;->MENU:Lcom/box/app/vpn/RestoreCfg;',
-            '    invoke-direct {v44, v0, v45}, Lnw4;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V',
-            '    filled-new-array {v3, v4, v2, v44}, [Lnw4;',
+            '    move-object/from16 v45, v0',
+            '    sget-object v46, Lcom/box/app/vpn/RestoreCfg;->MENU:Lcom/box/app/vpn/RestoreCfg;',
+            '    invoke-direct/range {v44 .. v46}, Lnw4;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V',
+            '    move-object/from16 v47, v44',
+            '    move-object/from16 v44, v3',
+            '    move-object/from16 v45, v4',
+            '    move-object/from16 v46, v2',
+            '    filled-new-array/range {v44 .. v47}, [Lnw4;',
         ]
         inserts, deletes = [(pos, raw)], {pos}
         reg_map.update({'v0': 'v0', 'v1': 'v1', 'v2': 'v2', 'v3': 'v3',
-                        'v4': 'v4', 'v44': 'v44', 'v45': 'v45'})
+                        'v4': 'v4', 'v44': 'v44', 'v45': 'v45',
+                        'v46': 'v46', 'v47': 'v47'})
         manual = 'add restore item to k proxy menu'
         MANUAL_HITS['restore menu k'] += 1
     elif old_ref.startswith('Lq75;->invoke('):
@@ -2819,11 +2825,29 @@ def main():
         'Lhw2;->b(Lhw2;Ljava/util/List;ILcj6;Lcj6;FIIFI)V',
     ])
     reference_fixups[old_hw2_call] = new_hw2_block
+    # The restore-menu rules hard-code the final 194 pair class Lnw4, but the
+    # insert translation jumps it to the reused name Llx4; repair the
+    # new-instance/array lines inside exactly the two patched files.
+    scoped_fixups = {
+        'smali/k.smali': {
+            'new-instance v44, Llx4;': 'new-instance v44, Lnw4;',
+            'filled-new-array/range {v44 .. v47}, [Llx4;':
+                'filled-new-array/range {v44 .. v47}, [Lnw4;',
+        },
+        'smali/j85.smali': {
+            'new-instance v4, Llx4;': 'new-instance v4, Lnw4;',
+            'filled-new-array {p2, p1, v0, v4}, [Llx4;':
+                'filled-new-array {p2, p1, v0, v4}, [Lnw4;',
+        },
+    }
     fixup_hits = {}
     for smali in sorted((args.output / 'smali').rglob('*.smali')):
         text = smali.read_text(errors='replace')
         original = text
-        for wrong, right in reference_fixups.items():
+        rel = str(smali.relative_to(args.output))
+        table = dict(reference_fixups)
+        table.update(scoped_fixups.get(rel, {}))
+        for wrong, right in table.items():
             found = text.count(wrong)
             if found:
                 text = text.replace(wrong, right)

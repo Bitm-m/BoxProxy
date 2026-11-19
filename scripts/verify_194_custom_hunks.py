@@ -42,6 +42,15 @@ METHOD_RE = re.compile(r'^\.method.*?^\.end method', re.M | re.S)
 # entry documents why the instruction shapes cannot match and names the
 # checks that replace the shape comparison for that hunk.
 ALLOWED_DIFFERENCES = {
+    'Lk;->u(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
+        'reason': 'the 194 k.a method inlined the 176 k.y menu builder into a '
+                  '.locals 44 frame and the restore rule bumps it to 48; the '
+                  'non-range invoke and filled-new-array forms cannot encode '
+                  'the v44-v47 locals, so the restore item is assembled with '
+                  'contiguous range forms and a move cascade (checked by '
+                  'check_restore_menu_range_form)',
+        'checks': ['restore_menu_range_form'],
+    },
     'Lpd1;->d(Ljava/io/File;Lda1;)Ljava/lang/Object;': {
         'reason': 'the 176 upstream moved the core version probe into the Lxe1 '
                   'coroutine, so the 171 shell hunk has no counterpart to be '
@@ -274,7 +283,21 @@ def check_battery_row_relocated_out_of_iu0(custom, migrated, problems, name):
            'relocated battery row residue', problems, name)
 
 
+def check_restore_menu_range_form(custom, migrated, problems, name):
+    """The 194 inlined k.a frame keeps the menu pair in the bumped v44-v47
+    locals; non-range invoke and filled-new-array cannot encode registers
+    above v15, so the restore item must be assembled through contiguous
+    range forms with the move-object cascade."""
+    if 'invoke-direct/range {v44 .. v46}, Lnw4;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V' not in migrated:
+        problems.append((name, 'restore pair is not built with the reviewed range form'))
+    if 'filled-new-array/range {v44 .. v47}, [Lnw4;' not in migrated:
+        problems.append((name, 'restore array is not built with the reviewed range form'))
+    if migrated.count('move-object/from16 v44, v3') != 1:
+        problems.append((name, 'restore array window cascade is missing'))
+
+
 ALLOWED_CHECKS = {
+    'restore_menu_range_form': check_restore_menu_range_form,
     'core_version_probe': check_core_version_probe,
     'dingtalk_release_lookup': check_dingtalk_release_lookup,
     'battery_row_relocated_out_of_iu0': check_battery_row_relocated_out_of_iu0,
