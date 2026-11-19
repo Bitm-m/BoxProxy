@@ -2846,6 +2846,16 @@ def main():
             'filled-new-array {p2, p1, v0, v4}, [Llx4;':
                 'filled-new-array {p2, p1, v0, v4}, [Lnw4;',
         },
+        # The custom diagnostic report script was hunked in the 171 frame
+        # where it lived in v12; the 194 frame reuses v12 for the SEP
+        # fragment right before the mz1.r five-string concat, so the script
+        # must take the stock v8 slot. Otherwise the concat receives the
+        # vc0 singleton where a String is declared and ART rejects uu0
+        # (VerifyError at the invoke) at class verification.
+        'smali/uu0.smali': {
+            'const-string v12, "\\n            # Match the root service\'s executable path':
+                'const-string v8, "\\n            # Match the root service\'s executable path',
+        },
     }
     fixup_hits = {}
     for smali in sorted((args.output / 'smali').rglob('*.smali')):
