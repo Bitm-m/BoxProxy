@@ -2786,6 +2786,52 @@ def main():
             path.write_text(text.replace('Landroid/widget/Toast;->makeText',
                                          'Lcom/box/app/vpn/FToast;->makeText'))
             report['toast'] += 1
+    # Cross-class helper moves that the generic type/member votes cannot
+    # see: each wrong reference below was produced by naive type chaining
+    # (or a stale member vote) and each replacement target is verified to
+    # exist with exactly that signature in the pinned 194 stock tree.
+    reference_fixups = {
+        'Lpm;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J':
+            'Lhs;->C(Ljava/io/InputStream;Ljava/io/OutputStream;)J',
+        'Llx4;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V':
+            'Lnw4;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V',
+        'Lmc3;->c0(ILkc2;)Ljava/lang/String;':
+            'Lya3;->c0(ILib2;)Ljava/lang/String;',
+        'Lqf0;->S(Lw04;FFFF)Lw04;':
+            'Lm71;->D(Lw04;FFFF)Lw04;',
+        'Lq9;->o(Landroid/content/Context;)Lmv;':
+            'Lj6;->w(Landroid/content/Context;)Lmv;',
+    }
+    # The icon layout helper dropped two float parameters upstream
+    # (171: cv2.b(...,I,F,hi6,F,F,I,I,F,I) -> 194: hw2.b(...,I,cj6,cj6,F,I,I,F,I)):
+    # arguments at source positions 4 and 7 disappear, the rest keep their
+    # order, so the twelve-register window collapses to ten in place.
+    old_hw2_call = ('invoke-static/range {v19 .. v30}, '
+                    'Lhw2;->b(Lhw2;Ljava/util/List;ILcj6;FLcj6;FFIIFI)V')
+    new_hw2_block = '\n'.join([
+        '    move-object/from16 v23, v24',
+        '    move/from16 v24, v25',
+        '    move/from16 v25, v27',
+        '    move/from16 v26, v28',
+        '    move/from16 v27, v29',
+        '    move/from16 v28, v30',
+        '    invoke-static/range {v19 .. v28}, '
+        'Lhw2;->b(Lhw2;Ljava/util/List;ILcj6;Lcj6;FIIFI)V',
+    ])
+    reference_fixups[old_hw2_call] = new_hw2_block
+    fixup_hits = {}
+    for smali in sorted((args.output / 'smali').rglob('*.smali')):
+        text = smali.read_text(errors='replace')
+        original = text
+        for wrong, right in reference_fixups.items():
+            found = text.count(wrong)
+            if found:
+                text = text.replace(wrong, right)
+                fixup_hits[wrong] = fixup_hits.get(wrong, 0) + found
+        if text != original:
+            smali.write_text(text)
+    report['referenceFixups'] = fixup_hits
+
     report['manifest'] = merge_manifest(args.old, args.custom, args.new, args.output)
     report['manualHits'] = {name: MANUAL_HITS.get(name, 0) for name in EXPECTED_MANUAL_HITS}
     for name, expected in EXPECTED_MANUAL_HITS.items():
