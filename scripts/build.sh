@@ -54,10 +54,28 @@ done
 command -v zipalign >/dev/null 2>&1 && zipalign="zipalign" || true
 command -v apksigner >/dev/null 2>&1 && apksigner="apksigner" || true
 
-if [[ -z "$zipalign" || -z "$apksigner" ]]; then
-  echo ">> zipalign/apksigner not found; unsigned APK left at: $unsigned"
+# apksigner is only distributed with the build-tools, but the standalone jar
+# works the same way and keeps the release build reproducible.
+apksigner_jar=""
+if [[ -z "$apksigner" ]]; then
+  for candidate in "$TOOLS_DIR/apksigner.jar" "$TOOLS_DIR/apksigner/apksigner.jar"; do
+    if [[ -f "$candidate" ]]; then
+      apksigner_jar="$candidate"
+      break
+    fi
+  done
+fi
+
+if [[ -z "$apksigner" && -z "$apksigner_jar" ]]; then
+  echo ">> apksigner not found; unsigned APK left at: $unsigned"
   echo "   安装 Android SDK build-tools 后重跑即可完成对齐与签名。"
   exit 0
+fi
+
+if [[ -n "$apksigner_jar" ]]; then
+  apksigner=(java -jar "$apksigner_jar")
+else
+  apksigner=("$apksigner")
 fi
 
 if [[ -n "${KEYSTORE:-}" ]]; then
@@ -75,11 +93,19 @@ else
 fi
 export KS_PASS KEY_PASS
 
-"$zipalign" -f -p 4 "$unsigned" "$OUT_DIR/aligned.apk"
-"$zipalign" -c -p 4 "$OUT_DIR/aligned.apk"
-"$apksigner" sign --ks "$ks" --ks-key-alias "${KEY_ALIAS:?KEY_ALIAS is required}" \
+if [[ -n "$zipalign" ]]; then
+  "$zipalign" -f -p 4 "$unsigned" "$OUT_DIR/aligned.apk"
+  "$zipalign" -c -p 4 "$OUT_DIR/aligned.apk"
+else
+  # The build-tools zipalign is not available everywhere; the bundled
+  # implementation reproduces the page alignment of the shared libraries.
+  echo ">> zipalign not found; using scripts/zipalign.py"
+  python3 scripts/zipalign.py "$unsigned" "$OUT_DIR/aligned.apk"
+  python3 scripts/zipalign.py -c "$OUT_DIR/aligned.apk"
+fi
+"${apksigner[@]}" sign --ks "$ks" --ks-key-alias "${KEY_ALIAS:?KEY_ALIAS is required}" \
   --ks-pass env:KS_PASS --key-pass env:KEY_PASS --out "$final" "$OUT_DIR/aligned.apk"
-"$apksigner" verify --verbose --print-certs "$final"
+"${apksigner[@]}" verify --verbose --print-certs "$final"
 rm -f "$OUT_DIR/aligned.apk"
 ( cd "$OUT_DIR" && sha256sum "$(basename "$final")" > "$(basename "$final").sha256" )
 echo ">> done: $final"
