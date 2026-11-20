@@ -361,6 +361,8 @@ def root_boot_script_hardening(custom_text, migrated_text, problems, name):
     mihomo.log)."""
     if 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true\\n              \\"$boxctl\\" $_bh' not in migrated_text:
         problems.append((name, 'root boot execs boxctl without a chmod 755 first'))
+    if migrated_text.count('chown -R ') < 2 or '${db%/*}' not in migrated_text:
+        problems.append((name, 'root boot does not chown -R the box tree to the app data dir owner'))
     if 'chown \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\"' not in migrated_text:
         problems.append((name, 'root boot does not chown run_dir to the app data dir owner'))
     if 'mkdir -p \\"$run_dir\\" 2>/dev/null || exit 1' not in migrated_text:
@@ -386,6 +388,8 @@ def check_root_boot_hardening(output, problems):
     text = owner.read_text(errors='replace')
     if 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true\\n              \\"$boxctl\\" $_bh' not in text:
         problems.append((name_of(owner), 'root boot execs boxctl without a chmod 755 first'))
+    if text.count('chown -R ') < 2 or '${db%/*}' not in text:
+        problems.append((name_of(owner), 'root boot does not chown -R the box tree to the app data dir owner'))
     if 'chown \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\"' not in text:
         problems.append((name_of(owner), 'root boot does not chown run_dir to the app data dir owner'))
 
@@ -482,6 +486,21 @@ def significant(text):
             continue
         result.append(code)
     return result
+
+
+def check_vpn_home_writability(output, problems):
+    name = 'assets/vpn/box-vpn.sh'
+    path = output / name
+    if not path.is_file():
+        problems.append((name, 'VPN helper script missing'))
+        return
+    text = path.read_text()
+    # The helper must heal root-owned leftovers (sing-box's cache.db) before
+    # exec'ing the core and fall back to an app-writable home mirror when the
+    # core home directory itself is not writable.
+    for needle in ('ensure_home "$home"', 'home-mirror', 'dropped unwritable', 'cache.db-journal'):
+        if needle not in text:
+            problems.append((name, 'VPN helper does not heal unwritable core homes (%s missing)' % needle))
 
 
 def check_176_contracts(output, problems):
@@ -911,6 +930,7 @@ def main():
     check_176_contracts(args.output, problems)
     check_root_boot_hardening(args.output, problems)
     check_vpn_status_identity_tolerance(args.output, problems)
+    check_vpn_home_writability(args.output, problems)
     for name, detail in problems:
         print('MISMATCH', name)
         if isinstance(detail, dict):
