@@ -503,6 +503,23 @@ def check_vpn_home_writability(output, problems):
             problems.append((name, 'VPN helper does not heal unwritable core homes (%s missing)' % needle))
 
 
+def check_singbox_compare_default(output, problems):
+    name = 'smali/mm0.smali'
+    path = output / name
+    if not path.is_file():
+        problems.append((name, 'core-sources/compare class missing'))
+        return
+    text = path.read_text()
+    regex = (r'(?im)^sing-box\s+(?:version\s+)?v?(\d+\.\d+\.\d+'
+             r'(?:-[0-9A-Za-z.]+)*?)(?:-zero)?(?:\+[0-9A-Za-z.-]+)?'
+             r'(?:\s|$)')
+    smali = regex.replace('\\', '\\\\')
+    if 'const-string p0, "' + smali + '"' not in text:
+        problems.append((name, 'sing-box default compare regex not replaced with the hardened pattern'))
+    if text.count(':goto_sing_full') != 2:
+        problems.append((name, 'sing-box default regex does not bypass the shared regex assembly'))
+
+
 def check_176_contracts(output, problems):
     """Regression checks for the 176 contracts the port has to preserve."""
 
@@ -931,6 +948,7 @@ def main():
     check_root_boot_hardening(args.output, problems)
     check_vpn_status_identity_tolerance(args.output, problems)
     check_vpn_home_writability(args.output, problems)
+    check_singbox_compare_default(args.output, problems)
     for name, detail in problems:
         print('MISMATCH', name)
         if isinstance(detail, dict):
