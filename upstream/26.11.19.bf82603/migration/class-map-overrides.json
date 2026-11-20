@@ -1,0 +1,5405 @@
+{
+ "warning": "Reviewed 171 -> 173 member map; owner-crossing votes are rejected.",
+ "rejectedMemberVotes": [
+  {
+   "old": "Lom;->M(Lbs0;)Ljava/lang/Class;",
+   "new": "Lmm0;->V(Lgr0;)Ljava/lang/Class;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->Q()Lgh3;",
+   "new": "Lgn;->C()Lgi3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->N(Lgh3;)Lgh3;",
+   "new": "Lgn;->u(Lgi3;)Lgi3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbv6;->f(F)I",
+   "new": "Lms6;->f(F)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->F(JZIF)J",
+   "new": "Lsa3;->D(JZIF)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;-><init>()V",
+   "new": "Lu93;-><init>()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->M(ZLla2;)Lax0;",
+   "new": "Ljn;->U(ZLib2;)Lax0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->Q(Lla2;)Z",
+   "new": "Lfj;->T(Lib2;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->p(Ljava/lang/Object;Ljava/lang/Object;)Z",
+   "new": "Lj23;->q(Ljava/lang/Object;Ljava/lang/Object;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->h(Ldv;Lqy1;IZLtr1;Lw82;Lw82;Lh92;Lla2;I)V",
+   "new": "Lj23;->d(Lhv;Lrz1;IZLrs1;Lu92;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->k(Ldv;Lqy1;IZLtr1;Lw82;Lw82;Lh92;Lla2;I)V",
+   "new": "Lj23;->g(Lhv;Lrz1;IZLrs1;Lu92;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->C(Lyd1;Ljava/lang/Throwable;)V",
+   "new": "Lgn;->L(Ldf1;Ljava/lang/Throwable;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->Y(Lyd1;Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lhr3;->Q(Ldf1;Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->V(Ll92;Ljava/lang/Object;Lca1;)Ljava/lang/Object;",
+   "new": "Lpm;->V(Lja2;Ljava/lang/Object;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->P(ILjava/lang/Object;)V",
+   "new": "Lla7;->x(ILjava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->Q(Lyd1;Ljava/lang/Object;)V",
+   "new": "Lhr3;->K(Ldf1;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->v(Lca1;Lca1;Ll92;)Lca1;",
+   "new": "Lpm;->o(Lea1;Lea1;Lja2;)Lea1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->D(Lca1;)Lca1;",
+   "new": "Lpm;->C(Lea1;)Lea1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->P(Lca1;Ljava/lang/Object;)V",
+   "new": "Li23;->s(Lea1;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->p(Ljava/lang/String;Lz53;)Lcx2;",
+   "new": "Ljq;->p(Ljava/lang/String;Le73;)Lhy2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->s(Li33;Ljava/lang/String;)Lgp;",
+   "new": "Lsa3;->u(Lm43;Ljava/lang/String;)Lip;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->z(Lyd1;)Lwj1;",
+   "new": "Lmm;->L(Ldf1;)Lyk1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->A(I[Ljava/lang/Object;)Ljava/lang/String;",
+   "new": "Lgn;->r(I[Ljava/lang/Object;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->Z(Lhe1;Lb3;Lke1;Ll92;I)Lek6;",
+   "new": "Lpm;->E(Lnf1;Lb3;Lqf1;Lja2;I)Lal6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->m(IILa83;)I",
+   "new": "Lnn;->k(IILh93;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->c(Lmz3;Ljava/lang/Float;Lt45;FLla2;I)V",
+   "new": "Lbb3;->d(Lw04;Ljava/lang/Float;Ln55;FLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->j0(Lg54;Ln54;FLl92;Lda1;)Ljava/lang/Object;",
+   "new": "Lbb3;->V(Lo64;Lv64;FLja2;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->j()J",
+   "new": "Lms6;->i()J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->c0()V",
+   "new": "Lm71;->H()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->M(Lyc3;Lw82;)Lj93;",
+   "new": "Lcc3;->L(Lee3;Lu92;)Lwa3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->d(Ljava/lang/Integer;ZZZLw82;Lla2;II)V",
+   "new": "Lbb3;->e(Ljava/lang/Integer;ZZZLu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->L(Ljava/lang/Object;)Liw4;",
+   "new": "Lsa3;->Q(Ljava/lang/Object;)Lgx4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->i0([Ljava/lang/Object;)Ljava/util/ArrayList;",
+   "new": "Lgn;->S([Ljava/lang/Object;)Ljava/util/ArrayList;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->C(Lmz3;Lm92;)Lmz3;",
+   "new": "Lhr3;->B(Lw04;Lka2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->V(Lla2;Lmz3;)Lmz3;",
+   "new": "Lnn;->J(Lib2;Lw04;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->H(Lmz3;Ljava/lang/Object;)Lmz3;",
+   "new": "Li23;->p(Lw04;Ljava/lang/Object;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Law2;->a(Lmz3;Lc03;Ldw2;)Lmz3;",
+   "new": "Lex2;->a(Lw04;Lg13;Lix2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->J(ILt92;Lla2;)Lyz0;",
+   "new": "Lmm;->X(ILra2;Lib2;)Lyz0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->J(ILla2;)Lg22;",
+   "new": "Ll46;->g0(ILib2;)Lg32;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->Z(Ljc4;Ljava/util/List;Lgc4;)Ljc4;",
+   "new": "Ll46;->U(Lld4;Ljava/util/List;Lid4;)Lld4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->T(Lmz3;FFFFI)Lmz3;",
+   "new": "Lm71;->E(Lw04;FFFFI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->g(ZLjava/lang/String;Ljava/util/List;Ljava/util/ArrayList;Ljava/util/ArrayList;IZZLw82;Lm92;Lh92;Lh92;Lla2;I)V",
+   "new": "Ljq;->f(ZLjava/lang/String;Ljava/util/List;Ljava/util/ArrayList;Ljava/util/ArrayList;IZZLu92;Lka2;Lfa2;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->y(FFF)F",
+   "new": "Lkb3;->A(FFF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->z(III)I",
+   "new": "Lkb3;->B(III)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->e(Ldv2;Lmv4;Lmz3;JLla2;II)V",
+   "new": "Lep3;->i(Liw2;Lkw4;Lw04;JLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->Q(Lae1;Lyd1;Ljava/lang/Runnable;)V",
+   "new": "Li23;->t(Lgf1;Ldf1;Ljava/lang/Runnable;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->p(Ljava/lang/Object;)Ljava/lang/String;",
+   "new": "Lgi1;->z(Ljava/lang/Object;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->m(FFFFFFFF)Laf1;",
+   "new": "Lrq;->l(FFFFFFFF)Lgg1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->l(Laj5;JJJJ)Lho5;",
+   "new": "Llb3;->o(Lnj5;JJJJ)Luo5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->M(Lkd;Lm77;Lxz6;Lmv2;Led4;Luv6;Lz24;Lag7;Lvv6;Lda1;)V",
+   "new": "Lgi1;->H(Lkd;Lw77;Ll07;Lqw2;Lke4;Lgx6;Lh44;Ljg7;Lhx6;Lfa1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->v(Lbg4;Lla2;I)V",
+   "new": "Ld70;->y(Leh4;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->s(Lbg4;Lla2;I)V",
+   "new": "Ld70;->v(Leh4;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->m(Lbg4;Lla2;I)V",
+   "new": "La70;->G(Leh4;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->p(Lbg4;Lla2;I)V",
+   "new": "La70;->J(Leh4;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->l(FF)J",
+   "new": "Lln;->i(FF)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->c(JLh92;Lw82;Lw82;Li25;JLmz3;Lyz0;Lla2;I)V",
+   "new": "Llb3;->c(JLfa2;Lu92;Lu92;Lb35;JLw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->j(Lzi2;Lla2;I)V",
+   "new": "Lvj;->r(Lfk2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->i(Lmz3;JJLw96;Ljava/util/List;Lla2;I)V",
+   "new": "Lhb;->f(Lw04;JJLma6;Ljava/util/List;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->M(Landroid/content/Context;Ljava/lang/String;)V",
+   "new": "Lfj;->g0(Landroid/content/Context;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lly1;->A(Ljava/lang/StringBuilder;ZLjava/lang/String;ZLjava/lang/String;)V",
+   "new": "Lx35;->u(Ljava/lang/StringBuilder;ZLjava/lang/String;ZLjava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lru6;->b(Ljava/lang/String;Lmz3;JJLt72;Lv62;JLqt6;JIZIILk17;Lla2;III)V",
+   "new": "Lyq6;->b(Ljava/lang/String;Lw04;JJLr82;Lt72;JLjv6;JIZIILx17;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->s0()V",
+   "new": "Lgn;->e0()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->O(Landroid/view/Display;I)Ljo5;",
+   "new": "Lfj;->O(Landroid/view/Display;I)Lwo5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->k(ILw82;Lw82;Lw82;Lla2;Z)V",
+   "new": "Lfv6;->m(ILu92;Lu92;Lu92;Lib2;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->l(ILw82;Lw82;Lw82;Lla2;Z)V",
+   "new": "Lhr3;->m(ILu92;Lu92;Lu92;Lib2;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->h(ILw82;Lw82;Lw82;Lla2;Z)V",
+   "new": "Ljw;->k(ILu92;Lu92;Lu92;Lib2;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->x(CCZ)Z",
+   "new": "Luj;->G(CCZ)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->E(C)Z",
+   "new": "Luj;->O(C)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->d0(Ljava/lang/Object;)Ljava/util/List;",
+   "new": "Lgn;->O(Ljava/lang/Object;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->P(Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;",
+   "new": "Lrq;->C(Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->x(Ljava/lang/String;Ljava/lang/String;ZLmz3;JLla2;II)V",
+   "new": "Lm46;->x(Ljava/lang/String;Ljava/lang/String;ZLw04;JLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->R(Lmz3;FFI)Lmz3;",
+   "new": "Lm71;->C(Lw04;FFI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->y(Ljava/lang/String;ZLla2;II)V",
+   "new": "La70;->S(Ljava/lang/String;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->w(Ljava/lang/String;Lyz0;Lla2;I)V",
+   "new": "La70;->Q(Ljava/lang/String;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->D(Landroid/content/Context;Landroid/content/ComponentName;)Ljava/lang/String;",
+   "new": "Llb3;->I(Landroid/content/Context;Landroid/content/ComponentName;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->e(Lw82;ZZLov0;FFFLmz3;FLh92;Lh92;Lmz3;Lla2;I)V",
+   "new": "Lvj;->i(Lu92;ZZLov0;FFFLw04;FLfa2;Lfa2;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->X(Landroid/content/Context;)Z",
+   "new": "Lej;->T(Landroid/content/Context;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->u0(Lnq2;)Lnq2;",
+   "new": "Lej;->l0(Lur2;)Lur2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->O(I)I",
+   "new": "Lep3;->M(I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->P([Lpv4;)Ljava/util/Map;",
+   "new": "Lep3;->N([Lnw4;)Ljava/util/Map;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->p0(Ljava/util/Map;)Ljava/util/Map;",
+   "new": "Ljn;->d0(Ljava/util/Map;)Ljava/util/Map;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->F()Ldv2;",
+   "new": "Lg93;->K()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->p(Ljava/lang/Object;Ljava/lang/String;Lla2;II)Lx77;",
+   "new": "Lms6;->m(Ljava/lang/Object;Ljava/lang/String;Lib2;II)Lh87;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->i(Lx77;Ljava/lang/Object;Ljava/lang/Object;Lg22;Lt87;Lla2;I)Lu77;",
+   "new": "Lms6;->h(Lh87;Ljava/lang/Object;Ljava/lang/Object;Lg32;Ld97;Lib2;I)Le87;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->c(Lr55;Ll92;Lla2;I)V",
+   "new": "Lrq;->f(Ll65;Lja2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->K(ILjava/lang/String;)J",
+   "new": "Lvj;->S(ILjava/lang/String;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->F(Lmm6;Lio0;I)Lqi6;",
+   "new": "Lep3;->G(Lnn6;Lkn0;I)Llj6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->h(Lw82;ZZLov0;Leu5;FFFLmz3;FLh92;Lh92;Lmz3;Lla2;I)V",
+   "new": "Lu93;->j(Lu92;ZZLov0;Lwu5;FFFLw04;FLfa2;Lfa2;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->G(Lu21;Ln55;)Ljava/lang/Object;",
+   "new": "Ljq;->y(Lw21;Lh65;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->H(Lsz3;)V",
+   "new": "La70;->c0(Lc14;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lh27;-><init>(Lwq6;)V",
+   "new": "Lqs6;-><init>(Lns6;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->a0(Lla2;)Lee2;",
+   "new": "Lmm0;->k0(Lib2;)Lmf2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->p(Lfw2;)Z",
+   "new": "Lgn;->w(Lkx2;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->G(Landroid/view/KeyEvent;)J",
+   "new": "Lvj;->M(Landroid/view/KeyEvent;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->V(Ljava/lang/String;)V",
+   "new": "Lj23;->N(Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->U(II[I)Z",
+   "new": "Lvj;->Q(II[I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->c0([B[B)Z",
+   "new": "Lhs;->h0([B[B)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->E(Ljava/io/Serializable;)[J",
+   "new": "Lhs;->B(Ljava/io/Serializable;)[J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->e0([Ljava/lang/Object;)Ljava/util/List;",
+   "new": "Lgn;->P([Ljava/lang/Object;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lly1;->m(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/String;",
+   "new": "Lx35;->l(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->F(C)Z",
+   "new": "Li23;->n(C)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->B(Landroid/graphics/Canvas;Landroid/text/GetChars;IIIIFFZLandroid/graphics/Paint;)V",
+   "new": "Lvj;->H(Landroid/graphics/Canvas;Landroid/text/GetChars;IIIIFFZLandroid/graphics/Paint;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->C(C)Ljava/lang/String;",
+   "new": "Li23;->l(C)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->W(II)J",
+   "new": "Lmm0;->g0(II)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->e(ZLmz3;Lmz3;ZZLw82;Lyz0;Lla2;II)V",
+   "new": "Lm71;->d(ZLw04;Lw04;ZZLu92;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->f(Ljava/lang/String;JLla2;II)V",
+   "new": "Lla7;->k(Ljava/lang/String;JLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->d(Ljava/lang/String;JLla2;II)V",
+   "new": "Lfv6;->e(Ljava/lang/String;JLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->e0(J)I",
+   "new": "Lln;->l0(J)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lq16;-><init>(Lyh2;ZLbw0;)V",
+   "new": "Li26;-><init>(Lfj2;ZLbw0;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls16;-><init>(Lyh2;ZLbw0;)V",
+   "new": "Lk26;-><init>(Lfj2;ZLbw0;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lr16;-><init>(Lyh2;ZLbw0;)V",
+   "new": "Lj26;-><init>(Lfj2;ZLbw0;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->e(I)J",
+   "new": "Lln;->c(I)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->M(Lwz3;Z)Lax0;",
+   "new": "Lkb3;->U(Lg14;Z)Lax0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->H(I)Landroid/graphics/BlendMode;",
+   "new": "Lqf0;->K(I)Landroid/graphics/BlendMode;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->U(I)Ljava/lang/String;",
+   "new": "Ljq;->L(I)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->g(Ldv;Lx17;IZILtr1;Lw82;Lla2;I)V",
+   "new": "Lj23;->c(Lhv;Lm27;IZILrs1;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->j(Ldv;Lf27;IZILtr1;Lw82;Lla2;I)V",
+   "new": "Lj23;->f(Lhv;Lu27;IZILrs1;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->N(Lwd1;Lyd1;)Lyd1;",
+   "new": "Llm;->T(Lbf1;Ldf1;)Ldf1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->J(Lx32;Lon0;ZLca1;)Ljava/lang/Object;",
+   "new": "Lhs;->G(Lx42;Lqm0;ZLea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->R(IIII)J",
+   "new": "Lln;->L(IIII)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->I(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/Object;",
+   "new": "Lep3;->H(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->B(Lz76;Li33;Ljava/lang/String;)I",
+   "new": "Lao7;->P(Lp86;Lm43;Ljava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->D(Lz76;Li33;)Z",
+   "new": "Lao7;->S(Lp86;Lm43;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->v(Ly56;Lbn5;)La56;",
+   "new": "Lsa3;->v(Ln66;Luj5;)Lq56;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->e0(Ly56;Lr46;Lz46;)Lz46;",
+   "new": "Lsa3;->d0(Ln66;Lh56;Lp56;)Lp56;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->C(La56;Ly56;)La56;",
+   "new": "Lsa3;->C(Lq56;Ln66;)Lq56;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->B(FFLjava/lang/Float;)Lnj6;",
+   "new": "Ln93;->O(FFLjava/lang/Float;)Lik6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->u(Lq83;Z)Lb76;",
+   "new": "Lm46;->u(Laa3;Z)Lq76;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->d0(Lz76;)Ljava/lang/String;",
+   "new": "Lkb3;->j0(Lp86;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->Y(Ljava/util/List;Ljava/util/List;IIZLjava/util/Set;Lbd5;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;II)I",
+   "new": "Lfa3;->V(Ljava/util/List;Ljava/util/List;IIZLjava/util/Set;Lud5;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;II)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->C(Lsc3;ILjava/lang/String;Ljava/lang/Integer;Lda1;)Ljava/lang/Object;",
+   "new": "Lfa3;->x(Lyd3;ILjava/lang/String;Ljava/lang/Integer;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->M(JJJ)V",
+   "new": "Lsd7;->z(JJJ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->S(Ljava/lang/Object;Lla2;)Lb34;",
+   "new": "Lsa3;->Z(Ljava/lang/Object;Lib2;)Lj44;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->p(Lmz3;Lyz0;Lyz0;Lyz0;ILyz0;ILyz0;Lyz0;JLik7;Lyz0;Lla2;II)V",
+   "new": "Lfa3;->o(Lw04;Lyz0;Lyz0;Lyz0;ILyz0;ILyz0;Lyz0;JLtk7;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->S(Lmz3;FFFF)Lmz3;",
+   "new": "Lm71;->D(Lw04;FFFF)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->g0(F)Lrv;",
+   "new": "Lla7;->X(F)Lvv;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->p(Lla2;Lmz3;)V",
+   "new": "Lkb3;->t(Lib2;Lw04;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->a(Ljava/lang/Object;Ljava/lang/String;Lmz3;Lq91;Lpv0;Lla2;II)V",
+   "new": "Lkb3;->a(Ljava/lang/Object;Ljava/lang/String;Lw04;Lr91;Lpv0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->g(Lgc4;Ljc4;Ljava/util/List;Lvd4;ZLh92;Ll92;Lw82;Lla2;I)V",
+   "new": "Lcc3;->d(Lid4;Lld4;Ljava/util/List;Lye4;ZLfa2;Lja2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->j(Lgc4;Ljc4;Ljava/util/List;Lvd4;ZLh92;Ll92;Lw82;Lla2;I)V",
+   "new": "Lep3;->f(Lid4;Lld4;Ljava/util/List;Lye4;ZLfa2;Lja2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->t(II)I",
+   "new": "Lj23;->v(II)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->g(FFFFI)J",
+   "new": "Lln;->e(FFFFI)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->r0(Lyd1;Ll92;Lca1;)Ljava/lang/Object;",
+   "new": "Lpm;->U(Ldf1;Lja2;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->G(Ljava/io/InputStream;)V",
+   "new": "Lt93;->p(Ljava/io/InputStream;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->i(ZLmz3;FJJZLla2;I)V",
+   "new": "Luj;->d(ZLw04;FJJZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->d(Lmz3;FLrv;Lx26;Lyz0;Lyz0;Lla2;II)V",
+   "new": "Lkb3;->f(Lw04;FLvv;Lq36;Lyz0;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->q(Lmd6;ZLw82;Lw82;ZLw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lla2;I)V",
+   "new": "Lko3;->c0(Lbe6;ZLu92;Lu92;ZLu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->Y(Ljava/util/List;)I",
+   "new": "Lgn;->K(Ljava/util/List;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->V(Lwq1;)V",
+   "new": "Lej;->S(Lvr1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->T(J)J",
+   "new": "Lvj;->a0(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->v(F)F",
+   "new": "Lkb3;->J(F)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->L(Lkd;Lm77;Lxz6;Lmv2;Led4;Luv6;Lvx2;Lz24;Lag7;Lvv6;Lda1;)V",
+   "new": "Lgi1;->G(Lkd;Lw77;Ll07;Lqw2;Lke4;Lgx6;Loq;Lh44;Ljg7;Lhx6;Lfa1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->l0(J)J",
+   "new": "Lfj;->e0(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->w(Lle3;Lda1;)Ljava/lang/Object;",
+   "new": "Lt93;->j(Lkf3;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->R(Lae1;Lyd1;)Z",
+   "new": "Li23;->u(Lgf1;Ldf1;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->k0(Lbj0;Lca1;Z)V",
+   "new": "Lej;->g0(Ljj0;Lea1;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->B(Lca1;)Ljava/lang/String;",
+   "new": "Lgi1;->N(Lea1;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->R(Lo23;ZLr23;)Lmn1;",
+   "new": "Lnn;->D(Ls33;ZLv33;)Llo1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->k(Lzi2;Lw82;Lla2;I)V",
+   "new": "Lvj;->s(Lfk2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->c(Ljava/lang/String;Lw82;Lmz3;ZFFFLqv3;Lbt4;Ldw2;Lla2;II)V",
+   "new": "Lg93;->b(Ljava/lang/String;Lu92;Lw04;ZFFFLuw3;Lzt4;Lix2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->f0(Lyz3;FLed;)Led;",
+   "new": "Lep3;->s0(Li14;FLed;)Led;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->d0(Led;JF[F)Led;",
+   "new": "Lhb;->S(Led;JF[F)Led;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzt6;->p(Lzy6;Ljava/lang/String;)V",
+   "new": "Lcq6;->l(Lpz6;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->A(FF)F",
+   "new": "Ln93;->H(FF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->w(Lyh;Lw26;Lsg6;F)V",
+   "new": "Ln93;->E(Lbi;Lo36;Loh6;F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->Y(Ljava/io/InputStream;JLs81;)[B",
+   "new": "Lpm;->H(Ljava/io/InputStream;JLt81;)[B",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->y(Lmq2;ZLw82;Lmz3;Lla2;I)V",
+   "new": "Lm46;->y(Ltr2;ZLu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->k0(Ljava/util/ArrayList;)Ljava/util/Map;",
+   "new": "Lep3;->q0(Ljava/util/ArrayList;)Ljava/util/Map;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->T(ILjava/lang/Object;)Z",
+   "new": "Lla7;->K(ILjava/lang/Object;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->N(Lbs0;)Ljava/lang/Class;",
+   "new": "Lmm0;->W(Lgr0;)Ljava/lang/Class;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->q(ILh92;Lla2;Lup5;Z)V",
+   "new": "Lra3;->p(ILfa2;Lib2;Liq5;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->P(IIILjava/lang/String;)Ljava/lang/String;",
+   "new": "Lj23;->J(IIILjava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->r(IIILjava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;",
+   "new": "Lj23;->s(IIILjava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->d0(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+   "new": "Lra3;->P(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->D(Lm62;)Z",
+   "new": "Lln;->W(Lk72;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->x(Lm62;)Laj5;",
+   "new": "Lln;->M(Lk72;)Lnj5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->Z(Lm62;ILh92;)Ljava/lang/Object;",
+   "new": "Lgn;->c0(Lk72;ILfa2;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->A(Lm62;)Lm62;",
+   "new": "Lln;->O(Lk72;)Lk72;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->w(Lm62;)Lm62;",
+   "new": "Lln;->H(Lk72;)Lk72;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->I(Ljava/lang/Throwable;)V",
+   "new": "Luj;->R(Ljava/lang/Throwable;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->J(Lwh1;)V",
+   "new": "Luj;->S(Lyi1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->z(Ljava/util/Collection;)[Ljava/lang/Object;",
+   "new": "Lgi1;->K(Ljava/util/Collection;)[Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->A(Ljava/util/Collection;[Ljava/lang/Object;)[Ljava/lang/Object;",
+   "new": "Lgi1;->L(Ljava/util/Collection;[Ljava/lang/Object;)[Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->b(IILse0;)Lxe0;",
+   "new": "Lfj;->h(IILaf0;)Lff0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->A()Lup6;",
+   "new": "Lgr6;->a()Lfr6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->P(Lh42;Laa1;Lmk6;Ljava/lang/Float;)Llh5;",
+   "new": "Lvj;->V(Lh52;Lca1;Lll6;Ljava/lang/Float;)Lzh5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->A(Lq81;ZLc07;Lgm4;Lsv2;)Lvx2;",
+   "new": "Llm;->u(Lr81;ZLq07;Lgn4;Lww2;)Loq;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->h(Ljd5;Lp15;ZLw82;Lla2;I)V",
+   "new": "Lra3;->j(Lce5;Li25;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->b(Lmz3;Ljava/lang/String;Lyz0;Lyz0;Lla2;II)V",
+   "new": "Lm71;->b(Lw04;Ljava/lang/String;Lyz0;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->H(Lc33;)Le33;",
+   "new": "Ljq;->K(Lg43;)Li43;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->G(Lc33;)Lz23;",
+   "new": "Ljq;->J(Lg43;)Ld43;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->q(Ljh1;)Lt33;",
+   "new": "Lrq;->p(Lli1;)Lx43;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->r(Lrl6;)V",
+   "new": "Lrq;->q(Lsm6;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->s(Lu05;Ll92;Lca1;)Ljava/lang/Object;",
+   "new": "Lmm0;->z(Lp15;Lja2;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->X(Landroid/content/res/Resources;I)Ljava/util/List;",
+   "new": "Lej;->c0(Landroid/content/res/Resources;I)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->d(Lj74;ZLw82;Lw82;Lla2;II)V",
+   "new": "Ll46;->b(Lq84;ZLu92;Lu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->S(ILjava/lang/String;I)J",
+   "new": "Ljw;->D(ILjava/lang/String;I)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->m(Lzy6;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lfv6;->o(Lpz6;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->S(Lyd1;)Z",
+   "new": "Lnn;->E(Ldf1;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->h(Landroid/content/Context;Ljava/lang/String;)I",
+   "new": "Lgi1;->o(Landroid/content/Context;Ljava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->H(Lmz3;FJFLla2;I)Lmz3;",
+   "new": "Lg93;->f0(Lw04;FJFLib2;I)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->Q(Lmz3;FF)Lmz3;",
+   "new": "Lm71;->B(Lw04;FF)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->G()Ldv2;",
+   "new": "Lfa3;->K()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->i(Ljava/lang/String;Lmz3;FLla2;II)V",
+   "new": "Lhr3;->j(Ljava/lang/String;Lw04;FLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->y(Ljava/lang/reflect/Type;)Ljava/lang/reflect/Type;",
+   "new": "Lla7;->y(Ljava/lang/reflect/Type;)Ljava/lang/reflect/Type;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->F(Ljava/lang/reflect/Type;)Ljava/lang/Class;",
+   "new": "Lla7;->H(Ljava/lang/reflect/Type;)Ljava/lang/Class;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->C(Ljava/lang/reflect/Type;Ljava/lang/reflect/Type;)Z",
+   "new": "Lla7;->D(Ljava/lang/reflect/Type;Ljava/lang/reflect/Type;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->R(Ljava/lang/reflect/Type;)Ljava/lang/String;",
+   "new": "Lla7;->Z(Ljava/lang/reflect/Type;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->H(Lla2;)Luv0;",
+   "new": "Lsa3;->G(Lib2;)Luv0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->S(Lmz3;Lh92;)Lmz3;",
+   "new": "Li23;->w(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->M(Lla2;)Lja7;",
+   "new": "Lsa3;->L(Lib2;)Lta7;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->p(Lw82;Lmz3;ZLdu2;Lw96;Ll92;Lla2;II)V",
+   "new": "Ljn;->q(Lu92;Lw04;ZLiv2;Lma6;Lja2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->E(JJJJLla2;I)Ldu2;",
+   "new": "Lpm;->B(JJJJLib2;I)Liv2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->b(Lmz3;Ln20;Lyz0;Lla2;I)V",
+   "new": "Lvj;->f(Lw04;Lt20;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->e0(Ljd5;Ljava/util/LinkedHashMap;Ljava/util/Set;)Ljava/util/List;",
+   "new": "Lfa3;->b0(Lce5;Ljava/util/LinkedHashMap;Ljava/util/Set;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->W(FFLb85;I)I",
+   "new": "Lfa3;->T(FFLv85;I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->X(FFLb85;I)I",
+   "new": "Lfa3;->U(FFLv85;I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->d([Lr55;Ll92;Lla2;I)V",
+   "new": "Lrq;->g([Ll65;Lja2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->B(Ljava/util/List;Ljava/lang/String;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/util/List;",
+   "new": "Lra3;->B(Ljava/util/List;Ljava/lang/String;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->e(Ll92;Lla2;Ljava/lang/Object;)V",
+   "new": "Lao7;->h(Lja2;Lib2;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->q(FFFFI)Lbt4;",
+   "new": "Lm71;->m(FFFFI)Lzt4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->i(Lmz3;Lsc3;Lzs4;Lsv;Ll20;Lni1;ZLgq4;Lh92;Lla2;II)V",
+   "new": "Lya3;->a(Lw04;Lyd3;Lxt4;Lwv;Lr20;Lpj1;ZLar4;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->e(Lw82;Lmz3;ZZLl92;Lla2;II)V",
+   "new": "Lfa3;->b(Lu92;Lw04;ZZLja2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->j0(IILws1;I)Lr87;",
+   "new": "Lfv6;->M(IILut1;I)Lb97;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->b0(III)I",
+   "new": "Lfa3;->Y(III)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->z(Lmz3;Lz03;)Lmz3;",
+   "new": "Lhr3;->w(Lw04;Ld23;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->b(Lkd5;ZZLxc5;Ljd5;ZZLjava/lang/Integer;Ljava/lang/Boolean;Ln85;Lw82;Lw82;Lw82;Lmz3;Lla2;II)V",
+   "new": "Lkb3;->d(Lde5;ZZLqd5;Lce5;ZZLjava/lang/Integer;Ljava/lang/Boolean;Lg95;Lu92;Lu92;Lu92;Lw04;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->H(JLaj5;)Z",
+   "new": "Lm71;->v(JLnj5;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Liv6;->f(JLaj5;)J",
+   "new": "Lur6;->k(JLnj5;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->a(Ljava/util/List;Lw82;Lla2;II)V",
+   "new": "Lya3;->c(Ljava/util/List;Lu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->m(Landroid/content/Context;)Lpk1;",
+   "new": "Lfv6;->a(Landroid/content/Context;)Lol1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->I(Landroid/view/KeyEvent;)I",
+   "new": "Lvj;->N(Landroid/view/KeyEvent;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->h(I)J",
+   "new": "Lpm;->f(I)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->D(Ljava/lang/Comparable;Lus0;)Ljava/lang/Comparable;",
+   "new": "Lkb3;->F(Ljava/lang/Comparable;Lzr0;)Ljava/lang/Comparable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lpb6;->h(IJ)Lqi6;",
+   "new": "Lbr2;->z(IJ)Llj6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->D(Lhe1;Lyd1;Ll92;I)Lpj1;",
+   "new": "Lpm;->i(Lnf1;Ldf1;Lja2;I)Lrk1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->h0(FFLjava/lang/Object;I)Lnj6;",
+   "new": "Lfv6;->I(FFLjava/lang/Object;I)Lik6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzy1;->g(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V",
+   "new": "Lw91;->i(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->q(Lzi2;Lla2;)Ljava/lang/String;",
+   "new": "Llm;->p(Lfk2;Lib2;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->l(Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLla2;I)V",
+   "new": "Lvj;->t(Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->p(Lmz3;JJLw96;Ljava/util/List;Lla2;I)V",
+   "new": "Lhb;->j(Lw04;JJLma6;Ljava/util/List;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->p(Ljava/lang/String;JLyz0;Lla2;II)V",
+   "new": "Lep3;->s(Ljava/lang/String;JLyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->D(Ljava/lang/String;)Lc3;",
+   "new": "Lgn;->J(Ljava/lang/String;)Lc3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->p(ILw82;Lla2;)V",
+   "new": "Lmm0;->n(ILu92;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->q(ZLak2;Lw82;Lla2;I)V",
+   "new": "Lmm0;->o(ZLgl2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->u(ILw82;Lla2;)V",
+   "new": "Lej;->x(ILu92;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->v(ZLak2;Lw82;Lla2;I)V",
+   "new": "Lej;->y(ZLgl2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->u()Lk12;",
+   "new": "Ll22;->c()Ll22;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->G(Ljava/lang/String;)Ljava/io/InputStream;",
+   "new": "Ll22;->d(Ljava/lang/String;)Ljava/io/InputStream;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->w(JLca1;)Ljava/lang/Object;",
+   "new": "Lmm;->H(JLea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->w(ZLda1;)Ljava/lang/Object;",
+   "new": "Luh7;->v(ZLfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->y(Lhe1;Ljava/util/concurrent/CancellationException;)V",
+   "new": "Ljn;->C(Lnf1;Ljava/util/concurrent/CancellationException;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->k(Lyd1;)Laa1;",
+   "new": "Ljn;->j(Ldf1;)Lca1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->B(Ljava/lang/Throwable;Ljava/lang/Throwable;)V",
+   "new": "Lrq;->o(Ljava/lang/Throwable;Ljava/lang/Throwable;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->A(IILxe6;Lc16;Lxe6;)J",
+   "new": "Lvj;->E(IILtf6;Lu16;Ltf6;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->b(IILw82;Lla2;Ljava/lang/String;Z)V",
+   "new": "Lm46;->b(IILu92;Lib2;Ljava/lang/String;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->w([Lpv4;)Landroid/os/Bundle;",
+   "new": "Lln;->E([Lnw4;)Landroid/os/Bundle;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->P(Li83;)V",
+   "new": "Lu93;->t(Lq93;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->t(Lw82;Lmz3;ZLw96;JJFLdw2;Lyz0;Lla2;I)V",
+   "new": "Lqr6;->a(Lu92;Lw04;ZLma6;JJFLix2;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->o(Landroid/content/Context;I)Landroid/content/res/ColorStateList;",
+   "new": "Lgi1;->y(Landroid/content/Context;I)Landroid/content/res/ColorStateList;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->f0(Ljava/io/InputStream;)Lby2;",
+   "new": "Lra3;->W(Ljava/io/InputStream;)Lfz2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->D(Landroid/content/Context;ZLjava/lang/String;Ljava/lang/String;Lda1;)Ljava/lang/Object;",
+   "new": "Luj;->Q(Landroid/content/Context;ZLjava/lang/String;Ljava/lang/String;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->f(J)J",
+   "new": "Lln;->d(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->o(FFFIIJLla2;Lmz3;)V",
+   "new": "Lep3;->r(FFFIIJLib2;Lw04;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->K(Lla2;)J",
+   "new": "Lfa3;->O(Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->B(Ljava/lang/AutoCloseable;Ljava/lang/Throwable;)V",
+   "new": "Lpm;->k(Ljava/lang/AutoCloseable;Ljava/lang/Throwable;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->f(Lmz3;FLsv;Lx26;Lyz0;Lla2;II)V",
+   "new": "Lkb3;->h(Lw04;FLwv;Lq36;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->K(Lb34;)V",
+   "new": "Ln93;->S(Lj44;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->L(Ljava/lang/String;)I",
+   "new": "Lhs;->a0(Ljava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->V(Lhe1;)Z",
+   "new": "Ljn;->L(Lnf1;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->e(Lg23;Lla2;I)V",
+   "new": "Lla7;->j(Lk33;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->c(Lg23;Lla2;I)V",
+   "new": "Lfv6;->d(Lk33;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->hashCode()I",
+   "new": "Lu93;->hashCode()I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->V(Landroid/content/res/XmlResourceParser;Landroid/content/res/Resources;)Lk72;",
+   "new": "Lej;->X(Landroid/content/res/XmlResourceParser;Landroid/content/res/Resources;)Li82;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->L(Lmz3;Lq84;Lt84;)Lmz3;",
+   "new": "Lla7;->N(Lw04;Lx94;Laa4;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->I(Lmz3;Lh92;)Lmz3;",
+   "new": "Lfv6;->E(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->r(Lmz3;Lh92;)Lmz3;",
+   "new": "Lfv6;->y(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->w(Lmz3;Lh92;)Lmz3;",
+   "new": "Lsd7;->C(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->v(Lw32;Ll92;Lda1;)Ljava/lang/Object;",
+   "new": "Luj;->L(Lw42;Lja2;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->P(Lmz3;F)Lmz3;",
+   "new": "Lm71;->A(Lw04;F)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->k(Lw82;Lmz3;ZLcz;FLbf2;Lmc2;FLaf2;JLgt1;Lye2;Lyz0;Lla2;III)V",
+   "new": "Ljq;->n(Lu92;Lw04;ZLgz;FLhg2;Lsd2;FLgg2;JLeu1;Leg2;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->b0(Lmc3;)I",
+   "new": "Lkb3;->l0(Lsd3;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->m(Ljava/lang/Object;)Lrk6;",
+   "new": "Lj23;->i(Ljava/lang/Object;)Lql6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->n(Lrk6;)Llh5;",
+   "new": "Lvj;->C(Lql6;)Lzh5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->R(JFLlk1;)F",
+   "new": "Llb3;->U(JFLkl1;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->V(Landroid/text/Spannable;JII)V",
+   "new": "Llb3;->X(Landroid/text/Spannable;JII)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->W(Landroid/text/Spannable;JLlk1;II)V",
+   "new": "Llb3;->Y(Landroid/text/Spannable;JLkl1;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->X(Landroid/text/Spannable;Ltj3;II)V",
+   "new": "Llb3;->Z(Landroid/text/Spannable;Lqk3;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->E(Ll92;Lca1;)Ljava/lang/Object;",
+   "new": "Ljn;->D(Lja2;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->M(Lyq1;Lw96;Lgt1;F)V",
+   "new": "Lej;->K(Lwr1;Lma6;Leu1;F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->x(Lyq1;Laf2;)V",
+   "new": "Lmm;->I(Lwr1;Lgg2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->t(Ljava/util/List;ILh92;Lcz;Lmz3;Lbf2;FFLgt1;Lye2;Lmc2;FJJJJLla2;I)V",
+   "new": "Lej;->u(Ljava/util/List;ILfa2;Lgz;Lw04;Lhg2;FFLeu1;Leg2;Lsd2;FJJJJLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->I(Loc;II)J",
+   "new": "Ljq;->D(Lrc;II)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->x(Ldz4;Z[Lmr2;F)F",
+   "new": "Lu93;->x(Lb05;Z[Lts2;F)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->a(Ljava/lang/Object;Lh92;Lla2;)V",
+   "new": "Lao7;->d(Ljava/lang/Object;Lfa2;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->E()Ldv2;",
+   "new": "Lu93;->s()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->c(Lw82;Lyz0;Lmz3;Lyz0;Ll92;Lyz0;Lw96;JJJJLyl1;Lla2;II)V",
+   "new": "La70;->c(Lu92;Lyz0;Lw04;Lyz0;Lja2;Lyz0;Lma6;JJJJLxm1;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->T(Lla2;)Lih3;",
+   "new": "Lkb3;->g0(Lib2;)Lii3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->J(Lla2;)J",
+   "new": "Lfa3;->N(Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->h(Lmz3;Ljava/lang/String;Lj00;Ljava/lang/String;Lj00;Ll92;Lm92;Lyz0;Lbt4;Lw82;Lnn5;ZZLb24;Lla2;III)V",
+   "new": "Lvj;->b(Lw04;Ljava/lang/String;Lp00;Ljava/lang/String;Lp00;Lja2;Lka2;Lyz0;Lzt4;Lu92;Lbo5;ZZLj34;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->A(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Lxo3;",
+   "new": "Llb3;->v(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Lwp3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->T(Lla2;)J",
+   "new": "Llm;->M(Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->g(Ljava/lang/String;Lmz3;JZZLw82;Lla2;II)V",
+   "new": "Ljw;->j(Ljava/lang/String;Lw04;JZZLu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->f(ILla2;)V",
+   "new": "Ljw;->i(ILib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->a0(Lkk2;Lla2;)J",
+   "new": "Lfj;->W(Lql2;Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->z(Ljava/lang/String;ZZLh92;Lzy6;Ljava/lang/String;Lla2;I)V",
+   "new": "La70;->T(Ljava/lang/String;ZZLfa2;Lpz6;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->f(ZLmz3;Lk25;Lj25;ZLw82;Lw82;FZLyz0;Lla2;III)V",
+   "new": "Lkb3;->k(ZLw04;Ld35;Lc35;ZLu92;Lu92;FZLyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->e0(II)Llz2;",
+   "new": "Lkb3;->k0(II)Lp03;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lls6;->c(FFIIJJLyz0;Lyz0;Lyz0;Lla2;Lmz3;Lx26;)V",
+   "new": "Liu6;->c(FFIIJJLyz0;Lyz0;Lyz0;Lib2;Lw04;Lq36;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->l(Lw82;Lmz3;ZLw96;Lkf0;Lbt4;Lm92;Lla2;II)V",
+   "new": "Ljq;->t(Lu92;Lw04;ZLma6;Lsf0;Lzt4;Lka2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->o(Llj0;Lla2;I)V",
+   "new": "Llb3;->r(Ltj0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->n(Llj0;Lla2;I)V",
+   "new": "Llb3;->q(Ltj0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcu6;->m(Landroid/app/PendingIntent;)V",
+   "new": "Lfs6;->m(Landroid/app/PendingIntent;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->N(I)[C",
+   "new": "Lfv6;->D(I)[C",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->R([C)V",
+   "new": "Lfv6;->F([C)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->t(I)V",
+   "new": "Luj;->B(I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->X(IIZZ)J",
+   "new": "Llm;->O(IIZZ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->d0(J)Z",
+   "new": "Llm;->h0(J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->c0(J)Z",
+   "new": "Llm;->g0(J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->e0(J)I",
+   "new": "Llm;->i0(J)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->T(J)F",
+   "new": "Lln;->b0(J)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->x(Ljava/lang/CharSequence;)Ljava/lang/String;",
+   "new": "Lfj;->J(Ljava/lang/CharSequence;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->J(Lo37;Lk11;Ljava/lang/Throwable;Lca1;)Ljava/lang/Object;",
+   "new": "Lfj;->Q(Lb47;Lm11;Ljava/lang/Throwable;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->c0(I)V",
+   "new": "Lej;->U(I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->u(Lg42;Lkg;ILda1;)Ljava/lang/Object;",
+   "new": "Lya3;->x(Lg52;Lmg;ILfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->d0(Lz73;)Laj5;",
+   "new": "Lm71;->I(Lf93;)Lnj5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->e0(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;",
+   "new": "Lgn;->g0(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->J(Ll92;)Lt76;",
+   "new": "Ln93;->T(Lja2;)Lj86;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lru6;->c(Lli;Lmz3;JJLt72;Lv62;JJIZIILjava/util/Map;Lh92;Lk17;Lla2;III)V",
+   "new": "Lyq6;->c(Loi;Lw04;JJLr82;Lt72;JJIZIILjava/util/Map;Lfa2;Lx17;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->a0(IF)F",
+   "new": "Lfa3;->X(IF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->P(Ljava/util/List;Ljava/util/List;IIZLjava/util/Set;Lbd5;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/String;)I",
+   "new": "Lfa3;->H(Ljava/util/List;Ljava/util/List;IIZLjava/util/Set;Lud5;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->h(Lx77;Lt87;Ljava/lang/String;Lla2;II)Lq77;",
+   "new": "Lms6;->g(Lh87;Ld97;Ljava/lang/String;Lib2;II)La87;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->j(Lcz;ZFLw82;Lbf2;Lmc2;Lmc2;JLaf2;FLgt1;Lye2;Lmz3;ZLok6;Ljava/lang/Boolean;Lyz0;Lla2;II)V",
+   "new": "Ljq;->m(Lgz;ZFLu92;Lhg2;Lsd2;Lsd2;JLgg2;FLeu1;Leg2;Lw04;ZLnl6;Ljava/lang/Boolean;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->E(Landroid/widget/EdgeEffect;FFLlk1;)F",
+   "new": "Lhs;->r(Landroid/widget/EdgeEffect;FFLkl1;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->w(J)J",
+   "new": "Llb3;->B(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk85;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lg75;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->f0(Ljava/lang/Object;)Ljava/util/List;",
+   "new": "Lgn;->Q(Ljava/lang/Object;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lqp2;-><init>(Leg2;Lda1;)V",
+   "new": "Lxq2;-><init>(Lbr2;Lfa1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->V(Lorg/json/JSONObject;)Lvn3;",
+   "new": "Lln;->m0(Lorg/json/JSONObject;)Lso3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->J(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/Integer;",
+   "new": "Lln;->f0(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/Integer;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->E(Lorg/json/JSONObject;)Ljava/lang/Integer;",
+   "new": "Lln;->a0(Lorg/json/JSONObject;)Ljava/lang/Integer;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltc2;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lbq2;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->r(Ljava/lang/String;Landroid/os/Bundle;)Landroid/os/Bundle;",
+   "new": "Lu93;->q(Ljava/lang/String;Landroid/os/Bundle;)Landroid/os/Bundle;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->E(I)Z",
+   "new": "Ljq;->H(I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->P(Lyi1;F)Z",
+   "new": "Lkb3;->Q(Lak1;F)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->b0(ILjava/lang/String;)Ljava/lang/String;",
+   "new": "Lj23;->P(ILjava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->H(Lorg/json/JSONObject;)Ljava/lang/String;",
+   "new": "Lln;->d0(Lorg/json/JSONObject;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->Y(Lorg/json/JSONArray;Ljava/lang/String;)Ljava/util/List;",
+   "new": "Lln;->o0(Lorg/json/JSONArray;Ljava/lang/String;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->R()Ldv2;",
+   "new": "Lln;->R()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->O()Ldv2;",
+   "new": "Lhs;->K()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->T(Lq83;)Lbg7;",
+   "new": "Lsd7;->K(Laa3;)Lkg7;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->z(Ljava/lang/reflect/Type;)V",
+   "new": "Lla7;->z(Ljava/lang/reflect/Type;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->x(DDD)D",
+   "new": "Lkb3;->z(DDD)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->j0(Lla2;)Lx26;",
+   "new": "Ljw;->F(Lib2;)Lq36;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->w(Lmz3;Lyz0;Lyz0;Lyz0;Lyz0;IJJLik7;Lyz0;Lla2;II)V",
+   "new": "Lra3;->v(Lw04;Lyz0;Lyz0;Lyz0;Lyz0;IJJLtk7;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->s(Ljava/lang/String;Ldk2;Lla2;I)V",
+   "new": "Lmm0;->q(Ljava/lang/String;Ljl2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->x(Ljava/lang/String;Ldk2;Lla2;I)V",
+   "new": "Lej;->A(Ljava/lang/String;Ljl2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->W(Ldk2;Ljava/lang/String;)Lbk2;",
+   "new": "Lln;->n0(Ljl2;Ljava/lang/String;)Lhl2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->w(Ljava/lang/String;Ljava/lang/String;Lla2;I)V",
+   "new": "Lej;->z(Ljava/lang/String;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->c(ZZZLmz3;Lyz0;Lla2;I)V",
+   "new": "Lkb3;->e(ZZZLw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->v(Lzn6;ZLw82;Lw82;Lmz3;Lla2;I)V",
+   "new": "Lm46;->v(Lap6;ZLu92;Lu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->B(Lep;)Landroid/content/Intent;",
+   "new": "Llb3;->G(Lgp;)Landroid/content/Intent;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->C(Lep;Landroid/content/ComponentName;)Landroid/content/Intent;",
+   "new": "Llb3;->H(Lgp;Landroid/content/ComponentName;)Landroid/content/Intent;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->p(FFI)Lbt4;",
+   "new": "Lm71;->l(FFI)Lzt4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->s(Lmz3;FFFLw96;ZI)Lmz3;",
+   "new": "Lfv6;->z(Lw04;FFFLma6;ZI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->q(Lw82;Lmz3;JJLw96;Ljava/util/List;Lla2;I)V",
+   "new": "Lhb;->k(Lu92;Lw04;JJLma6;Ljava/util/List;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lls6;->d(Lmz3;JJLyz0;Lyz0;Lyz0;Lla2;I)V",
+   "new": "Liu6;->d(Lw04;JJLyz0;Lyz0;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lls6;->b(ILmz3;JJLyz0;Lyz0;Lyz0;Lla2;I)V",
+   "new": "Liu6;->b(ILw04;JJLyz0;Lyz0;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->h(Lw82;Lmz3;ZZJFFFLyz0;Lla2;II)V",
+   "new": "Lgn;->p(Lu92;Lw04;ZZJFFFLyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->A()Ljava/util/Set;",
+   "new": "Lvj;->L()Ljava/util/Set;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->Y(Lhe1;Lyd1;Lke1;Ll92;)Lek6;",
+   "new": "Lpm;->D(Lnf1;Ldf1;Lqf1;Lja2;)Lal6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->R(ILks1;)J",
+   "new": "Llm;->e0(ILit1;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->z(Lyd1;)V",
+   "new": "Lnn;->r(Ldf1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->N(Lz76;[Lz76;)I",
+   "new": "Lkb3;->O(Lp86;[Lp86;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->N(Lzn4;ILjava/lang/Object;)V",
+   "new": "Lep3;->l0(Lzo4;ILjava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->l(JFLla2;I)V",
+   "new": "Lln;->r(JFLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->r(Lw82;Lmz3;Lw96;JJLb32;Lyz0;Lla2;I)V",
+   "new": "Ljq;->k(Lu92;Lw04;Lma6;JJLc42;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->j(Lz76;Lje5;)Lz76;",
+   "new": "Ll46;->u(Lp86;Lpd5;)Lp86;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->w(Lz76;Li33;)Ljava/lang/String;",
+   "new": "Lkb3;->y(Lp86;Lm43;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->b0(Lkg;IFFLca1;)Ljava/lang/Object;",
+   "new": "Lra3;->U(Lmg;IFFLea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->e(FFIJLla2;Lmz3;Lko5;)V",
+   "new": "Luj5;->e(FFIJLib2;Lw04;Lxo5;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->i(FZZZLh92;ZLw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lla2;I)V",
+   "new": "Ljw;->l(FZZZLfa2;ZLu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->G(Landroid/text/Spanned;Ljava/lang/Class;)Z",
+   "new": "Lep3;->K(Landroid/text/Spanned;Ljava/lang/Class;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->d(Ljava/lang/String;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lbb3;->i(Ljava/lang/String;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->k(Ljava/lang/String;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lsa3;->f(Ljava/lang/String;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->W(Lh41;)Z",
+   "new": "Llm;->F(Li41;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->D(Ljava/io/InputStream;Ljava/io/OutputStream;)J",
+   "new": "Lhs;->C(Ljava/io/InputStream;Ljava/io/OutputStream;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->O(Lla2;)Lmz3;",
+   "new": "Lbb3;->H(Lib2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->Q(Lla2;)J",
+   "new": "Lbb3;->J(Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->P(Lla2;)Lz57;",
+   "new": "Lbb3;->I(Lib2;)Lk67;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->N(I)Landroid/graphics/Shader$TileMode;",
+   "new": "Lj23;->O(I)Landroid/graphics/Shader$TileMode;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->D(JJ)J",
+   "new": "Lln;->F(JJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->E(Lmz3;Lb24;Z)Lmz3;",
+   "new": "Ld70;->V(Lw04;Lj34;Z)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->Q([Ljava/lang/Object;IILp3;)Ljava/lang/String;",
+   "new": "Lya3;->e0([Ljava/lang/Object;IILp3;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->u(JJ)I",
+   "new": "Lj23;->w(JJ)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->x([JJ)I",
+   "new": "Lu93;->l([JJ)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->v(Ler2;Lla2;I)V",
+   "new": "Lmm0;->t(Lls2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->A(Ler2;Lla2;I)V",
+   "new": "Lej;->D(Lls2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->V(Lmz3;Lfk3;ZLw82;Lh92;Lck3;Ljava/lang/String;JLlj0;Lla2;I)V",
+   "new": "Ld70;->q(Lw04;Lcl3;ZLu92;Lfa2;Lzk3;Ljava/lang/String;JLtj0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->t(Lik7;Lla2;)Lmy2;",
+   "new": "Lm71;->s(Ltk7;Lib2;)Lqz2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->O(Lz53;)Lz53;",
+   "new": "Ljn;->J(Le73;)Le73;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->F(Landroid/view/inputmethod/EditorInfo;Landroid/view/inputmethod/InputConnection;Landroid/widget/TextView;)V",
+   "new": "Ljq;->I(Landroid/view/inputmethod/EditorInfo;Landroid/view/inputmethod/InputConnection;Landroid/widget/TextView;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->P(Landroid/view/inputmethod/EditorInfo;Ljava/lang/CharSequence;)V",
+   "new": "Lmm0;->n0(Landroid/view/inputmethod/EditorInfo;Ljava/lang/CharSequence;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lls6;->a(FFIIJJLyz0;Lyz0;Lyz0;Lla2;Lmz3;Lx26;)V",
+   "new": "Liu6;->a(FFIIJJLyz0;Lyz0;Lyz0;Lib2;Lw04;Lq36;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->d(Ldt0;Lzs0;Lwb6;Ljava/lang/String;Ljava/lang/String;Lla2;I)V",
+   "new": "Lej;->f(Lls0;Les0;Lmc6;Ljava/lang/String;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->k(Lw82;Lh92;Lme5;Lmz3;Lla2;I)V",
+   "new": "Li23;->d(Lu92;Lfa2;Ldf5;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->n(Lw82;Lh92;Lme5;Lmz3;Lla2;I)V",
+   "new": "Lgi1;->e(Lu92;Lfa2;Ldf5;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->r(JFZLla2;II)V",
+   "new": "Lfa3;->u(JFZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->r(JFZLla2;II)V",
+   "new": "Llb3;->s(JFZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->q(Ljava/lang/String;JLla2;I)V",
+   "new": "Ld70;->t(Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->k(Ljava/lang/String;JLla2;I)V",
+   "new": "La70;->E(Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->R()Ldv2;",
+   "new": "Lla7;->F()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->p(Ljava/lang/String;JLla2;I)V",
+   "new": "Lvj;->x(Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->b(Ljava/lang/String;Lw82;Lmz3;ZLjava/lang/String;Ll92;Lla2;II)V",
+   "new": "Llb3;->e(Ljava/lang/String;Lu92;Lw04;ZLjava/lang/String;Lja2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->v(Ljava/lang/String;Ljava/util/List;FF)Ldv2;",
+   "new": "Llm;->q(Ljava/lang/String;Ljava/util/List;FF)Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->J(Lla2;)Lb34;",
+   "new": "Lvj;->T(Lib2;)Lj44;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->u()Ldv2;",
+   "new": "Lfj;->M()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->A(ILjava/lang/String;)I",
+   "new": "Lej;->R(ILjava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->x(Ljava/lang/String;Z)Z",
+   "new": "Lej;->O(Ljava/lang/String;Z)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->h(Le66;Lyz0;Lla2;I)V",
+   "new": "Lmm0;->g(Lu66;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->h(Ljava/util/List;ZLh92;Lw82;Lla2;I)V",
+   "new": "Ljn;->d(Ljava/util/List;ZLfa2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->L(ILjava/lang/String;Lyz0;Lla2;I)V",
+   "new": "Lep3;->L(ILjava/lang/String;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->j(Ljava/lang/String;Lyz0;Lla2;I)V",
+   "new": "Lsa3;->e(Ljava/lang/String;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->z()Z",
+   "new": "Li23;->j()Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->j0(Landroid/content/Context;)Lkf1;",
+   "new": "Lej;->f0(Landroid/content/Context;)Lpg1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->Y(Ljava/lang/String;)Lo02;",
+   "new": "Llm;->R(Ljava/lang/String;)Lp12;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->Z(Ljava/lang/String;)Lfe6;",
+   "new": "Llm;->S(Ljava/lang/String;)Lxe6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->t(Lpk4;ZLml5;ZJFLmz3;Lla2;II)V",
+   "new": "Ld70;->H(Lol4;ZLbm5;ZJFLw04;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->U(FF)F",
+   "new": "Lm46;->T(FF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;-><init>(Landroid/graphics/Paint;)V",
+   "new": "Lxc;-><init>(Landroid/graphics/Paint;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->o(I)V",
+   "new": "Lxc;->d(I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfv6;->g(JF)J",
+   "new": "Lrs6;->e(JF)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->s(Landroid/graphics/Shader;)V",
+   "new": "Lxc;->h(Landroid/graphics/Shader;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->S(Landroid/text/TextPaint;F)V",
+   "new": "Li23;->v(Landroid/text/TextPaint;F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->t(Lla2;)Llj0;",
+   "new": "Lkb3;->x(Lib2;)Ltj0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->E(Landroid/graphics/drawable/Drawable;Landroid/graphics/Bitmap$Config;Lxe6;Lc16;Lxe6;Z)Landroid/graphics/Bitmap;",
+   "new": "Lmm0;->G(Landroid/graphics/drawable/Drawable;Landroid/graphics/Bitmap$Config;Ltf6;Lu16;Ltf6;Z)Landroid/graphics/Bitmap;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->y(Landroid/graphics/drawable/Drawable;)Lku2;",
+   "new": "Luj;->y(Landroid/graphics/drawable/Drawable;)Lpv2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->U(I)Ljava/lang/String;",
+   "new": "Lsd7;->M(I)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->L([Ljava/lang/Object;II)V",
+   "new": "Lya3;->W([Ljava/lang/Object;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->H(Liq3;)Ljava/lang/Object;",
+   "new": "Lra3;->H(Ljr3;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->B(Lzs4;La83;)F",
+   "new": "Lm71;->u(Lxt4;Lh93;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->A(Lzs4;La83;)F",
+   "new": "Lm71;->t(Lxt4;Lh93;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->B(Liq3;)Ljava/lang/Object;",
+   "new": "Li23;->k(Ljr3;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->I(FII)I",
+   "new": "Lkb3;->T(FII)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt64;->a(Lmz3;JZZLi64;Lyz0;Lla2;I)V",
+   "new": "Lb84;->a(Lw04;JZZLq74;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->t(ZZLer2;Ljava/lang/String;Lw82;Lla2;I)V",
+   "new": "Lmm0;->r(ZZLls2;Ljava/lang/String;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->y(ZZLer2;Ljava/lang/String;Lw82;Lla2;I)V",
+   "new": "Lej;->B(ZZLls2;Ljava/lang/String;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->B(IIIILc16;Lxe6;)D",
+   "new": "Lvj;->F(IIIILu16;Ltf6;)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->X(Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lsd7;->O(Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lin6;-><init>(Lzy6;Lzy6;Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Lrh7;Lb34;Lb34;B)V",
+   "new": "Ljo6;-><init>(Lpz6;Lpz6;Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Lai7;Lj44;Lj44;B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->w(Ljava/lang/String;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lm46;->w(Ljava/lang/String;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ln2;-><init>(Ljava/lang/Object;Ljava/lang/Object;Lca1;B)V",
+   "new": "Ln2;-><init>(Ljava/lang/Object;Ljava/lang/Object;Lea1;B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->m(JJ)J",
+   "new": "Llm;->o(JJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->s(J)J",
+   "new": "Llm;->x(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->B(JJJ)J",
+   "new": "Lkb3;->D(JJJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->c(Lmz3;Lw96;Lmj0;Loj0;Lb40;Lyz0;Lla2;II)V",
+   "new": "Ljn;->c(Lw04;Lma6;Luj0;Lwj0;Lh40;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->Q(Lmz3;Lq73;)Lmz3;",
+   "new": "Lgi1;->C(Lw04;Lw83;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->T(Landroid/content/Context;Ljava/lang/String;)Lmu5;",
+   "new": "Lra3;->J(Landroid/content/Context;Ljava/lang/String;)Lev5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhw;->c()Ljava/lang/Object;",
+   "new": "Llw;->a()Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhw;->d(Ljava/lang/Object;)V",
+   "new": "Llw;->b(Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->E(Ljava/lang/String;)Lld5;",
+   "new": "Lbb3;->z(Ljava/lang/String;)Lee5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lvp2;-><init>(Lh27;Lda1;)V",
+   "new": "Ldr2;-><init>(Lw27;Lfa1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->o(Ljava/lang/String;Lorg/json/JSONObject;)Llq2;",
+   "new": "Lln;->D(Ljava/lang/String;Lorg/json/JSONObject;)Lsr2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->s(Lw82;Lk17;Lmz3;Lw96;JJLb32;Lyz0;Lla2;II)V",
+   "new": "Ljq;->l(Lu92;Lx17;Lw04;Lma6;JJLc42;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->i(Ljava/util/ArrayList;ILh92;Lcz;Lmz3;ZLbf2;Laf2;FZLgt1;Lye2;FLmc2;JJJJLla2;II)V",
+   "new": "Lfj;->p(Ljava/util/ArrayList;ILfa2;Lgz;Lw04;ZLhg2;Lgg2;FZLeu1;Leg2;FLsd2;JJJJLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->E()Ldv2;",
+   "new": "Lln;->P()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->C(Lmz3;Lik7;)Lmz3;",
+   "new": "Lgi1;->Q(Lw04;Ltk7;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->z(ILla2;)Ljava/lang/String;",
+   "new": "Llb3;->J(ILib2;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->o(IIZZZLw82;Ljava/lang/String;ZLw82;Lmz3;Lla2;I)V",
+   "new": "Ljn;->i(IIZZZLu92;Ljava/lang/String;ZLu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->c0(IILz76;)V",
+   "new": "Lbb3;->S(IILp86;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->S(Lmz3;ZLb24;Ldw2;ZLnn5;Lw82;)Lmz3;",
+   "new": "Lqf0;->I(Lw04;ZLj34;Lix2;ZLbo5;Lu92;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt64;->c(Lmz3;Lyz0;Lla2;I)V",
+   "new": "Lb84;->c(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->H(FFF)F",
+   "new": "Lkb3;->S(FFF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->y(Lax4;Ln12;Ljava/lang/String;Lvh5;I)Li12;",
+   "new": "Lmm0;->u(Lxx4;Lo22;Ljava/lang/String;Lji5;I)Li22;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->b0(Lnh5;)Lhe4;",
+   "new": "Lmm0;->i0(Lbi5;)Lkf4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->l0(Ljava/util/Map;)Ljava/util/Map;",
+   "new": "Lep3;->r0(Ljava/util/Map;)Ljava/util/Map;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->g0(Lhe4;Lmh5;)V",
+   "new": "Lmm0;->v0(Lkf4;Lai5;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->a(Ljava/util/List;IIILjava/lang/String;Ljava/lang/String;ZLxc5;ZLjava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Set;Ljava/util/Map;Ln85;Lh92;Lh92;Lh92;ZZZLmz3;Lla2;I)V",
+   "new": "Lkb3;->c(Ljava/util/List;IIILjava/lang/String;Ljava/lang/String;ZLqd5;ZLjava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Set;Ljava/util/Map;Lg95;Lfa2;Lfa2;Lfa2;ZZZLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->E(I)Ljava/lang/Object;",
+   "new": "Lg93;->J(I)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->C(I)Ljava/lang/Object;",
+   "new": "Lg93;->H(I)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->b(Ljava/lang/Object;ILnb3;Lyz0;Lla2;I)V",
+   "new": "Lra3;->b(Ljava/lang/Object;ILwc3;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->c(Lax0;Lm17;Lyz0;Lla2;I)V",
+   "new": "Lg93;->c(Lax0;Lz17;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->u(ILw82;Lla2;Lmz3;Z)V",
+   "new": "Ld70;->I(ILu92;Lib2;Lw04;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->E()Lbo4;",
+   "new": "Ljw;->x()Lxc;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->w(I)V",
+   "new": "Lxc;->l(I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->z([JIJ)I",
+   "new": "Lhb;->F([JIJ)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->a(Lw82;Lw82;Lla2;I)V",
+   "new": "Lep3;->a(Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->g(Lw82;Lw82;Lla2;I)V",
+   "new": "Lep3;->c(Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->J(Lit2;)Ldh5;",
+   "new": "Lko3;->r0(Lnu2;)Lrh5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->K(Lpk6;Lla2;)Lb34;",
+   "new": "Lrq;->u(Lol6;Lib2;)Lj44;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->M(Lv14;)V",
+   "new": "Lln;->p0(Ld34;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->N()Ljava/lang/String;",
+   "new": "Llm;->A()Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->y(Lyd1;Lla2;)Lhe1;",
+   "new": "Lao7;->M(Ldf1;Lib2;)Lnf1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->S(Ll94;Lla2;)J",
+   "new": "Lm46;->S(Lsa4;Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lqr4;-><init>(Lyp0;IB)V",
+   "new": "Lns4;-><init>(Lzo0;IB)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->m(FFFFJ)Lho5;",
+   "new": "Llb3;->p(FFFFJ)Luo5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->K(JJ)Z",
+   "new": "Luj;->H(JJ)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->g0(J)Ljava/lang/String;",
+   "new": "Luj;->f0(J)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->Q(Lho5;)Z",
+   "new": "Llb3;->M(Luo5;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->f(I)Lhy4;",
+   "new": "Lvj;->p(I)Lfz4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->P(Ljz3;Lh47;Lln5;ZLnn5;Llk;)Lmz3;",
+   "new": "Lfv6;->L(Lt04;Ls47;Lzn5;ZLbo5;Lmk;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->f0()Lzg6;",
+   "new": "Lfv6;->H()Lvh6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->d(Lmz3;Lh92;Lla2;I)V",
+   "new": "Lpm;->b(Lw04;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->g(Lw82;JLhz3;Lyz0;Lla2;I)V",
+   "new": "Lsa3;->b(Lu92;JLq04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->G(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/lang/Class;)Ljava/lang/reflect/Type;",
+   "new": "Lla7;->J(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/lang/Class;)Ljava/lang/reflect/Type;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzt6;->i(Lhv6;)Lcz6;",
+   "new": "Lcq6;->g(Luw6;)Lsz6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Liv6;->d(JIII)J",
+   "new": "Lss6;->a(JIII)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->y(Lrd3;)Ljava/lang/String;",
+   "new": "Lg93;->z(Lqe3;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->p(ILw82;Lh92;Lla2;)V",
+   "new": "Lko3;->b0(ILu92;Lfa2;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->f(Ljava/util/List;Lmz3;Lla2;I)V",
+   "new": "Lu93;->f(Ljava/util/List;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->g(Lr94;Ljava/util/List;Lmz3;Lla2;I)V",
+   "new": "Lkb3;->i(Lya4;Ljava/util/List;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->D(I)Ljava/util/ArrayList;",
+   "new": "Luh7;->E(I)Ljava/util/ArrayList;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->F(Lgg;I)Lbg;",
+   "new": "Lg93;->e0(Lig;I)Ldg;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->g0(Ljc4;Ljava/util/List;Ljava/lang/String;)Ljc4;",
+   "new": "Ll46;->f0(Lld4;Ljava/util/List;Ljava/lang/String;)Lld4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->p(J)V",
+   "new": "Lxc;->e(J)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->k(Ljava/lang/Object;Lmz3;Lg22;Ljava/lang/String;Lyz0;Lla2;II)V",
+   "new": "Ljq;->h(Ljava/lang/Object;Lw04;Lg32;Ljava/lang/String;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->B(Lf26;Lwl0;Lo14;Laj5;FF)F",
+   "new": "Lcc3;->F(Lx26;Ldm0;Lw24;Lnj5;FF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->M(Li36;FLca1;)Ljava/lang/Object;",
+   "new": "Lep3;->k0(Lb46;FLea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->m(Li36;FLzh;Lca1;)Ljava/lang/Object;",
+   "new": "Lep3;->u(Lb46;FLci;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->J(III)I",
+   "new": "Lkb3;->M(III)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->Z(Lkg;FLd54;Lw82;Lda1;)Ljava/lang/Object;",
+   "new": "Lra3;->S(Lmg;FLl64;Lu92;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->n(Lmz3;Lw82;Lyz0;Lla2;I)V",
+   "new": "Lfj;->x(Lw04;Lu92;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->h(Lw82;ZZLov0;FFLmz3;FLh92;Lh92;Lmz3;Lla2;I)V",
+   "new": "Luj;->c(Lu92;ZZLov0;FFLw04;FLfa2;Lfa2;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->s(Lw82;ZZLov0;Leu5;Lwr5;FFFLmz3;Lh92;Lh92;Lw82;Lw82;Lw82;Lmz3;Lla2;I)V",
+   "new": "Lm71;->q(Lu92;ZZLov0;Lwu5;Lns5;FFFLw04;Lfa2;Lfa2;Lu92;Lu92;Lu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->l(Lw82;Lh92;ZZLov0;ZZZLh92;Lh92;FFLmz3;FLw82;Lw82;Lw82;Lmz3;Lla2;I)V",
+   "new": "Lmm;->i(Lu92;Lfa2;ZZLov0;ZZZLfa2;Lfa2;FFLw04;FLu92;Lu92;Lu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->s(FFFFIIIILov0;Lw82;Lw82;Lw82;Lw82;Lw82;Lh92;Lh92;Lh92;Lla2;Lmz3;Lmz3;ZZZZZZZZ)V",
+   "new": "Lgn;->q(FFFFIIIILov0;Lu92;Lu92;Lu92;Lu92;Lu92;Lfa2;Lfa2;Lfa2;Lib2;Lw04;Lw04;ZZZZZZZZ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->i(Lw82;Lw82;Lw82;Lw82;ZZZLov0;FFLmz3;Lh92;Lh92;FLmz3;Lla2;I)V",
+   "new": "Lfv6;->k(Lu92;Lu92;Lu92;Lu92;ZZZLov0;FFLw04;Lfa2;Lfa2;FLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->Q([Landroid/text/InputFilter;)[Landroid/text/InputFilter;",
+   "new": "Llm;->D([Landroid/text/InputFilter;)[Landroid/text/InputFilter;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->s(Ljava/lang/String;JJJ)J",
+   "new": "Let6;->m(Ljava/lang/String;JJJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->t(ILjava/lang/String;I)I",
+   "new": "Let6;->n(ILjava/lang/String;I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->D(II)V",
+   "new": "Lm46;->C(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->k0(Ljava/util/List;)Ljava/util/List;",
+   "new": "Lgn;->T(Ljava/util/List;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->s(Ljava/lang/StringBuilder;Ljava/lang/Object;Lh92;)V",
+   "new": "Lkb3;->v(Ljava/lang/StringBuilder;Ljava/lang/Object;Lfa2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->O(Lyh2;[D[D)D",
+   "new": "Lln;->T(Lfj2;[D[D)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->U(Lyh2;)Lyh2;",
+   "new": "Lhs;->H(Lfj2;)Lfj2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->B(Ljava/util/List;DD)Llz2;",
+   "new": "Ljq;->F(Ljava/util/List;DD)Lp03;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->D(I)Z",
+   "new": "Lm46;->K(I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->E(I)Z",
+   "new": "Lm46;->L(I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->F(I)Z",
+   "new": "Lm46;->M(I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->W()Ldv2;",
+   "new": "Ljq;->B()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->n(Ldv2;Ljava/lang/String;Lw82;Lyz0;Lla2;I)V",
+   "new": "Lcc3;->q(Liw2;Ljava/lang/String;Lu92;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lh27;-><init>(I)V",
+   "new": "Lqs6;-><init>(I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->u(Ljava/lang/String;Ljava/lang/String;ZLla2;II)V",
+   "new": "Lmm0;->s(Ljava/lang/String;Ljava/lang/String;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->z(Ljava/lang/String;Ljava/lang/String;ZLla2;II)V",
+   "new": "Lej;->C(Ljava/lang/String;Ljava/lang/String;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->T(Lq83;)Z",
+   "new": "Lfa3;->L(Laa3;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->p(Ljava/lang/String;)Ljava/lang/String;",
+   "new": "Lej;->H(Ljava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->b(IFZLdv;Liv;Lob7;Ljava/util/List;Lmn3;Lpa0;Loa0;ZLm84;Lla2;I)V",
+   "new": "Lj23;->b(IFZLhv;Lmv;Lyb7;Ljava/util/List;Ljo3;Lta0;Lsa0;ZLt94;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->f(Le73;Lla2;I)V",
+   "new": "Ld70;->l(Lj83;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->g(Lzy6;Lx26;Ljava/lang/String;Ldv2;Lla2;I)V",
+   "new": "Ld70;->m(Lpz6;Lq36;Ljava/lang/String;Liw2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->I()Ldv2;",
+   "new": "Lsa3;->H()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->F(Lom3;Lf8;)I",
+   "new": "Lt93;->n(Lkn3;Li8;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->N(Lkd5;Ljava/lang/Integer;Ljava/lang/String;)Lkd5;",
+   "new": "Lra3;->Z(Lde5;Ljava/lang/Integer;Ljava/lang/String;)Lde5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->z([BI)C",
+   "new": "Lbb3;->B([BI)C",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzt6;->d(C)Z",
+   "new": "Lur6;->l(C)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->A(Ljava/lang/String;JLmz3;Lla2;I)V",
+   "new": "Lm46;->A(Ljava/lang/String;JLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->h(Ljava/lang/String;JLmz3;Lla2;I)V",
+   "new": "Lkb3;->j(Ljava/lang/String;JLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->o(Lnq6;La00;)Ljava/lang/Object;",
+   "new": "Lbb3;->r(Lbs6;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->l0(Lag7;I)F",
+   "new": "Lhs;->b0(Ljg7;I)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->G(Lnq6;Lk04;Lsv2;Li05;La00;)Ljava/lang/Object;",
+   "new": "Lbb3;->K(Lbs6;Ls14;Lww2;Ld15;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->S(Lnq6;Lev6;Li05;La00;)Ljava/lang/Object;",
+   "new": "Lbb3;->T(Lbs6;Lrw6;Ld15;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->T(Lnq6;Lev6;Li05;ILa00;)Ljava/lang/Object;",
+   "new": "Lbb3;->U(Lbs6;Lrw6;Ld15;ILe00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->d(Ljava/lang/String;Lmz3;Ljava/lang/String;Llj0;Lyz0;Lla2;II)V",
+   "new": "Lu93;->d(Ljava/lang/String;Lw04;Ljava/lang/String;Ltj0;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->F()Ldv2;",
+   "new": "Lfj;->N()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->M()Ldv2;",
+   "new": "Lej;->Q()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->L(Ljava/util/ArrayList;Ljava/lang/Comparable;)I",
+   "new": "Lgn;->t(Ljava/util/ArrayList;Ljava/lang/Comparable;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhw;->e(Ljava/lang/String;)V",
+   "new": "Llw;->c(Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->m(Ly94;Lh92;Lla2;I)V",
+   "new": "Lm71;->i(Lfb4;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->o(Ly94;Lh92;Lla2;I)V",
+   "new": "Lqf0;->l(Lfb4;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->c(Lmz3;FLh92;Lyz0;Lla2;I)V",
+   "new": "Lvj;->g(Lw04;FLfa2;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->g(Ljava/util/List;Lmz3;Lyz0;Lla2;I)V",
+   "new": "Llm;->j(Ljava/util/List;Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->S(Lx12;FLw96;Lx12;Lla2;II)Luf3;",
+   "new": "Llm;->W(Ly22;FLma6;Ly22;Lib2;II)Ltg3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->F(Ljava/io/InputStream;Ljava/io/OutputStream;JLs81;)J",
+   "new": "Lpm;->m(Ljava/io/InputStream;Ljava/io/OutputStream;JLt81;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->g(JJ)Laj5;",
+   "new": "Ln93;->z(JJ)Lnj5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->n(F)V",
+   "new": "Lxc;->c(F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->K(Ljava/lang/String;)J",
+   "new": "Llm;->Q(Ljava/lang/String;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->I(Ljava/lang/String;)Lsv2;",
+   "new": "Lu93;->B(Ljava/lang/String;)Lww2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->t(ZLh92;ZLpq6;Lla2;I)V",
+   "new": "Lms6;->b(ZLfa2;ZLds6;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->o(ZLmz3;Lpg5;ZLla2;II)V",
+   "new": "Lfa3;->h(ZLw04;Leh5;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->c(Lav;ZZLh92;Lw82;Lla2;I)V",
+   "new": "Lej;->d(Lev;ZZLfa2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->y(DDD)Lyh2;",
+   "new": "Ljq;->z(DDD)Lfj2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->I(I)D",
+   "new": "Lj23;->E(I)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->F(D)D",
+   "new": "Lj23;->D(D)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->P(Lhv6;II)V",
+   "new": "Lvj;->O(Luw6;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->B(Lrs1;)Lrs1;",
+   "new": "Lln;->N(Lpt1;)Lpt1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->h(Ljy5;Lw82;Lh92;Lla2;I)V",
+   "new": "Lm46;->q(Lzy5;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->l(Ljy5;Lw82;Lh92;Lla2;I)V",
+   "new": "Lcc3;->o(Lzy5;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->j(Lty6;ZLyz0;Lla2;I)V",
+   "new": "Lmm0;->h(Liz6;ZLyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->g(Lty6;ZLyz0;Lla2;I)V",
+   "new": "Lej;->q(Liz6;ZLyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->K(Landroid/content/Intent;I)Ljava/lang/Object;",
+   "new": "Li23;->q(Landroid/content/Intent;I)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->H(Lep;Ljava/lang/Object;)Llh7;",
+   "new": "Li23;->m(Lgp;Ljava/lang/Object;)Lr6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->B(Lep;Ljava/lang/Object;)Landroid/content/Intent;",
+   "new": "Li23;->h(Lgp;Ljava/lang/Object;)Landroid/content/Intent;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lg03;->c()Landroid/graphics/RuntimeShader;",
+   "new": "Lb5;->b()Landroid/graphics/RuntimeShader;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->y(Lmz3;Lh92;)Lmz3;",
+   "new": "Lsd7;->E(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->F()V",
+   "new": "Lt93;->o()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->b(FFI)Lai;",
+   "new": "Lla7;->a(FFI)Ldi;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->v(Lw26;FLai;Lfh1;Lsg6;Lda1;)Ljava/lang/Object;",
+   "new": "Ln93;->D(Lo36;FLdi;Lii1;Loh6;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->E(Lx32;Ljava/lang/Object;Ljava/lang/Object;Lca1;)V",
+   "new": "Lmm0;->L(Lx42;Ljava/lang/Object;Ljava/lang/Object;Lea1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->x(Llz3;)Landroid/view/View;",
+   "new": "Lpm;->v(Lv04;)Landroid/view/View;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->b(Ljn2;Lr94;ZZZLmz3;Lla2;I)V",
+   "new": "Lbb3;->g(Lpo2;Lya4;ZZZLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->e(Lh47;Lw82;Lmz3;Lro0;ZLla2;II)V",
+   "new": "Ljq;->c(Ls47;Lu92;Lw04;Ltn0;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->k(Lmz3;FJLla2;II)V",
+   "new": "Lvj;->y(Lw04;FJLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->l(Lw82;Lmz3;ZLw96;Ldu2;Lla2;I)V",
+   "new": "Ljn;->l(Lu92;Lw04;ZLma6;Liv2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->O(Lmz3;Lzs4;)Lmz3;",
+   "new": "Lm71;->z(Lw04;Lxt4;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->a(FFFIIJLla2;Lmz3;)V",
+   "new": "Lbb3;->a(FFFIIJLib2;Lw04;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->i(Lsg2;Lmz3;Lia3;Lzs4;Lsv;Lqv;Lni1;ZLgq4;Lh92;Lla2;II)V",
+   "new": "Lbb3;->c(Lbi2;Lw04;Lyb3;Lxt4;Lwv;Luv;Lpj1;ZLar4;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->I(I)Ljava/lang/String;",
+   "new": "Lg93;->h0(I)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->t(Lw66;)Lvz6;",
+   "new": "Lg93;->P(Ll76;)Lk07;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->o(Ljava/lang/String;Lw82;Lmz3;ZZLw82;JJJJLla2;I)V",
+   "new": "Lnn;->i(Ljava/lang/String;Lu92;Lw04;ZZLu92;JJJJLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->d(JJLjava/util/ArrayList;Ljava/util/List;)Landroid/graphics/LinearGradient;",
+   "new": "Lqf0;->b(JJLjava/util/ArrayList;Ljava/util/List;)Landroid/graphics/LinearGradient;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->Z(Lde4;Lca1;)Lal5;",
+   "new": "Luj;->e0(Lgf4;Lea1;)Lpl5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->J(Lmz3;Lmv4;Ln20;Lq21;FLpv0;I)Lmz3;",
+   "new": "Lj23;->F(Lw04;Lkw4;Lt20;Ley0;FLpv0;I)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbu6;->a()I",
+   "new": "Lzi2;->b()I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->i()Lok1;",
+   "new": "Ljq;->i()Lnl1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->l0(Lpq1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lh92;)V",
+   "new": "Lrq;->R(Lpr1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lfa2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->B(Lmz3;F)Lmz3;",
+   "new": "Lko3;->j0(Lw04;F)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->o0(Ljava/util/List;)Ljava/util/List;",
+   "new": "Ljn;->c0(Ljava/util/List;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->O(Lda1;)Ljava/lang/Object;",
+   "new": "Lqf0;->H(Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->b(Lau;ZLh92;Lla2;I)V",
+   "new": "Lej;->b(Leu;ZLfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->l(ZZLw82;Lm92;Lla2;I)V",
+   "new": "Lgi1;->c(ZZLu92;Lka2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhh1;->x(Ljava/lang/String;Ljava/lang/Object;)V",
+   "new": "Lsl4;->i(Ljava/lang/String;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->O(Lmz3;FFI)Lmz3;",
+   "new": "Lhr3;->F(Lw04;FFI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->k(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lw82;Lh92;Lla2;II)V",
+   "new": "Lm46;->t(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lu92;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->o(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lw82;Lh92;Lla2;II)V",
+   "new": "Lcc3;->r(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lu92;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->t(II)V",
+   "new": "Ljq;->x(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->f(Ljava/lang/String;Ljava/util/ArrayList;Lyz0;Lla2;I)V",
+   "new": "Lln;->h(Ljava/lang/String;Ljava/util/ArrayList;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->L(Lm62;)Z",
+   "new": "Ljn;->S(Lk72;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->T(Le13;Lh92;Lla2;I)Lqn3;",
+   "new": "Lfv6;->G(Li23;Lfa2;Lib2;I)Lno3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->Z(ILlz2;)Ljz2;",
+   "new": "Lkb3;->i0(ILp03;)Ln03;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->i0(Lw93;)I",
+   "new": "Llb3;->b0(Lnb3;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->s(Ljava/lang/String;Ljava/lang/String;JZLjava/lang/String;ZLla2;I)V",
+   "new": "Lj23;->j(Ljava/lang/String;Ljava/lang/String;JZLjava/lang/String;ZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->u(Lld5;ZZLh92;Lla2;I)V",
+   "new": "Lj23;->l(Lee5;ZZLfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->J(ILjava/util/ArrayList;)I",
+   "new": "Lj23;->y(ILjava/util/ArrayList;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->P(Lzn4;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V",
+   "new": "Lep3;->n0(Lzo4;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;-><init>()V",
+   "new": "Lmm0;-><init>()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->G(Lla2;Ll92;)V",
+   "new": "Luj;->N(Lib2;Lja2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->t0(Ljava/lang/Throwable;Lw82;)Z",
+   "new": "Ljn;->g0(Ljava/lang/Throwable;Lu92;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->L(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lj23;->A(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llh7;->n()V",
+   "new": "Lj5;->t()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->O(Lzn4;ILjava/lang/Object;ILjava/lang/Object;)V",
+   "new": "Lep3;->m0(Lzo4;ILjava/lang/Object;ILjava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->a0(Ljava/util/ArrayList;II)V",
+   "new": "Lj23;->L(Ljava/util/ArrayList;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->Y(Lky4;Ln55;)Ljava/lang/Object;",
+   "new": "Lhs;->d0(Liz4;Lh65;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->m(Lfa2;)Lfa2;",
+   "new": "Lvj;->B(Ldb2;)Ldb2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->f(Ljd5;Lx85;ZLn85;ZZZLxc5;Lw82;Lw82;Lmz3;Lla2;I)V",
+   "new": "Lhr3;->g(Lce5;Lq95;ZLg95;ZZZLqd5;Lu92;Lu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->I(Lwh0;F)Loc;",
+   "new": "Ld70;->T(Lei0;F)Lrc;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzt6;->m(Ljava/lang/String;Lla2;II)Lzy6;",
+   "new": "Lcq6;->i(Ljava/lang/String;Lib2;II)Lpz6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->f(Ljava/lang/Object;Ljava/lang/Object;Ll92;Lla2;)V",
+   "new": "Lao7;->i(Ljava/lang/Object;Ljava/lang/Object;Lja2;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->N(ILla2;Lmz3;Z)Lmz3;",
+   "new": "Lbb3;->G(ILib2;Lw04;Z)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->l(Ljava/lang/String;FFFLjava/lang/String;JLla2;I)V",
+   "new": "Lfj;->v(Ljava/lang/String;FFFLjava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->o(Lw82;Lla2;)V",
+   "new": "Lao7;->F(Lu92;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->k(ZLl92;Lla2;I)V",
+   "new": "Ljq;->s(ZLja2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->y(II[I)I",
+   "new": "Lhb;->E(II[I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->H(Lnq6;JLda1;)Ljava/lang/Object;",
+   "new": "Lhs;->t(Lbs6;JLfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->D(Lbw0;)Liw0;",
+   "new": "Li23;->i(Lbw0;)Liw0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->r(Ly16;ZLjava/lang/Object;Ll92;)Ljava/lang/Object;",
+   "new": "Lls6;->n(Lq26;ZLjava/lang/Object;Lja2;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->A(Ljava/lang/Double;)D",
+   "new": "Llb3;->F(Ljava/lang/Double;)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->E(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "new": "Lsa3;->A(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->L(Landroid/content/Context;Ljava/lang/String;Lj41;)V",
+   "new": "Lfj;->f0(Landroid/content/Context;Ljava/lang/String;Lk41;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->p(Lsh6;Lh92;Lmz3;Lw82;Le64;Ll44;Lla2;I)V",
+   "new": "Lfv6;->h(Loi6;Lfa2;Lw04;Lu92;Lm74;Lt54;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->n(Lsh6;Lh92;Lmz3;Lw82;Le64;Ll44;Lla2;I)V",
+   "new": "Lfv6;->f(Loi6;Lfa2;Lw04;Lu92;Lm74;Lt54;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->e0(Lm46;I)I",
+   "new": "Lla7;->V(Lc56;I)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->K(III[B[B)Z",
+   "new": "Lsd7;->x(III[B[B)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->w(Lmz3;Lae0;)Lmz3;",
+   "new": "Lfv6;->u(Lw04;Lie0;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->H(Landroid/content/Context;)Landroid/content/SharedPreferences;",
+   "new": "Lfj;->d0(Landroid/content/Context;)Landroid/content/SharedPreferences;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->K(Lm62;I)Llf1;",
+   "new": "Ljn;->R(Lk72;I)Lqg1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->s(Lo55;)Z",
+   "new": "Lbb3;->x(Li65;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->y(Lo55;)Ljava/lang/Object;",
+   "new": "Lbb3;->A(Li65;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->G(Ljava/util/List;Lc40;)I",
+   "new": "Luj;->U(Ljava/util/List;Li40;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->A(Ld46;JLl92;)Ljava/lang/Object;",
+   "new": "Lao7;->N(Lt46;JLja2;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->F(Ljava/lang/Object;)Z",
+   "new": "Lu93;->u(Ljava/lang/Object;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->D(Ljava/lang/Object;)Ld46;",
+   "new": "Lu93;->r(Ljava/lang/Object;)Lt46;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->t(Lpp0;Ljava/lang/String;ZLld5;ZLh92;Lla2;I)V",
+   "new": "Lj23;->k(Lqo0;Ljava/lang/String;ZLee5;ZLfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->e(Lj74;ZLw82;Lw82;ZLw82;Lw82;Lla2;I)V",
+   "new": "Ll46;->c(Lq84;ZLu92;Lu92;ZLu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->h(ZLjava/util/List;Ljava/util/ArrayList;IZLh92;Lw82;Lw82;Lla2;I)V",
+   "new": "Lgn;->l(ZLjava/util/List;Ljava/util/ArrayList;IZLfa2;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->t(Lmz3;)Lmz3;",
+   "new": "Lmm0;->A(Lw04;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->C(I)Z",
+   "new": "Lm46;->I(I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->s(Ldj6;JJJJLmz3;FLla2;I)V",
+   "new": "Lfa3;->v(Lyj6;JJJJLw04;FLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->g(ILh92;Lh92;Lla2;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Z)V",
+   "new": "Lm71;->f(ILfa2;Lfa2;Lib2;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->n(Lw82;Lw82;Lh92;ZLw82;Lmz3;Lla2;I)V",
+   "new": "Lm71;->j(Lu92;Lu92;Lfa2;ZLu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->p(Lw82;Lw82;Lh92;ZLw82;Lmz3;Lla2;I)V",
+   "new": "Lqf0;->m(Lu92;Lu92;Lfa2;ZLu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->v(FFFII)I",
+   "new": "Lrq;->y(FFFII)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->u(DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+   "new": "Llb3;->y(DLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->o(Ljava/lang/String;Lw82;ZZLov0;FFFLmz3;FLmz3;Lyz0;Lyz0;ZLh92;ZZLsc3;Lmo1;Lh92;Lyz0;Lla2;III)V",
+   "new": "Lko3;->X(Ljava/lang/String;Lu92;ZZLov0;FFFLw04;FLw04;Lyz0;Lyz0;ZLfa2;ZZLyd3;Lmp1;Lfa2;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->l(Ljava/lang/String;Lw82;ZZLov0;FFFLmz3;FLmz3;Lyz0;Lyz0;ZLh92;ZZLsc3;Lmo1;Lh92;Lyz0;Lla2;III)V",
+   "new": "Lhb;->i(Ljava/lang/String;Lu92;ZZLov0;FFFLw04;FLw04;Lyz0;Lyz0;ZLfa2;ZZLyd3;Lmp1;Lfa2;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->X(Ljava/util/Collection;)Llz2;",
+   "new": "Lgn;->I(Ljava/util/Collection;)Lp03;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcc3;->l([FLud1;Ljava/util/AbstractList;FF)Lno5;",
+   "new": "Lep3;->q([FLze1;Ljava/util/AbstractList;FF)Lap5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->M(Lmz3;Lh92;)Lmz3;",
+   "new": "Lhr3;->D(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->G()Ldv2;",
+   "new": "Lra3;->I()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->H()Ldv2;",
+   "new": "Lya3;->I()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->K()Ldv2;",
+   "new": "Lbb3;->C()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->x(Ljava/lang/String;FLla2;I)V",
+   "new": "Lfj;->H(Ljava/lang/String;FLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->t(Ljava/lang/String;FLla2;I)V",
+   "new": "Lfj;->D(Ljava/lang/String;FLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->W(II)V",
+   "new": "Lqf0;->L(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->j(Ldm4;Lq05;)V",
+   "new": "Lls6;->e(Lj76;Ll15;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lru6;->f(Lyj1;)Liu6;",
+   "new": "Lls6;->h(Lal1;)Lxv6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->q(Lpv0;)V",
+   "new": "Lxc;->f(Lpv0;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->q(Lfw2;)Z",
+   "new": "Lgn;->x(Lkx2;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->g0(Lmz2;)Landroid/graphics/Rect;",
+   "new": "Ll46;->a0(Lq03;)Landroid/graphics/Rect;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->K(Lmz3;)Lmz3;",
+   "new": "Lko3;->s0(Lw04;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->Q(Ly44;)Le64;",
+   "new": "Lfv6;->K(Lg64;)Lm74;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->z(Loj7;Loj7;)Z",
+   "new": "Lrq;->w(Lzj7;Lzj7;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->U([F[F)[F",
+   "new": "Lrq;->L([F[F)[F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->y([F[F[F)[F",
+   "new": "Lrq;->s([F[F[F)[F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->P([F)[F",
+   "new": "Lrq;->J([F)[F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->d(FFFFLyv0;)J",
+   "new": "Lln;->b(FFFFLyv0;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->r0()V",
+   "new": "Lgn;->d0()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->i(Lw82;Lmz3;ZFFFLjf0;JLbt4;Lyz0;Lla2;II)V",
+   "new": "Ljn;->m(Lu92;Lw04;ZFFFLrf0;JLzt4;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->b0(Ljava/io/InputStream;)[B",
+   "new": "Lhs;->e0(Ljava/io/InputStream;)[B",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->j(Lw82;Lcz;Lle2;Lre2;Lzs4;Lh92;Lh92;Lm92;Lm92;Lmz3;Lmz3;Lyz0;Lh92;ZZLyz0;Lla2;III)V",
+   "new": "Lhr3;->b(Lu92;Lgz;Ltf2;Lyf2;Lxt4;Lfa2;Lfa2;Lka2;Lka2;Lw04;Lw04;Lyz0;Lfa2;ZZLyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->p(Lyz0;Lbg4;ZLw82;Lw82;Lla2;I)V",
+   "new": "Ld70;->s(Lyz0;Leh4;ZLu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->j(Lyz0;Lbg4;ZLw82;Lw82;Lla2;I)V",
+   "new": "La70;->D(Lyz0;Leh4;ZLu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->f0(JJ)J",
+   "new": "Lfj;->c0(JJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->h(FZZ)J",
+   "new": "Lfj;->o(FZZ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->D(JJ)I",
+   "new": "Lmm0;->C(JJ)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->R(J)Z",
+   "new": "Lmm0;->Z(J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->L(J)F",
+   "new": "Lmm0;->T(J)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->L(FFFFJ)Z",
+   "new": "Lkb3;->R(FFFFJ)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->K(FFLed;)Z",
+   "new": "Lkb3;->P(FFLed;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->D(Lyq1;Lmg2;)V",
+   "new": "Llm;->w(Lwr1;Lvh2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->A(Lnh5;Lmh0;IJ)J",
+   "new": "Lfv6;->v(Lbi5;Luh0;IJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->a(Lgj;Lw82;ZLw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lw82;ZZZZFLmz3;Lla2;III)V",
+   "new": "Luj;->a(Lij;Lu92;ZLu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lu92;ZZZZFLw04;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->E(Lyd1;)Lo23;",
+   "new": "Lnn;->w(Ldf1;)Ls33;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->W(Lbk3;JJLla2;I)V",
+   "new": "Ld70;->r(Lyk3;JJLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->z(JLjava/lang/String;Ljava/lang/String;)Lli;",
+   "new": "Lt93;->l(JLjava/lang/String;Ljava/lang/String;)Loi;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->p(Ljava/lang/String;Ljava/lang/String;Lyz0;Lla2;II)V",
+   "new": "Lfj;->z(Ljava/lang/String;Ljava/lang/String;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->x(Lw26;FFLai;Lzh;Lh92;Lda1;)Ljava/lang/Object;",
+   "new": "Ln93;->F(Lo36;FFLdi;Lci;Lfa2;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->a(Lgj;Liv;Lob7;Lw82;Lw82;ZLh92;Lmz3;ZFLla2;II)V",
+   "new": "Lpm;->a(Lij;Lmv;Lyb7;Lu92;Lu92;ZLfa2;Lw04;ZFLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->o(Lc34;Ljava/lang/String;Lla2;I)Lx77;",
+   "new": "Lms6;->l(Lk44;Ljava/lang/String;Lib2;I)Lh87;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->b0(Li05;J)Z",
+   "new": "Lhs;->Q(Ld15;J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->P(Landroid/content/Context;Ljava/util/concurrent/Executor;Lp45;Z)V",
+   "new": "La70;->j0(Landroid/content/Context;Ljava/util/concurrent/Executor;Lj55;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->y(Landroid/content/Context;)Ljava/lang/String;",
+   "new": "Lgi1;->I(Landroid/content/Context;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->U(Landroid/content/Context;I)J",
+   "new": "Ljn;->Z(Landroid/content/Context;I)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->K(ZLda1;)Ljava/lang/Object;",
+   "new": "Lqf0;->C(ZLfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->e(Ljava/lang/String;Lla2;I)V",
+   "new": "Lej;->g(Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->i0(Ljava/lang/String;Ljava/lang/Object;)V",
+   "new": "Lla7;->Y(Ljava/lang/String;Ljava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->S(J)Z",
+   "new": "Lmm0;->a0(J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->x(ILyz0;Lyz0;Lyz0;Lyz0;Lik7;Lyz0;Lla2;I)V",
+   "new": "Lra3;->w(ILyz0;Lyz0;Lyz0;Lyz0;Ltk7;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->a(Lzr;Lmz3;ZLw82;Lla2;II)V",
+   "new": "Lm71;->a(Lcs;Lw04;ZLu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldw6;->g(Lla2;)Lj07;",
+   "new": "Lfs6;->k(Lib2;)Lx07;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->f(Lq31;Ljava/lang/String;Lla2;I)V",
+   "new": "Lrq;->i(Ls31;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->e(Lq31;Ljava/lang/String;Lla2;I)V",
+   "new": "Ljq;->e(Ls31;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->l(Lq31;Ljava/lang/String;Lla2;I)V",
+   "new": "Ljn;->f(Ls31;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->H(JJ)Z",
+   "new": "Lnn;->s(JJ)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->o(Lyv0;)Lyv0;",
+   "new": "Lrq;->n(Lyv0;)Lyv0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leg2;-><init>(Ljava/util/ArrayList;Ljava/util/ArrayList;)V",
+   "new": "Loq;-><init>(Ljava/util/ArrayList;Ljava/util/ArrayList;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leg2;-><init>(III)V",
+   "new": "Loq;-><init>(III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leg2;-><init>(II)V",
+   "new": "Loq;-><init>(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->K(FLl92;I)Lf64;",
+   "new": "Lkb3;->V(FLja2;I)Ln74;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->m0(Lmz3;Lx26;ZI)Lmz3;",
+   "new": "Ljw;->I(Lw04;Lq36;ZI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->i(JLla2;I)V",
+   "new": "Llm;->k(JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->K(Lyq1;Ljava/util/List;FFJ)V",
+   "new": "Lra3;->A(Lwr1;Ljava/util/List;FFJ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->t(Ljava/util/List;Lw82;Lla2;I)V",
+   "new": "Ld70;->w(Ljava/util/List;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->n(Ljava/util/List;Lw82;Lla2;I)V",
+   "new": "La70;->H(Ljava/util/List;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->e0(Ljava/lang/String;Lla2;I)Lvw2;",
+   "new": "Ljn;->W(Ljava/lang/String;Lib2;I)Lay2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->S(Lhs1;Luk5;JI)Lrw2;",
+   "new": "Lfv6;->A(Lft1;Ljl5;JI)Lwx2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->v(Lvw2;FFLrw2;Ljava/lang/String;Lla2;II)Lsw2;",
+   "new": "Ljn;->w(Lay2;FFLwx2;Ljava/lang/String;Lib2;II)Lxx2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->U([F[F)Z",
+   "new": "Lgn;->M([F[F)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->g0(Ly14;)I",
+   "new": "Lfa3;->e0(Lg34;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->B(Ly14;I)V",
+   "new": "Lfa3;->w(Lg34;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->r(Ljava/lang/StringBuilder;Ljava/lang/Class;)V",
+   "new": "Ljq;->u(Ljava/lang/StringBuilder;Ljava/lang/Class;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->w(Ln12;Lax4;)V",
+   "new": "Lgn;->B(Lo22;Lxx4;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->G(Lyd1;Lyd1;Z)Lyd1;",
+   "new": "Lmm;->J(Ldf1;Ldf1;Z)Ldf1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->o(ZLb24;Lla2;I)V",
+   "new": "Lmm0;->m(ZLj34;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->I(Lmz3;Lb24;Ldw2;ZI)Lmz3;",
+   "new": "Lko3;->q0(Lw04;Lj34;Lix2;ZI)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->e0(Ljava/lang/String;ZZLh92;Lzy6;Ljava/lang/String;Lla2;I)V",
+   "new": "Ljw;->v(Ljava/lang/String;ZZLfa2;Lpz6;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->K(Lnq6;JLow5;La00;)Ljava/lang/Object;",
+   "new": "Lhs;->v(Lbs6;JLfx5;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->a(IIILm20;Lyz0;Lyi1;Lox1;Lla2;Lmz3;Lq84;Lgq4;Lbt4;Lbn5;Lvg6;Z)V",
+   "new": "Lra3;->a(IIILs20;Lyz0;Lak1;Lpy1;Lib2;Lw04;Lx94;Lar4;Lzt4;Luj5;Lrh6;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->d(Landroid/graphics/drawable/Drawable;Lla2;I)V",
+   "new": "Luj5;->d(Landroid/graphics/drawable/Drawable;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->C(Lyv0;Lyv0;)Lo71;",
+   "new": "Lrq;->z(Lyv0;Lyv0;)Lp71;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->S(Lzu0;Landroid/view/MotionEvent;I)J",
+   "new": "Lep3;->j0(Lzu0;Landroid/view/MotionEvent;I)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->A(II)I",
+   "new": "Lj23;->t(II)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->u(Landroid/graphics/RectF;FFF)Z",
+   "new": "Lt93;->h(Landroid/graphics/RectF;FFF)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->w(III)V",
+   "new": "Lbb3;->w(III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->u(II)V",
+   "new": "Lbb3;->u(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->Z([I[IZ)V",
+   "new": "Lla7;->Q([I[IZ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->a0(I[I[IZ)V",
+   "new": "Lla7;->R(I[I[IZ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->J(Lrh5;Lca1;)Ljava/lang/Object;",
+   "new": "Lmm;->w(Lfi5;Lea1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->O(Ljava/lang/Object;)Ljava/util/Map;",
+   "new": "Lla7;->w(Ljava/lang/Object;)Ljava/util/Map;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->F([Ljava/lang/Object;)Ljava/util/ArrayList;",
+   "new": "Lgn;->s([Ljava/lang/Object;)Ljava/util/ArrayList;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->q(Ly44;ILg54;Lk54;Lb54;Le64;Le64;Li44;Ll44;JLa83;Llk1;Lla2;I)V",
+   "new": "Lfv6;->i(Lg64;ILo64;Ls64;Lj64;Lm74;Lm74;Lq54;Lt54;JLh93;Lkl1;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->B(Lfn2;Ljava/util/List;Ljava/util/Map;)Ljava/util/List;",
+   "new": "Lmm0;->E(Llo2;Ljava/util/List;Ljava/util/Map;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->c0(Lfn2;ZLla2;)Lt31;",
+   "new": "Lmm0;->j0(Llo2;ZLib2;)Lv31;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->g(IILm77;)J",
+   "new": "Lms6;->e(IILw77;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->Z(J)Lnj7;",
+   "new": "Lhs;->O(J)Lyj7;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->Q(Lyi1;Lla2;II)Lvg6;",
+   "new": "Lfa3;->J(Lak1;Lib2;II)Lrh6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->i(Lxi6;I)Ljava/lang/Object;",
+   "new": "Li23;->f(Lsj6;I)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->d(Lr94;JJJJJJLjava/lang/String;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Llb3;->g(Lya4;JJJJJJLjava/lang/String;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->f0(ILjava/lang/String;Ljava/util/List;)Ljava/util/List;",
+   "new": "Lm46;->f0(ILjava/lang/String;Ljava/util/List;)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->N(Lm62;Z)Z",
+   "new": "Ljn;->V(Lk72;Z)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->Q(IIII)J",
+   "new": "Lln;->K(IIII)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->u(Laa3;IIILlk1;Lda1;)Ljava/lang/Object;",
+   "new": "Lsa3;->x(Lrb3;IIILkl1;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->R(FFFFF)J",
+   "new": "Lcc3;->O(FFFFF)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->h(Ldv;Lf27;Lmz3;Lx17;Lla2;II)V",
+   "new": "Lls6;->b(Lhv;Lu27;Lw04;Lm27;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->l(Lfj0;Lsa3;Lbo4;)V",
+   "new": "Lu93;->n(Lnj0;Lt93;Lxc;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->m()Lzy4;",
+   "new": "Lfa3;->f()Lxz4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->a(Ljava/lang/String;Ljava/lang/String;Lmz3;ZLyz0;Lla2;I)V",
+   "new": "Lfa3;->a(Ljava/lang/String;Ljava/lang/String;Lw04;ZLyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->v(II)V",
+   "new": "Lbb3;->v(II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->i(Lrc0;Lcz;Laf2;Lre2;Lmz3;Lmc2;Lla2;II)V",
+   "new": "Lhr3;->a(Lwc0;Lgz;Lgg2;Lyf2;Lw04;Lsd2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->l(Lbk3;JJLla2;I)V",
+   "new": "La70;->y(Lyk3;JJLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->o(Ljava/lang/String;FLk17;Lk17;Ljava/lang/String;Lla2;I)V",
+   "new": "Lfj;->y(Ljava/lang/String;FLx17;Lx17;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->y()Ljava/lang/String;",
+   "new": "Ll46;->E()Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->L(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;",
+   "new": "Llm;->y(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->S(Lnq6;JLh92;Lda1;)Ljava/lang/Object;",
+   "new": "Lhs;->F(Lbs6;JLfa2;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->g(Ljava/lang/String;ZLla2;I)V",
+   "new": "Lej;->o(Ljava/lang/String;ZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->k0(Lmz3;Lx26;ZZZ)Lmz3;",
+   "new": "Ljw;->G(Lw04;Lq36;ZZZ)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->A(ILlz2;)I",
+   "new": "Lkb3;->C(ILp03;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->i(ZZLhw5;Lw82;Lm92;Lla2;I)V",
+   "new": "Lm46;->r(ZZLxw5;Lu92;Lka2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->m(ZZLhw5;Lw82;Lm92;Lla2;I)V",
+   "new": "Lcc3;->p(ZZLxw5;Lu92;Lka2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->R(II)I",
+   "new": "Lra3;->X(II)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->i(Lmz3;Ll92;Lm92;Lyz0;Lbt4;Lw82;Lnn5;ZZLb24;Lyz0;Lla2;II)V",
+   "new": "Lvj;->c(Lw04;Lja2;Lka2;Lyz0;Lzt4;Lu92;Lbo5;ZZLj34;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltv5;-><init>(B)V",
+   "new": "Lk27;-><init>(B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->I(F)Z",
+   "new": "Lg93;->S(F)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->w(Ldv;Lc27;Lw82;Lmz3;Lla2;I)V",
+   "new": "Lj23;->n(Lhv;Lr27;Lu92;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->E(Ljava/lang/String;Lcb3;[Lz76;Lh92;)Lb86;",
+   "new": "Lt93;->m(Ljava/lang/String;Lu93;[Lp86;Lfa2;)Lr86;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->u(Ltg1;Lda1;)Ljava/lang/Object;",
+   "new": "Lbb3;->r(Lbs6;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->c(ILla2;Ljava/util/List;)V",
+   "new": "Lhs;->b(ILib2;Ljava/util/List;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->A(Lu6;)Ljava/lang/String;",
+   "new": "Lj23;->B(Lx6;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->k(Lmz3;Lik7;)Lmz3;",
+   "new": "Lgi1;->p(Lw04;Ltk7;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->m0(Ljava/lang/Object;)Ljava/lang/String;",
+   "new": "Lfj;->i0(Ljava/lang/Object;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->l(ZLjava/util/Set;Ljava/lang/String;Lw82;Lh92;Lla2;I)V",
+   "new": "Lfv6;->n(ZLjava/util/Set;Ljava/lang/String;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->m(ZLjava/util/Set;Ljava/lang/String;Lw82;Lh92;Lla2;I)V",
+   "new": "Lhr3;->n(ZLjava/util/Set;Ljava/lang/String;Lu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->o(Lu77;Lai;)F",
+   "new": "Lln;->l(Le87;Ldi;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->E(Laj5;JFLaj5;La83;)Lrs0;",
+   "new": "Lhr3;->G(Lnj5;JFLnj5;Lh93;)Lwr0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnm4;->n(Leg2;Lpa;)Lfq2;",
+   "new": "Luh7;->A(Lbr2;Lsa;)Lmg1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->K()Ldv2;",
+   "new": "Ljq;->A()Liw2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->i(Ljava/lang/String;JLjava/lang/String;JJJJZLkg;Lfw4;Lw82;ZLok6;Lok6;Lmz3;FLhb2;Lyz0;Lla2;I)V",
+   "new": "Lgi1;->a(Ljava/lang/String;JLjava/lang/String;JJJJZLmg;Ldx4;Lu92;ZLnl6;Lnl6;Lw04;FLjc2;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->s(Ljava/lang/String;Ljava/lang/String;JLla2;I)V",
+   "new": "Lfj;->C(Ljava/lang/String;Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->i(ZLmz3;Lyz0;Lla2;I)V",
+   "new": "Lfj;->s(ZLw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->y(Lh43;Lz76;)Lnd3;",
+   "new": "Ll46;->J(Lm53;Lp86;)Lne3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->O(ILjava/lang/String;)I",
+   "new": "Lnn;->L(ILjava/lang/String;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->m0(Lnq6;Lq05;Ly21;Lvx3;Ll92;Lw82;Lko;La00;)Ljava/lang/Object;",
+   "new": "Lhs;->c0(Lbs6;Ll15;La31;Laz3;Lja2;Lu92;Lmo;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->w(Landroid/content/Context;Ljava/lang/String;)V",
+   "new": "Lgi1;->F(Landroid/content/Context;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->d(Lmz3;Lbk3;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLw82;Lla2;I)V",
+   "new": "Lvj;->h(Lw04;Lyk3;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->g(Lmz3;Lbk3;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLw82;Lla2;I)V",
+   "new": "Luj;->b(Lw04;Lyk3;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->r(Ljava/lang/String;Ljava/util/List;)Z",
+   "new": "Ll46;->t(Ljava/lang/String;Ljava/util/List;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->H(Lyh2;[D[D)D",
+   "new": "Lln;->S(Lfj2;[D[D)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->Z(Ldv;Lf27;Lz17;ZILla2;II)Luv0;",
+   "new": "Ll46;->P(Lhv;Lu27;Lo27;ZILib2;II)Luv0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->e(Lfn2;Ljava/util/List;Ljava/lang/String;Lla2;I)V",
+   "new": "Lhs;->d(Llo2;Ljava/util/List;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->F(Lvz6;I)Lml5;",
+   "new": "Lkb3;->N(Lk07;I)Lbm5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt64;->b(Lzo5;ZLw82;Ldv2;Ljava/lang/String;Lmz3;ZLj64;Lla2;I)V",
+   "new": "Lb84;->b(Lnp5;ZLu92;Liw2;Ljava/lang/String;Lw04;ZLr74;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->r(Lw82;Lh92;Lw82;Lh92;Lmz3;Lla2;I)V",
+   "new": "Lm71;->p(Lu92;Lfa2;Lu92;Lfa2;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->K(Ljd5;Lla2;)Ljava/lang/String;",
+   "new": "Lhr3;->C(Lce5;Lib2;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->d(Ljd5;Lx85;ZZZLjava/lang/String;Lxc5;Lw82;Lw82;Ln85;Lla2;I)V",
+   "new": "Lhr3;->e(Lce5;Lq95;ZZZLjava/lang/String;Lqd5;Lu92;Lu92;Lg95;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->h(Ljava/lang/String;Ljava/lang/String;Lc95;ZZLjava/lang/String;ZLxc5;Lyz0;Lw82;Lla2;I)V",
+   "new": "Lhr3;->i(Ljava/lang/String;Ljava/lang/String;Lv95;ZZLjava/lang/String;ZLqd5;Lyz0;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->g(Ldv;Lx17;Lmz3;Lla2;II)V",
+   "new": "Lls6;->a(Lhv;Lm27;Lw04;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->k(Ljava/lang/String;Lh92;Lmz3;Lla2;I)V",
+   "new": "Lmm;->h(Ljava/lang/String;Lfa2;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->n(ZLw82;Laj5;Lcz;Lmz3;Lee2;Lle2;Lre2;FLzs4;Lw82;Lyz0;Lla2;III)V",
+   "new": "Lln;->k(ZLu92;Lnj5;Lgz;Lw04;Lmf2;Ltf2;Lyf2;FLxt4;Lu92;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->Y(Lpe4;Lw82;Lw82;Lla2;I)V",
+   "new": "Ljw;->p(Ltf4;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->n(Lpe4;Lw82;Lw82;Lla2;I)V",
+   "new": "Lko3;->Z(Ltf4;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->E(Lsh6;)I",
+   "new": "Lqf0;->z(Loi6;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->N(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/lang/reflect/Type;Ljava/util/HashMap;)Ljava/lang/reflect/Type;",
+   "new": "Lla7;->U(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/lang/reflect/Type;Ljava/util/HashMap;)Ljava/lang/reflect/Type;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->j(ZJJJJJLyz0;Lmz3;Ljava/lang/String;Ljava/lang/String;ZLw82;ZFJLhb2;Lyz0;Lla2;III)V",
+   "new": "Lgi1;->b(ZJJJJJLyz0;Lw04;Ljava/lang/String;Ljava/lang/String;ZLu92;ZFJLjc2;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->H(Lz76;Li33;)V",
+   "new": "Lao7;->Y(Lp86;Lm43;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->y(Lqm3;)Lqm3;",
+   "new": "Lbb3;->D(Lmn3;)Lmn3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->u(Ljava/io/File;Ljava/io/File;Leo;Lda1;)Ljava/lang/Object;",
+   "new": "Luj5;->x(Ljava/io/File;Ljava/io/File;Lgo;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->d0(Ljava/lang/String;ZLla2;II)V",
+   "new": "Ljw;->u(Ljava/lang/String;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->U(Ljava/util/List;ILl92;Lda1;)Ljava/lang/Object;",
+   "new": "Lgn;->R(Ljava/util/List;ILja2;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->u(ZLh92;Lmz3;Lyz0;ZLqq6;Lla2;I)V",
+   "new": "Lko3;->g0(ZLfa2;Lw04;Lyz0;ZLes6;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->k(Lee4;ZLla2;I)V",
+   "new": "Lcc3;->n(Lhf4;ZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->c(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Lh92;Lla2;)V",
+   "new": "Lao7;->f(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Lfa2;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->C(Ljava/util/ArrayList;)D",
+   "new": "Ljq;->G(Ljava/util/ArrayList;)D",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->c(Lyr1;ZZZLtr1;Lmz3;Lbt4;Lw82;Lw82;Lla2;II)V",
+   "new": "Llb3;->f(Lws1;ZZZLrs1;Lw04;Lzt4;Lu92;Lu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->K(Ljava/lang/StringBuilder;Ljava/lang/StringBuilder;I)V",
+   "new": "Lj23;->z(Ljava/lang/StringBuilder;Ljava/lang/StringBuilder;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->d(Ljava/util/List;Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lhs;->c(Ljava/util/List;Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->a0(Lkg;FLo54;FLw82;Lda1;)Ljava/lang/Object;",
+   "new": "Lra3;->T(Lmg;FLw64;FLu92;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->S(J)J",
+   "new": "Lvj;->X(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->r(Lmz3;Lia3;Lug2;Lzs4;Lni1;ZLgq4;Lsv;Lqv;Lh92;Lla2;II)V",
+   "new": "Lkb3;->b(Lw04;Lyb3;Ldi2;Lxt4;Lpj1;ZLar4;Lwv;Luv;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->D(Lb76;)Z",
+   "new": "Lhr3;->s(Lq76;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->K(Lb76;)Z",
+   "new": "Lhr3;->y(Lq76;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->H(Lb76;)Lli;",
+   "new": "Lhr3;->v(Lq76;)Loi;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->G(Lb76;Landroid/content/res/Resources;)Ljava/lang/String;",
+   "new": "Lhr3;->u(Lq76;Landroid/content/res/Resources;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->F(Lb76;)Z",
+   "new": "Lhr3;->t(Lq76;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->z(Lw66;Lh76;)Ljava/lang/Object;",
+   "new": "Lep3;->E(Ll76;Lx76;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->u(Ljava/util/ArrayList;)Z",
+   "new": "Lmm;->B(Ljava/util/ArrayList;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->s(Lh5;Lb76;)V",
+   "new": "Lj23;->o(Lh5;Lq76;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->J(Lb76;Landroid/content/res/Resources;)Z",
+   "new": "Lhr3;->x(Lq76;Landroid/content/res/Resources;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->O(Laa3;I)Z",
+   "new": "Lsa3;->N(Lrb3;I)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->v(ZLaa3;II)Z",
+   "new": "Lsa3;->y(ZLrb3;II)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->R(Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Luj;->Y(Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->h0(Lca1;Lyd1;Ljava/lang/Object;)Lsb7;",
+   "new": "Lmm;->j0(Lea1;Ldf1;Ljava/lang/Object;)Lcc7;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->x(Lmz3;Lh92;)Lmz3;",
+   "new": "Lsd7;->D(Lw04;Lfa2;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->Q(Lhv6;IILjava/lang/CharSequence;)V",
+   "new": "Lvj;->P(Luw6;IILjava/lang/CharSequence;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->E(Lk12;I)Lpb3;",
+   "new": "Luh7;->F(Luh7;I)Lyc3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->X(Lpe4;Lw82;Lla2;I)V",
+   "new": "Ljw;->o(Ltf4;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->m(Lpe4;Lw82;Lla2;I)V",
+   "new": "Lko3;->Y(Ltf4;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->n(Ljava/lang/String;Lw82;Lmz3;ZFFFLau6;Lbt4;Lk17;Ldw2;Lla2;II)V",
+   "new": "Lnn;->j(Ljava/lang/String;Lu92;Lw04;ZFFFLrv6;Lzt4;Lx17;Lix2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->n(Lu77;Lai;)F",
+   "new": "Lmm0;->l(Le87;Ldi;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->l(ZLw82;Lmz3;ZJFLla2;I)V",
+   "new": "Lra3;->n(ZLu92;Lw04;ZJFLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->t(Ltk6;ILs3;Z)Z",
+   "new": "Lqf0;->s(Lsl6;ILs3;Z)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->L(Lsh6;Lh92;)Z",
+   "new": "Lqf0;->D(Loi6;Lfa2;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->D(Lsh6;)Ltk6;",
+   "new": "Lqf0;->y(Loi6;)Lsl6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->p(Lla2;)Lax0;",
+   "new": "Ll46;->B(Lib2;)Lax0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->y(Ln12;Lax4;)V",
+   "new": "Lgn;->D(Lo22;Lxx4;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->q(JLqe0;ILjava/util/ArrayList;IILjava/util/ArrayList;)V",
+   "new": "Ll46;->s(JLye0;ILjava/util/ArrayList;IILjava/util/ArrayList;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lq21;->d(Laf1;F)J",
+   "new": "Lie3;->k(Lgg1;F)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->v(Lmz3;Lh92;ZZLyz0;Lw96;Lw96;JJJJLla2;II)V",
+   "new": "Lko3;->h0(Lw04;Lfa2;ZZLyz0;Lma6;Lma6;JJJJLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->U(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "new": "Lra3;->K(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->D()Lsv2;",
+   "new": "Lg93;->I()Lww2;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->o(ILd34;)I",
+   "new": "Lmm;->y(ILl44;)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->S(FJJ)J",
+   "new": "Lln;->Y(FJJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->J(Ljava/lang/CharSequence;Landroid/text/TextPaint;IILandroid/text/TextDirectionHeuristic;Landroid/text/Layout$Alignment;ILandroid/text/TextUtils$TruncateAt;IIZIIII)Landroid/text/StaticLayout;",
+   "new": "Lt93;->r(Ljava/lang/CharSequence;Landroid/text/TextPaint;IILandroid/text/TextDirectionHeuristic;Landroid/text/Layout$Alignment;ILandroid/text/TextUtils$TruncateAt;IIZIIII)Landroid/text/StaticLayout;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->J(Landroid/text/Layout;ILandroid/graphics/Paint;)F",
+   "new": "Lmm;->M(Landroid/text/Layout;ILandroid/graphics/Paint;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->K(Landroid/text/Layout;ILandroid/graphics/Paint;)F",
+   "new": "Lmm;->N(Landroid/text/Layout;ILandroid/graphics/Paint;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->I(Lkv;Log6;Llk5;Lyn4;)V",
+   "new": "Lmm0;->M(Lov;Lkh6;Lal5;Lyo4;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ln2;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Lca1;B)V",
+   "new": "Ln2;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Lea1;B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->I(Lu91;)[Ljava/lang/String;",
+   "new": "Lhs;->L(Lv91;)[Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->f(Ljava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lhs;->e(Ljava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lzw3;-><init>(B)V",
+   "new": "Lg96;-><init>(B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->g(Ljava/lang/String;)Lmb;",
+   "new": "Lhs;->f(Ljava/lang/String;)Lpb;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->N(Lw66;)Z",
+   "new": "Ld70;->W(Ll76;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->b(Lw82;Lmz3;ZLw96;Lmj0;Loj0;Lb40;Lyz0;Lla2;II)V",
+   "new": "Ljn;->b(Lu92;Lw04;ZLma6;Luj0;Lwj0;Lh40;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->i(Ljava/lang/String;ZLw82;Lw82;ZZLmz3;Lla2;I)V",
+   "new": "Lkb3;->m(Ljava/lang/String;ZLu92;Lu92;ZZLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lir6;->q([F[FI[F)V",
+   "new": "Lls6;->m([F[FI[F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->m(Lu77;Lai;)F",
+   "new": "Lmm0;->k(Le87;Ldi;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->V(ILjava/lang/String;)V",
+   "new": "Llm;->Z(ILjava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->S(Ltd1;Lg22;Lla2;I)Lhh;",
+   "new": "Lhr3;->I(Lye1;Lg32;Lib2;I)Ljh;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->O(Ljava/util/List;)Lyz0;",
+   "new": "Ln93;->I(Ljava/util/List;)Lyz0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->m(Lk17;Lla2;)F",
+   "new": "Lfj;->w(Lx17;Lib2;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->k(ZLw82;Lmz3;ZLqg5;Lla2;II)V",
+   "new": "Lra3;->m(ZLu92;Lw04;ZLfh5;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->p0(Ljava/util/ArrayList;Lfw3;Lda1;)Ljava/lang/Object;",
+   "new": "Ln93;->h0(Ljava/util/ArrayList;Lmx3;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->n(Lda1;Lur5;Ljava/io/File;)Ljava/lang/Object;",
+   "new": "Luj5;->j(Lfa1;Lks5;Ljava/io/File;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->Z(Ljava/io/InputStream;J)Ljava/lang/String;",
+   "new": "Lpm;->K(Ljava/io/InputStream;J)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->g(Lee4;ZLlj0;Lla2;I)V",
+   "new": "Lm46;->p(Lhf4;ZLtj0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->U(Lmz3;JLbt4;Lyz0;Lla2;I)V",
+   "new": "Ld70;->p(Lw04;JLzt4;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->f(Lcz;ZZLw82;JLmz3;Lw82;Lyz0;Lla2;I)V",
+   "new": "Lsa3;->a(Lgz;ZZLu92;JLw04;Lu92;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->c0(Lli;)Lns0;",
+   "new": "Ljn;->a0(Loi;)Lsr0;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Liv6;->h(Lxz6;J)J",
+   "new": "Lur6;->o(Ll07;J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfv6;->b(Lvz6;I)F",
+   "new": "Lqr6;->g(Lk07;I)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->t(Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lf61;Z)Ljava/util/List;",
+   "new": "Lej;->M(Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lg61;Z)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;-><init>(B)V",
+   "new": "Ll46;-><init>(B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;-><init>(B)V",
+   "new": "Lm46;-><init>(B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->e(Lfn2;Ljava/util/List;Ljava/lang/String;Lw82;Lla2;I)V",
+   "new": "Lrq;->h(Llo2;Ljava/util/List;Ljava/lang/String;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->k(Lfn2;Ljava/util/List;Ljava/lang/String;Lw82;Lla2;I)V",
+   "new": "Ljn;->e(Llo2;Ljava/util/List;Ljava/lang/String;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->C(Lmo1;Lmo1;Lmo1;)Ljava/lang/Comparable;",
+   "new": "Lkb3;->E(Lmp1;Lmp1;Lmp1;)Ljava/lang/Comparable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->P(Lbo4;)Landroid/graphics/Paint;",
+   "new": "Ljw;->B(Lxc;)Landroid/graphics/Paint;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->L(Landroid/graphics/Matrix;[F)V",
+   "new": "Lao7;->Z(Landroid/graphics/Matrix;[F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->x(Lku2;Landroid/content/res/Resources;)Landroid/graphics/drawable/Drawable;",
+   "new": "Luj;->x(Lpv2;Landroid/content/res/Resources;)Landroid/graphics/drawable/Drawable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->m(ZLw82;Laj5;Lcz;Lmz3;Lle2;Lre2;FLbt4;Lyz0;Lla2;I)V",
+   "new": "Lln;->j(ZLu92;Lnj5;Lgz;Lw04;Ltf2;Lyf2;FLzt4;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->I(Ljava/lang/String;Ljava/util/LinkedHashMap;Ljava/util/Set;)Ljava/util/Set;",
+   "new": "Lfa3;->D(Ljava/lang/String;Ljava/util/LinkedHashMap;Ljava/util/Set;)Ljava/util/Set;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->y(Ljava/lang/String;Lw82;Lla2;II)V",
+   "new": "Ld70;->B(Ljava/lang/String;Lu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->s(Ljava/lang/String;Lw82;Lla2;II)V",
+   "new": "La70;->M(Ljava/lang/String;Lu92;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->V(Lbg7;Lq83;)V",
+   "new": "Lla7;->L(Lkg7;Laa3;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->b(Ljava/lang/Object;Ljava/lang/Object;Lh92;Lla2;)V",
+   "new": "Lao7;->e(Ljava/lang/Object;Ljava/lang/Object;Lfa2;Lib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->n(Ldv2;ZLla2;I)V",
+   "new": "Lgn;->n(Liw2;ZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->n(Ljava/lang/String;JLt72;JFLla2;I)V",
+   "new": "Lvj;->v(Ljava/lang/String;JLr82;JFLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->P(ZLie3;Lcj5;ZLjava/lang/Object;)V",
+   "new": "Lmm;->c0(ZLhf3;Lpj5;ZLjava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->t(Lw82;Lmz3;ZLw96;Ldu2;Lla2;I)V",
+   "new": "Ljn;->v(Lu92;Lw04;ZLma6;Liv2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->c0(Ljava/lang/String;Ljava/lang/String;ZLh92;ZLyz0;Lla2;I)V",
+   "new": "Ljw;->t(Ljava/lang/String;Ljava/lang/String;ZLfa2;ZLyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->h(Ljn2;Lr94;ZZZLjava/lang/String;Lmz3;Lla2;I)V",
+   "new": "Lsa3;->c(Lpo2;Lya4;ZZZLjava/lang/String;Lw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->f0(Landroid/graphics/drawable/Drawable;II)Landroid/graphics/Bitmap;",
+   "new": "Lfj;->j0(Landroid/graphics/drawable/Drawable;II)Landroid/graphics/Bitmap;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->R(III)I",
+   "new": "Lmm0;->b0(III)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->t(Ljava/lang/String;Ljava/util/List;)Ljd5;",
+   "new": "Ll46;->z(Ljava/lang/String;Ljava/util/List;)Lce5;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->s(Lo23;Lhq6;)Ljava/lang/Object;",
+   "new": "Lnn;->m(Ls33;Lvr6;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->J(Lto5;IIIIILpq3;Ljava/util/List;[Lez4;II[II)Loq3;",
+   "new": "Lm46;->R(Lhp5;IIIIILqr3;Ljava/util/List;[Lc05;II[II)Lpr3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->a0(Lpx1;Lvu2;Ldo4;Lox1;Lda1;)Lpx1;",
+   "new": "Ljn;->f0(Lqy1;Law2;Ldp4;Lpy1;Lfa1;)Lqy1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lk12;->z(Lvu2;Lxe6;)Ldo4;",
+   "new": "Lae;->e(Law2;Ltf6;)Ldp4;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llh7;->x(Lvu2;Ljava/lang/Object;Ldo4;Lox1;)Lar3;",
+   "new": "Lae;->d(Law2;Ljava/lang/Object;Ldp4;Lpy1;)Lbs3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llh7;->t(Lvu2;Lar3;Lxe6;Lc16;)Lbr3;",
+   "new": "Lae;->b(Law2;Lbs3;Ltf6;Lu16;)Lcs3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->u(Ljava/lang/String;Ljava/lang/String;ZLw82;Lla2;I)V",
+   "new": "Ld70;->x(Ljava/lang/String;Ljava/lang/String;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->x(Ljava/lang/String;Lla2;I)V",
+   "new": "La70;->R(Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->F(Lyi1;)F",
+   "new": "Lkb3;->H(Lak1;)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->A(Lpq1;FFF)V",
+   "new": "Lrq;->v(Lpr1;FFF)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->I(Lm62;I)Llf1;",
+   "new": "Ljn;->P(Lk72;I)Lqg1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->r(Lmz3;Lyz0;Lla2;I)V",
+   "new": "Lsa3;->t(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Leb;->j(Lmz3;Lyz0;Lla2;I)V",
+   "new": "La70;->w(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->a(Ldv;Lyz0;Lla2;I)V",
+   "new": "Lm46;->c(Lhv;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->b(Ldv;Lyz0;Lla2;I)V",
+   "new": "Ll46;->a(Lhv;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->R(Lla2;)Lr15;",
+   "new": "Lbb3;->P(Lib2;)Lk25;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->S(JLks1;)J",
+   "new": "Llm;->f0(JLit1;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->R(J)J",
+   "new": "Lmm;->h0(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->b(Lw82;Lmz3;ZFFFLjf0;Lbt4;Ldw2;Lyz0;Lla2;I)V",
+   "new": "Lnn;->d(Lu92;Lw04;ZFFFLrf0;Lzt4;Lix2;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->r(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lla2;I)V",
+   "new": "Ld70;->u(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->l(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lla2;I)V",
+   "new": "La70;->F(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->y(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+   "new": "Lpm;->t(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->u(Ljava/lang/String;)Ljava/lang/String;",
+   "new": "Lpm;->n(Ljava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->j(Ljava/lang/String;JJLla2;I)V",
+   "new": "Llm;->l(Ljava/lang/String;JJLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->b(ZLh92;Lmz3;ZLla2;II)V",
+   "new": "Ln93;->g(ZLfa2;Lw04;ZLib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->U(Lyd1;)Ljava/lang/Object;",
+   "new": "Lhr3;->P(Ldf1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->T(Log6;Lkv;I)V",
+   "new": "Llb3;->P(Lkh6;Lov;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lgq3;->p(ILw82;Lla2;Lmz3;Z)V",
+   "new": "Lfv6;->q(ILu92;Lib2;Lw04;Z)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->N(ZZLla2;I)V",
+   "new": "Lmm;->a0(ZZLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->U(IILla2;I)Luh3;",
+   "new": "Lkb3;->h0(IILib2;I)Lsi3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->l(ZLmz3;JZFFLw82;Lw82;JJZJZZZJLhb2;Lyz0;Lla2;II)V",
+   "new": "Lra3;->i(ZLw04;JZFFLu92;Lu92;JJZJZZZJLjc2;Lyz0;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->h(III)J",
+   "new": "Lln;->f(III)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->Z(Lz67;Lla2;)J",
+   "new": "Lm46;->h0(Lj77;Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->Y(Lz67;Lla2;)J",
+   "new": "Lm46;->g0(Lj77;Lib2;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->u(Lgu6;Landroid/content/Context;ZLjava/lang/CharSequence;J)V",
+   "new": "Lra3;->x(Lvv6;Landroid/content/Context;ZLjava/lang/CharSequence;J)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->C(Lro1;)J",
+   "new": "Ljq;->E(Lrp1;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->u(Lxo1;J)Z",
+   "new": "Lnn;->p(Lxp1;J)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->J(J)J",
+   "new": "Lya3;->K(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llc3;->f0(JJ)J",
+   "new": "Lya3;->Y(JJ)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->h(Ldv2;Ljava/lang/String;Ljava/lang/String;JLla2;I)V",
+   "new": "Lrq;->k(Liw2;Ljava/lang/String;Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->n(Ldv2;Ljava/lang/String;Ljava/lang/String;JLla2;I)V",
+   "new": "Ljn;->h(Liw2;Ljava/lang/String;Ljava/lang/String;JLib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->r(Lnq6;Lj05;La00;)Ljava/lang/Object;",
+   "new": "Lmm0;->y(Lbs6;Le15;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->v(ILw82;Lla2;Lmz3;Ljava/lang/String;)V",
+   "new": "Lj23;->m(ILu92;Lib2;Lw04;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->g(ILw82;Lla2;Lmz3;Ljava/lang/String;)V",
+   "new": "Li23;->e(ILu92;Lib2;Lw04;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->f(ZLw82;Lh92;Lla2;I)V",
+   "new": "Lcc3;->c(ZLu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->i(ZLw82;Lh92;Lla2;I)V",
+   "new": "Lep3;->e(ZLu92;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->B(Lcv4;)J",
+   "new": "Lbb3;->y(Law4;)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->k(Lkg;Lkg;Lhe1;FF)V",
+   "new": "Lfj;->r(Lmg;Lmg;Lnf1;FF)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lm66;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lu76;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->j(Lx77;Lmz3;Lg22;Lh92;Lyz0;Lla2;I)V",
+   "new": "Ljq;->g(Lh87;Lw04;Lg32;Lfa2;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->r(Landroid/content/Context;)Lf72;",
+   "new": "Llm;->v(Landroid/content/Context;)Ld82;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->x(Lhj6;Lla2;I)V",
+   "new": "Ld70;->A(Lck6;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->r(Lhj6;Lla2;I)V",
+   "new": "La70;->L(Lck6;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lho3;->B(Lig7;Leg2;Lle3;)V",
+   "new": "Lcc3;->v(Lrg7;Lbr2;Lkf3;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lqf4;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lst4;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->u(Lii4;Lla2;)Ljava/lang/String;",
+   "new": "Lm46;->F(Ljj4;Lib2;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->t(Led;FFFFZ)V",
+   "new": "Ln93;->C(Led;FFFFZ)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhw;-><init>()V",
+   "new": "Llw;-><init>()V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhn;->m(Lno2;JLt72;JFLmz3;Lla2;I)V",
+   "new": "Lvj;->u(Ltp2;JLr82;JFLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->W(Ljava/lang/String;)Ljava/lang/String;",
+   "new": "Llm;->N(Ljava/lang/String;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->G(Lfw2;Lio4;Lew2;Z)J",
+   "new": "Lgn;->V(Lkx2;Lip4;Ljx2;Z)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->h(Ljava/util/List;Ltr1;Ll92;Lla2;I)V",
+   "new": "Lvj;->q(Ljava/util/List;Lrs1;Lja2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ls36;->b(Lyz0;Lla2;I)V",
+   "new": "Llb3;->b(Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->k(Ljava/lang/String;Lla2;I)V",
+   "new": "Lfa3;->j(Ljava/lang/String;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lta3;->o(Lx03;)Ljava/util/ArrayList;",
+   "new": "Ll46;->A(Lb23;)Ljava/util/ArrayList;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnm4;->x(Lq81;I)Lxu3;",
+   "new": "Luh7;->H(Lr81;I)Law3;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkm;->G(Lnq6;Lq05;Lj05;La00;)Ljava/lang/Object;",
+   "new": "Lhs;->s(Lbs6;Ll15;Le15;Le00;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->N(Z)Lnj6;",
+   "new": "Lej;->L(Z)Lik6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->k(Ljava/util/List;Ljava/util/List;JJJLmz3;Lla2;I)V",
+   "new": "Lra3;->h(Ljava/util/List;Ljava/util/List;JJJLw04;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbo4;->v(F)V",
+   "new": "Lxc;->k(F)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->J(Lfb3;Z)I",
+   "new": "Lsd7;->I(Lrc3;Z)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->e(Lgc4;Ljc4;Ljava/util/List;Lh92;Ll92;Lw82;Lla2;I)V",
+   "new": "Lcc3;->b(Lid4;Lld4;Ljava/util/List;Lfa2;Lja2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkt6;->h(Lgc4;Ljc4;Ljava/util/List;Lh92;Ll92;Lw82;Lla2;I)V",
+   "new": "Lep3;->d(Lid4;Lld4;Ljava/util/List;Lfa2;Lja2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lf13;->g(Ljava/lang/String;Ljava/util/List;ZLh92;Lh92;Lla2;I)V",
+   "new": "Lhr3;->h(Ljava/lang/String;Ljava/util/List;ZLfa2;Lfa2;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->M(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "new": "Lrq;->O(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->j(Lmz3;Lsc3;Lbt4;Lqv;Lm20;Lni1;ZLgq4;Lh92;Lla2;II)V",
+   "new": "Lya3;->b(Lw04;Lyd3;Lzt4;Luv;Ls20;Lpj1;ZLar4;Lfa2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->d(Lw82;Lmz3;ZLw96;Lkf0;Lqf0;Lb40;Lbt4;Lm92;Lla2;II)V",
+   "new": "Ljq;->b(Lu92;Lw04;ZLma6;Lsf0;Lyf0;Lh40;Lzt4;Lka2;Lib2;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lu60;->w(ILla2;Ljava/util/ArrayList;)V",
+   "new": "Ld70;->z(ILib2;Ljava/util/ArrayList;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->q(ILla2;Ljava/util/ArrayList;)V",
+   "new": "La70;->K(ILib2;Ljava/util/ArrayList;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->L(Lw96;Llk1;La83;Led;FFFF)V",
+   "new": "Llb3;->O(Lma6;Lkl1;Lh93;Led;FFFF)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lhq;->o(Lda1;)V",
+   "new": "Lmm;->v(Lfa1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->m(ILla2;)V",
+   "new": "Lgn;->m(ILib2;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->v(Landroid/content/Context;Ljava/lang/String;)V",
+   "new": "La70;->P(Landroid/content/Context;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lnn3;->b0(Landroid/content/Context;Ljava/lang/String;)V",
+   "new": "Ljw;->s(Landroid/content/Context;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->o(Lur5;Ljava/io/File;Ljava/io/File;Lda1;)Ljava/io/Serializable;",
+   "new": "Luj5;->k(Lks5;Ljava/io/File;Ljava/io/File;Lfa1;)Ljava/io/Serializable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ln2;-><init>(Ljava/lang/Object;Lca1;B)V",
+   "new": "Ln2;-><init>(Ljava/lang/Object;Lea1;B)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->u(Lyz0;Lla2;I)V",
+   "new": "Lra3;->t(Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->t(Lhq5;Lla2;I)V",
+   "new": "Lra3;->s(Lxq5;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lfw;->F(Ly04;Lfj0;Lke0;FLt96;Lzu6;Lzq1;)V",
+   "new": "Lko3;->n0(Lg24;Lnj0;Lse0;FLja6;Lnw6;Lxr1;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->P(Landroid/view/View;)Landroid/view/View;",
+   "new": "Lln;->J(Landroid/view/View;)Landroid/view/View;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->S(Landroid/view/View;)Lz11;",
+   "new": "Lln;->Q(Landroid/view/View;)Lb21;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lmb3;->x(FF)F",
+   "new": "Lra3;->y(FF)F",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->N(Ljava/util/ArrayList;)Ljava/util/Collection;",
+   "new": "Lla7;->v(Ljava/util/ArrayList;)Ljava/util/Collection;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->i(Lmz3;Lyz0;Lla2;I)V",
+   "new": "Lra3;->k(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcb3;->j(Lmz3;Lyz0;Lla2;I)V",
+   "new": "Lra3;->l(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lcj;->j(Lmz3;Lyz0;Lla2;I)V",
+   "new": "Ljn;->n(Lw04;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->q(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "new": "Lm46;->D(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljn;->m(Lid0;FFFJLjava/util/List;Lla2;I)V",
+   "new": "Llm;->n(Lod0;FFFJLjava/util/List;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Le13;->P(J)J",
+   "new": "Lgi1;->O(J)J",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lln;->O(Lcj5;ZLjava/lang/Object;)V",
+   "new": "Lmm;->b0(Lpj5;ZLjava/lang/Object;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lbn5;->p(Ljava/io/File;Ljava/io/File;Lda1;)Ljava/io/Serializable;",
+   "new": "Luj5;->l(Ljava/io/File;Ljava/io/File;Lfa1;)Ljava/io/Serializable;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->L(Lb24;Lla2;I)Lb34;",
+   "new": "Lfj;->K(Lj34;Lib2;I)Lj44;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->p(Lhq5;Ljava/util/List;ZLjava/lang/String;Lh92;Lw82;Lla2;I)V",
+   "new": "Lra3;->o(Lxq5;Ljava/util/List;ZLjava/lang/String;Lfa2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->d0(J)Ljava/lang/String;",
+   "new": "Lnn;->P(J)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lub3;->W(Ljava/lang/String;)Z",
+   "new": "Llb3;->V(Ljava/lang/String;)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->s(II)I",
+   "new": "Lmm;->z(II)I",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lom;->G(Landroid/content/Context;)Lw62;",
+   "new": "Lhs;->D(Landroid/content/Context;)Lu72;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->d(Lll5;Lla2;I)V",
+   "new": "Ljq;->d(Lam5;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lt36;->Q(Ljm1;Ljm1;)Ljm1;",
+   "new": "Llb3;->T(Lin1;Lin1;)Lin1;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->f(Ljava/util/List;ZLh92;Lw82;Lla2;I)V",
+   "new": "Lpm;->c(Ljava/util/List;ZLfa2;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ljd7;->d(Lw82;Lyl1;Lyz0;Lla2;I)V",
+   "new": "Lla7;->f(Lu92;Lxm1;Lyz0;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lab3;->D(Lsc3;ILjava/lang/String;Ljava/lang/Integer;Ll1;Lda1;)Ljava/lang/Object;",
+   "new": "Lfa3;->z(Lyd3;ILjava/lang/String;Ljava/lang/Integer;Ll1;Lfa1;)Ljava/lang/Object;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ll71;->J(Lmz3;Lz03;)Lmz3;",
+   "new": "Lhr3;->R(Lw04;Ld23;)Lw04;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lsj;->p(IIII)Loc;",
+   "new": "Lrq;->m(IIII)Lrc;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lba7;->j(Lw82;Lmz3;JJLw96;Ljava/util/List;Lla2;I)V",
+   "new": "Lhb;->g(Lu92;Lw04;JJLma6;Ljava/util/List;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->f0(Landroid/window/BackEvent;)Lv64;",
+   "new": "Lg93;->j0(Landroid/window/BackEvent;)Ld84;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lkn0;->a(Lgj;Liv;Lob7;Lw82;Lw82;FLov0;ZZZLh92;Lyz0;Lla2;III)V",
+   "new": "Lgn;->a(Lij;Lmv;Lyb7;Lu92;Lu92;FLov0;ZZZLfa2;Lyz0;Lib2;III)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Las6;->n(Landroid/content/Context;Ljava/lang/String;)V",
+   "new": "Lms6;->k(Landroid/content/Context;Ljava/lang/String;)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->l(Ljq5;ZLw82;Lla2;I)V",
+   "new": "Lfa3;->k(Lzq5;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lva3;->n(Lhq5;ZLw82;Lla2;I)V",
+   "new": "Lfa3;->m(Lxq5;ZLu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lif0;->j(Ljava/lang/String;ZLw82;Lw82;ZZLw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lla2;I)V",
+   "new": "Li23;->c(Ljava/lang/String;ZLu92;Lu92;ZZLu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lx60;->m(Ljava/lang/String;ZLw82;Lw82;ZZLw82;Lw82;Lw82;Lw82;Lw82;Lw82;Lla2;I)V",
+   "new": "Lgi1;->d(Ljava/lang/String;ZLu92;Lu92;ZZLu92;Lu92;Lu92;Lu92;Lu92;Lu92;Lib2;I)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldh1;->t(F)Z",
+   "new": "Li23;->o(F)Z",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ltj;->t(J)Ljava/lang/String;",
+   "new": "Lrq;->r(J)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Llm;->J(Landroid/content/ClipData;)Ljava/lang/String;",
+   "new": "Lpm;->j(Landroid/content/ClipData;)Ljava/lang/String;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Loq;->p0(Ljava/util/ArrayList;II)V",
+   "new": "Lrq;->V(Ljava/util/ArrayList;II)V",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Ldj;->Q(Lq81;IIZ)Lo07;",
+   "new": "Lmm0;->Y(Lr81;IIZ)Lb17;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lh27;->L(C)Lyq6;",
+   "new": "Lqs6;->f(C)Lps6;",
+   "reason": "owner class mismatch"
+  },
+  {
+   "old": "Lh27;->M(C)Ljava/util/List;",
+   "new": "Lqs6;->g(C)Ljava/util/List;",
+   "reason": "owner class mismatch"
+  }
+ ]
+}
