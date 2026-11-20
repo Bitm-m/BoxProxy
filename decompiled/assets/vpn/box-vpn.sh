@@ -50,6 +50,39 @@ kill_core() {
   return 0
 }
 
+# ensure_home HOME WORK -> sets $home to a directory the app can write.
+# A root-mode session can leave root-owned files behind (sing-box's
+# cache.db is the usual one): inside a writable home they are simply
+# unlinked -- unlink depends on the directory, not the file owner. When
+# the home itself is not writable (root created it), a mirror directory
+# holding symlinks to the readable originals takes its place for this
+# session; nothing is written into the original directory.
+ensure_home() {
+  _h=$1; _w=$2
+  if [ -d "$_h" ] && [ -w "$_h" ]; then
+    for _f in "$_h"/cache.db "$_h"/cache.db-shm "$_h"/cache.db-wal "$_h"/cache.db-journal; do
+      [ -e "$_f" ] || continue
+      [ -w "$_f" ] && continue
+      rm -f "$_f" 2>/dev/null && note "dropped unwritable ${_f##*/} in $_h" \
+        || note "cannot drop unwritable ${_f##*/} in $_h"
+    done
+    home=$_h
+    return 0
+  fi
+  _m="$_w/home-mirror"
+  rm -rf "$_m" 2>/dev/null
+  mkdir -p "$_m" || return 1
+  for _e in "$_h"/* "$_h"/.[!.]*; do
+    [ -e "$_e" ] || [ -L "$_e" ] || continue
+    _b=${_e##*/}
+    case "$_b" in cache.db|cache.db-shm|cache.db-wal|cache.db-journal) continue ;; esac
+    ln -s "$_e" "$_m/$_b" 2>/dev/null
+  done
+  note "home $_h is not writable, using mirror $_m"
+  home=$_m
+  return 0
+}
+
 # _num VALUE -> sets _n to the digits of a YAML port value, or '' when it is empty/0/invalid
 _num() {
   _n=${1%%#*}
@@ -260,6 +293,7 @@ case "$cmd" in
     [ -f "$src" ] || { echo "ERR:core not found: $src"; exit 1; }
     [ -f "$cfg" ] || { echo "ERR:config not found: $cfg"; exit 1; }
     mkdir -p "$home" 2>/dev/null
+    ensure_home "$home" "$work" || { echo "ERR:home not writable: $home"; exit 1; }
     rm -f "$work/config.run.yaml" "$work/config.run.json" "$work/config.src"
     # core patched by an older version with the /dev/null replacement path is already fine
     [ -f "$work/core.patched2" ] && [ ! -f "$work/core.patched4" ] && mv -f "$work/core.patched2" "$work/core.patched4"
@@ -318,6 +352,7 @@ case "$cmd" in
     echo $$ > "$work/core.pid"
     echo $$ > "$pf"
     export TMPDIR="$work/tmp" HOME="$work"
+    ensure_home "$home" "$work" || { note "cannot prepare a writable home for $home"; exit 1; }
     cd "$home" || { note "cannot cd $home"; exit 1; }
     # leftovers of earlier versions that used a stand-in packages file
     rm -f "$home/.pkgs.xml" "$work/.pkgs.xml" 2>/dev/null

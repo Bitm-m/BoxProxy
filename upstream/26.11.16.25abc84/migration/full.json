@@ -152,7 +152,7 @@
     "assets/box/sing-box/mianliu.json": "dfdedffae90de3daf457b155834d58389834d43a32e8f9aff837a4c9ee2bcd89",
     "assets/schema/sing-box-fork-hints.json": "0b86fc91c1c2880562df29875b41389b4e5178aea9ec24231e5566a3a5255304",
     "assets/schema/sing-box-fork.json": "ff264d1c69ab5c474e794e265d436cd4f136696edd119be4b29939af5e42ee8a",
-    "assets/vpn/box-vpn.sh": "bb917c84d7b8efb1a2ac77b7cd7015f09e6359d6cdb1a43aad261cf7e5b58dc6",
+    "assets/vpn/box-vpn.sh": "8896759a164c8471bd86f9025a2acc45588aa0917e6053a64c8e40152ef8c28a",
     "smali/androidx/compose/runtime/Immutable.smali": "368fb6a8e0a5a9cbdb4ce9218cf67106ee1bbe82dfb7e528897d169520a018d8",
     "smali/com/box/app/cfg/AnchorActivity$build$1.smali": "f1e21b96cd57f478bb76a01ddf0c136fca90cc98c0410de01e59693141c69e7c",
     "smali/com/box/app/cfg/AnchorActivity.smali": "cc43bc39cd0a7968fd491e3245e2f47b0ee1b2c22dc08b47f5928cd53946ec5b",
@@ -11359,7 +11359,7 @@
     ]
   },
   "runtimeArchive": "runtime-payload.tar.gz",
-  "runtimeArchiveSha256": "272d8755a73f118ad1398cc5ae403176091d6a6d29aae063f0414da7c826a2e0",
+  "runtimeArchiveSha256": "34f48997e4fdffb4db69609a1a36c50340520216c89c8d4fa3af60c5008ef68e",
   "runtimeArchiveFileCount": 1432,
-  "runtimeArchiveBytes": 21163118
+  "runtimeArchiveBytes": 21164571
 }

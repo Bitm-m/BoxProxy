@@ -2853,6 +2853,14 @@ def main():
             'esac\\n              \\"$boxctl\\" $_bh':
                 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true'
                 '\\n              \\"$boxctl\\" $_bh',
+            # A root session can also leave root-owned files anywhere in the
+            # box directory (sing-box cache.db, state stamps, ...). Chown the
+            # whole box tree to the app data owner before boot and once more
+            # right after boot, so a later app-uid VPN run can write them.
+            '              : > \\"$log_file\\" 2>/dev/null || exit 1\\n':
+                '              chown -R \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\" 2>/dev/null)\\" \\"${db%/*}\\" 2>/dev/null || true\\n              : > \\"$log_file\\" 2>/dev/null || exit 1\\n',
+            'boot >> \\"$log_file\\" 2>&1\\n              start_code=$?\\n':
+                'boot >> \\"$log_file\\" 2>&1\\n              start_code=$?\\n              chown -R \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\" 2>/dev/null)\\" \\"${db%/*}\\" 2>/dev/null || true\\n',
         },
         # The 194 status probe jn.O validates the box.identity file that
         # only a root-managed boxctl run writes; a VPN (no-root) session
