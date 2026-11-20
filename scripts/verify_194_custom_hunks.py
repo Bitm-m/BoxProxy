@@ -51,6 +51,17 @@ ALLOWED_DIFFERENCES = {
                   'check_restore_menu_range_form)',
         'checks': ['restore_menu_range_form'],
     },
+    'Lzu5;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
+        'reason': 'the CfgNav.wrap hooks in this compose frame were hunked in '
+                  'the 171 register layout: the fw5 slot held a vv5, the ja2 '
+                  'slot the vv5 or the receiver, and the Object-typed receiver '
+                  'field read entered v16 without the Context narrowing the '
+                  'stock performs before every use; the port rewrites both '
+                  'windows to the 194 frame (fw5 = the check-cast v1 before '
+                  'each site, ja2 = the receiver, which implements ja2) and '
+                  'inserts the check-cast (checked by cfgnav_wrap_narrowing)',
+        'checks': ['cfgnav_wrap_narrowing'],
+    },
     'Lpd1;->d(Ljava/io/File;Lda1;)Ljava/lang/Object;': {
         'reason': 'the 176 upstream moved the core version probe into the Lxe1 '
                   'coroutine, so the 171 shell hunk has no counterpart to be '
@@ -296,7 +307,28 @@ def check_restore_menu_range_form(custom, migrated, problems, name):
         problems.append((name, 'restore array window cascade is missing'))
 
 
+def check_cfgnav_wrap_narrowing(custom, migrated, problems, name):
+    """Both CfgNav.wrap hooks must use the 194 frame: the fw5 is the
+    check-cast v1 before each site, the ja2 is the sv5 receiver (sv5
+    implements ja2), and the Object-typed receiver field read is narrowed
+    to Context before it reaches v16."""
+    if migrated.count(
+            'invoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(') != 2:
+        problems.append((name, 'expected exactly both CfgNav.wrap hooks'))
+    if migrated.count('move-object/from16 v15, v1\nmove-object/from16 v16, v4') != 2:
+        problems.append((name, 'a wrap hook does not feed fw5/Context from v1/v4'))
+    if migrated.count('check-cast v4, Landroid/content/Context;') < 2:
+        problems.append((name, 'the receiver field read is not narrowed to Context'))
+    for stale in (
+            'move-object/from16 v15, v7\nmove-object/from16 v16, v4',
+            'move-object/from16 v14, v6\nmove-object/from16 v15, v0',
+            'move-object/from16 v15, v0\nmove-object/from16 v16, v4'):
+        if stale in migrated:
+            problems.append((name, 'a wrap hook still uses the 171-frame registers'))
+
+
 ALLOWED_CHECKS = {
+    'cfgnav_wrap_narrowing': check_cfgnav_wrap_narrowing,
     'restore_menu_range_form': check_restore_menu_range_form,
     'core_version_probe': check_core_version_probe,
     'dingtalk_release_lookup': check_dingtalk_release_lookup,

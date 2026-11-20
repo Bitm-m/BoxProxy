@@ -2864,6 +2864,13 @@ def main():
                 'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
             'move-object/from16 v14, v6\nmove-object/from16 v15, v0\nmove-object/from16 v16, v4':
                 'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
+            # sv5.u is declared Object; the stock narrows it with a
+            # check-cast before every Context use and the wrap hook must
+            # do the same or the verifier rejects v16 at the invoke.
+            'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v0\nmove-object/from16 v15, v1':
+                'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\n'
+                'check-cast v4, Landroid/content/Context;\n'
+                'move-object/from16 v14, v0\nmove-object/from16 v15, v1',
         },
         'smali/uu0.smali': {
             'const-string v12, "\\n            # Match the root service\'s executable path':
