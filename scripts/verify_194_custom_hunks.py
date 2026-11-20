@@ -52,12 +52,13 @@ ALLOWED_DIFFERENCES = {
         'checks': ['restore_menu_range_form'],
     },
     'Lzu5;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
-        'reason': 'the CfgNav.wrap hooks were hunked in the 171 frame where '
-                  'the composer already sat in a local before the factory '
-                  'call; the 194 frame creates the composer (the yz0 from '
-                  'Lmm.X) right after that point while v0 is the sv5 '
-                  'receiver the stock keeps reading fields from, so the '
-                  'hooks are relocated to wrap the factory result in place '
+        'reason': 'the CfgNav.wrap hooks arrive from the 171 frame where '
+                  'they wrapped the freshly created scene holder (x65, an '
+                  'l92) and returned it into the same slot before the '
+                  'composer factory; the ported blocks passed the receiver '
+                  'as the ja2 and clobbered v0/v10, and an interim attempt '
+                  'wrapped the yz0 factory result which CfgNav can never '
+                  'be. The hooks now wrap the 194 vv5 holder in place '
                   '(checked by cfgnav_wrap_narrowing)',
         'checks': ['cfgnav_wrap_narrowing'],
     },
@@ -307,33 +308,38 @@ def check_restore_menu_range_form(custom, migrated, problems, name):
 
 
 def check_cfgnav_wrap_narrowing(custom, migrated, problems, name):
-    """Both CfgNav.wrap hooks must wrap the composer factory result in
-    place: the fw5 comes from the check-cast v1 before each site, the
-    Context is read from the sv5 receiver and narrowed (sv5.u is declared
-    Object), and only v14-v16 (dead there) plus the composer slot v41/v42
-    are written - never the v0 receiver the stock keeps reading fields
-    from."""
+    """Both CfgNav.wrap hooks must wrap the freshly created vv5 holder and
+    put the result back into the same slot: the stock feeds that slot to
+    Lmm.X as the ra2 argument and ja2 implements ra2, so the static type
+    stays legal. The Context is read from the sv5 receiver (sv5.u is
+    declared Object) into v13, dead after both sites; only v14-v16 and
+    the holder slot are written - never the v0 receiver or the yz0
+    composer slots v41/v42."""
     if migrated.count(
             'invoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(') != 2:
         problems.append((name, 'expected exactly both CfgNav.wrap hooks'))
-    if migrated.count('move-object/from16 v14, v41\nmove-object/from16 v15, v1') != 1:
-        problems.append((name, 'site 1 does not wrap the v41 composer with v1/v16'))
-    if migrated.count('move-object/from16 v14, v42\nmove-object/from16 v15, v1') != 1:
-        problems.append((name, 'site 2 does not wrap the v42 composer with v1/v16'))
+    if migrated.count(
+            'move-object/from16 v14, v7\nmove-object/from16 v15, v1\n'
+            'move-object/from16 v16, v13\n') != 1:
+        problems.append((name, 'site 1 does not wrap the v7 holder with v1/v13'))
+    if migrated.count(
+            'move-object/from16 v14, v6\nmove-object/from16 v15, v1\n'
+            'move-object/from16 v16, v13\n') != 1:
+        problems.append((name, 'site 2 does not wrap the v6 holder with v1/v13'))
     if migrated.count('check-cast v13, Landroid/content/Context;') != 2:
         problems.append((name, 'the receiver field read is not narrowed to Context'))
-    if migrated.count('move-object/from16 v16, v13') != 2:
-        problems.append((name, 'the Context is not moved into the range window'))
-    for stale_result in ('v0', 'v10'):
-        if ('CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\n'
-                'move-result-object ' + stale_result) in migrated:
-            problems.append((name, 'a wrap hook still clobbers the ' + stale_result + ' slot'))
+    for holder in ('v7', 'v6'):
+        if ('Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\n'
+                'move-result-object ' + holder) not in migrated:
+            problems.append((name, 'the wrap result does not return to the ' + holder + ' holder slot'))
     for stale in (
             'move-object/from16 v15, v7\nmove-object/from16 v16, v4',
             'move-object/from16 v14, v6\nmove-object/from16 v15, v0',
-            'move-object/from16 v15, v0\nmove-object/from16 v16, v4'):
+            'move-object/from16 v15, v0\nmove-object/from16 v16, v4',
+            'move-result-object v41\niget-object v13',
+            'move-result-object v42\niget-object v13'):
         if stale in migrated:
-            problems.append((name, 'a wrap hook still uses the 171-frame registers'))
+            problems.append((name, 'a wrap hook still uses a stale frame'))
 
 
 ALLOWED_CHECKS = {

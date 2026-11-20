@@ -2852,24 +2852,25 @@ def main():
         # must take the stock v8 slot. Otherwise the concat receives the
         # vc0 singleton where a String is declared and ART rejects uu0
         # (VerifyError at the invoke) at class verification.
-        # The CfgNav.wrap hooks arrive from the 171 frame where the
-        # composer already sat in a local before the factory call: site 1
-        # passed the fresh vv5 as the fw5 and clobbered v0 (the sv5
-        # receiver the stock keeps reading fields from), site 2 passed the
-        # vv5 as the ja2 and the receiver as the fw5. In the 194 frame the
-        # composer is the yz0 that Lmm.X produces right after the insertion
-        # point (v41/v42), the fw5 is the check-cast v1 before each site,
-        # and the Context comes from the receiver narrowed with a
-        # check-cast (sv5.u is declared Object). Relocate both hooks to
-        # wrap the factory result in place; they only write v14-v16 (dead
-        # there) plus the composer slot itself.
+        # The CfgNav.wrap hooks arrive from the 171 frame wrapped the
+        # freshly created scene holder (x65, an l92) and put the result
+        # back into the same slot, which then feeds the composer factory
+        # (t92 -> ra2 in 194). The ported blocks instead passed the
+        # receiver as the ja2 and clobbered v0/v10. In the 194 frame the
+        # holder is the vv5 created right before each factory call
+        # (implements ja2; ja2 implements ra2, so the factory's ra2
+        # parameter accepts the wrapped result), the fw5 state is the
+        # check-cast v1, and the Context is read from the receiver
+        # (sv5.u is declared Object) into v13, which is dead after both
+        # sites. iget/check-cast are non-range forms hard-capped at v15,
+        # so v13 only enters the v14-v16 range window via move/from16.
         'smali/sv5.smali': {
             'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v0\nmove-object/from16 v15, v7\nmove-object/from16 v16, v4\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v0': '',
             'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v6\nmove-object/from16 v15, v0\nmove-object/from16 v16, v4\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v10': '',
-            'move-result-object v41':
-                'move-result-object v41\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v41\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v41',
-            'move-result-object v42\n\n    .line 1077\n    new-instance v23, Lwv5;':
-                'move-result-object v42\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v42\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v42' + '\n\n    .line 1077\n    new-instance v23, Lwv5;',
+            'invoke-direct {v7, v2, v15}, Lvv5;-><init>(Lu92;B)V':
+                'invoke-direct {v7, v2, v15}, Lvv5;-><init>(Lu92;B)V' + '\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v7\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v7',
+            'invoke-direct {v6, v2, v14}, Lvv5;-><init>(Lu92;B)V':
+                'invoke-direct {v6, v2, v14}, Lvv5;-><init>(Lu92;B)V' + '\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v6\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v6',
         },
         'smali/uu0.smali': {
             'const-string v12, "\\n            # Match the root service\'s executable path':
