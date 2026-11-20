@@ -2854,6 +2854,31 @@ def main():
                 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true'
                 '\\n              \\"$boxctl\\" $_bh',
         },
+        # The 194 status probe jn.O validates the box.identity file that
+        # only a root-managed boxctl run writes; a VPN (no-root) session
+        # never produces it, so O rejected every live core: the UI reported
+        # the service stopped and the start action surfaced a detail-less
+        # generic failure while the tunnel was actually up (171 had no
+        # identity concept at all). Treat a missing/blank identity like the
+        # 171 probe did: keep every /proc liveness check and skip only the
+        # identity gate (p6 null/blank returns true).
+        'smali/jn.smali': {
+            '    if-eqz p6, :cond_7\n':
+                '    move/from16 p2, v2\n'
+                '    if-eqz p6, :goto_2\n',
+            '    move-result-object v8\n'
+            '\n'
+            '    .line 113\n'
+            '    invoke-static {v8}, Lbn6;->W0(Ljava/lang/CharSequence;)Ljava/util/List;\n':
+                '    move-result-object v8\n'
+                '\n'
+                '    invoke-static {v8}, Lbn6;->Q0(Ljava/lang/CharSequence;)Z\n'
+                '    move-result v9\n'
+                '    if-nez v9, :goto_2\n'
+                '\n'
+                '    .line 113\n'
+                '    invoke-static {v8}, Lbn6;->W0(Ljava/lang/CharSequence;)Ljava/util/List;\n',
+        },
         'smali/k.smali': {
             'new-instance v44, Llx4;': 'new-instance v44, Lnw4;',
             'filled-new-array/range {v44 .. v47}, [Llx4;':

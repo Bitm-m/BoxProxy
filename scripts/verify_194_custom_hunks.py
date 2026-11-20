@@ -394,6 +394,37 @@ def name_of(path):
     return path.name
 
 
+def check_vpn_status_identity_tolerance(output, problems):
+    """The 194 status probe jn.O validates the box.identity file that only
+    a root-managed boxctl run writes; a VPN (no-root) session never
+    produces it, so O rejected every live core: the UI reported the
+    service stopped and the start action surfaced a detail-less generic
+    failure while the tunnel was actually up (171 had no identity
+    concept). The migrated probe must accept a missing/blank identity
+    (p6 null/blank returns true) while keeping the /proc checks."""
+    path = output / 'smali' / 'jn.smali'
+    if not path.is_file():
+        problems.append(('vpn_status_identity_tolerance', 'jn.smali is missing'))
+        return
+    block = method_text(path, 'O(Ljava/lang/String;Ljava/lang/String;'
+                        'Lob1;Ljava/lang/String;Ljava/lang/String;'
+                        'Ljava/lang/String;Ljava/lang/String;'
+                        'Ljava/lang/String;Ljava/lang/Long;'
+                        'Ljava/lang/Long;J)Z')
+    if not block:
+        problems.append(('vpn_status_identity_tolerance',
+                         'the jn.O status probe is missing'))
+        return
+    require(block, (
+        'move/from16 p2, v2',
+        'if-eqz p6, :goto_2',
+        'Lbn6;->Q0(Ljava/lang/CharSequence;)Z',
+        'if-nez v9, :goto_2',
+    ), 'identity tolerance', problems, 'vpn_status_identity_tolerance')
+    forbid(block, ('if-eqz p6, :cond_7',),
+           'identity gate', problems, 'vpn_status_identity_tolerance')
+
+
 ALLOWED_CHECKS = {
     'root_boot_script_hardening': root_boot_script_hardening,
     'cfgnav_wrap_narrowing': check_cfgnav_wrap_narrowing,
@@ -877,6 +908,7 @@ def main():
     print('checked %d of %d coverage entries' % (checked, len(coverage['completed'])))
     check_176_contracts(args.output, problems)
     check_root_boot_hardening(args.output, problems)
+    check_vpn_status_identity_tolerance(args.output, problems)
     for name, detail in problems:
         print('MISMATCH', name)
         if isinstance(detail, dict):
