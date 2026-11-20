@@ -52,14 +52,13 @@ ALLOWED_DIFFERENCES = {
         'checks': ['restore_menu_range_form'],
     },
     'Lzu5;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
-        'reason': 'the CfgNav.wrap hooks in this compose frame were hunked in '
-                  'the 171 register layout: the fw5 slot held a vv5, the ja2 '
-                  'slot the vv5 or the receiver, and the Object-typed receiver '
-                  'field read entered v16 without the Context narrowing the '
-                  'stock performs before every use; the port rewrites both '
-                  'windows to the 194 frame (fw5 = the check-cast v1 before '
-                  'each site, ja2 = the receiver, which implements ja2) and '
-                  'inserts the check-cast (checked by cfgnav_wrap_narrowing)',
+        'reason': 'the CfgNav.wrap hooks were hunked in the 171 frame where '
+                  'the composer already sat in a local before the factory '
+                  'call; the 194 frame creates the composer (the yz0 from '
+                  'Lmm.X) right after that point while v0 is the sv5 '
+                  'receiver the stock keeps reading fields from, so the '
+                  'hooks are relocated to wrap the factory result in place '
+                  '(checked by cfgnav_wrap_narrowing)',
         'checks': ['cfgnav_wrap_narrowing'],
     },
     'Lpd1;->d(Ljava/io/File;Lda1;)Ljava/lang/Object;': {
@@ -308,17 +307,27 @@ def check_restore_menu_range_form(custom, migrated, problems, name):
 
 
 def check_cfgnav_wrap_narrowing(custom, migrated, problems, name):
-    """Both CfgNav.wrap hooks must use the 194 frame: the fw5 is the
-    check-cast v1 before each site, the ja2 is the sv5 receiver (sv5
-    implements ja2), and the Object-typed receiver field read is narrowed
-    to Context before it reaches v16."""
+    """Both CfgNav.wrap hooks must wrap the composer factory result in
+    place: the fw5 comes from the check-cast v1 before each site, the
+    Context is read from the sv5 receiver and narrowed (sv5.u is declared
+    Object), and only v14-v16 (dead there) plus the composer slot v41/v42
+    are written - never the v0 receiver the stock keeps reading fields
+    from."""
     if migrated.count(
             'invoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(') != 2:
         problems.append((name, 'expected exactly both CfgNav.wrap hooks'))
-    if migrated.count('move-object/from16 v15, v1\nmove-object/from16 v16, v4') != 2:
-        problems.append((name, 'a wrap hook does not feed fw5/Context from v1/v4'))
-    if migrated.count('check-cast v4, Landroid/content/Context;') < 2:
+    if migrated.count('move-object/from16 v14, v41\nmove-object/from16 v15, v1') != 1:
+        problems.append((name, 'site 1 does not wrap the v41 composer with v1/v16'))
+    if migrated.count('move-object/from16 v14, v42\nmove-object/from16 v15, v1') != 1:
+        problems.append((name, 'site 2 does not wrap the v42 composer with v1/v16'))
+    if migrated.count('check-cast v13, Landroid/content/Context;') != 2:
         problems.append((name, 'the receiver field read is not narrowed to Context'))
+    if migrated.count('move-object/from16 v16, v13') != 2:
+        problems.append((name, 'the Context is not moved into the range window'))
+    for stale_result in ('v0', 'v10'):
+        if ('CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\n'
+                'move-result-object ' + stale_result) in migrated:
+            problems.append((name, 'a wrap hook still clobbers the ' + stale_result + ' slot'))
     for stale in (
             'move-object/from16 v15, v7\nmove-object/from16 v16, v4',
             'move-object/from16 v14, v6\nmove-object/from16 v15, v0',

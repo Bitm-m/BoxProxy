@@ -2852,25 +2852,24 @@ def main():
         # must take the stock v8 slot. Otherwise the concat receives the
         # vc0 singleton where a String is declared and ART rejects uu0
         # (VerifyError at the invoke) at class verification.
-        # The CfgNav.wrap hooks were hunked in the 171 frame: site 1 passed
-        # the fresh vv5 as the fw5 argument and site 2 passed the vv5 as the
-        # ja2 and the sv5 receiver as the fw5. In the 194 frame the fw5 is
-        # the check-cast v1 right before each site and the ja2 is the sv5
-        # receiver (sv5 implements ja2), which is what both iget-object
-        # v4, v0, Lsv5;->u lines already assume. v14-v16 are dead after
-        # each hook, so overwriting them is safe.
+        # The CfgNav.wrap hooks arrive from the 171 frame where the
+        # composer already sat in a local before the factory call: site 1
+        # passed the fresh vv5 as the fw5 and clobbered v0 (the sv5
+        # receiver the stock keeps reading fields from), site 2 passed the
+        # vv5 as the ja2 and the receiver as the fw5. In the 194 frame the
+        # composer is the yz0 that Lmm.X produces right after the insertion
+        # point (v41/v42), the fw5 is the check-cast v1 before each site,
+        # and the Context comes from the receiver narrowed with a
+        # check-cast (sv5.u is declared Object). Relocate both hooks to
+        # wrap the factory result in place; they only write v14-v16 (dead
+        # there) plus the composer slot itself.
         'smali/sv5.smali': {
-            'move-object/from16 v14, v0\nmove-object/from16 v15, v7\nmove-object/from16 v16, v4':
-                'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
-            'move-object/from16 v14, v6\nmove-object/from16 v15, v0\nmove-object/from16 v16, v4':
-                'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
-            # sv5.u is declared Object; the stock narrows it with a
-            # check-cast before every Context use and the wrap hook must
-            # do the same or the verifier rejects v16 at the invoke.
-            'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v0\nmove-object/from16 v15, v1':
-                'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\n'
-                'check-cast v4, Landroid/content/Context;\n'
-                'move-object/from16 v14, v0\nmove-object/from16 v15, v1',
+            'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v0\nmove-object/from16 v15, v7\nmove-object/from16 v16, v4\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v0': '',
+            'iget-object v4, v0, Lsv5;->u:Ljava/lang/Object;\nmove-object/from16 v14, v6\nmove-object/from16 v15, v0\nmove-object/from16 v16, v4\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v10': '',
+            'move-result-object v41':
+                'move-result-object v41\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v41\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v41',
+            'move-result-object v42\n\n    .line 1077\n    new-instance v23, Lwv5;':
+                'move-result-object v42\n' + 'iget-object v13, v0, Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;\nmove-object/from16 v14, v42\nmove-object/from16 v15, v1\nmove-object/from16 v16, v13\ninvoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\nmove-result-object v42' + '\n\n    .line 1077\n    new-instance v23, Lwv5;',
         },
         'smali/uu0.smali': {
             'const-string v12, "\\n            # Match the root service\'s executable path':
