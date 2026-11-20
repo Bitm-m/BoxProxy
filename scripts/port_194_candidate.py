@@ -2949,15 +2949,15 @@ def main():
         },
         # The 194 update-core compare dialog pre-fills sing-box's local
         # extraction regex from mm0's per-core prefix plus a shared tail
-        # assembled by mz1.m. Replace the sing-box case with the full
-        # hardened pattern (lazy multi-segment prerelease, -zero group,
-        # trailing anchor) and jump over the shared assembly so only the
-        # sing-box default changes.
+        # assembled by mz1.m. Replace the sing-box case with a self-
+        # contained copy of the pattern that inlines the we1 epilogue and
+        # returns on its own: sharing a bypass label with the original
+        # allocation site made ART merge two distinct fresh instances
+        # (VerifyError: mm0.H, v0 Conflict at <init>), so this path must
+        # never join the shared assembly. Other cores keep their default.
         'smali/mm0.smali': {
             '    const-string p0, "sing-box\\\\s+(?:version\\\\s+)?"\n\n    .line 251\n    .line 252\n    goto :goto_4\n':
-                '    const-string p0, "(?im)^sing-box\\\\s+(?:version\\\\s+)?v?(\\\\d+\\\\.\\\\d+\\\\.\\\\d+(?:-[0-9A-Za-z.]+)*?)(?:-zero)?(?:\\\\+[0-9A-Za-z.-]+)?(?:\\\\s|$)"\n\n    .line 251\n    .line 252\n    new-instance v0, Lwe1;\n    goto :goto_sing_full\n',
-            'invoke-static {v1, p0, v2}, Lmz1;->m(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n\n    .line 289\n    .line 290\n    .line 291\n    move-result-object p0\n\n    .line 292\n':
-                'invoke-static {v1, p0, v2}, Lmz1;->m(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n\n    .line 289\n    .line 290\n    .line 291\n    move-result-object p0\n\n    .line 292\n    :goto_sing_full\n',
+                '    const-string p0, "(?im)^sing-box\\\\s+(?:version\\\\s+)?v?(\\\\d+\\\\.\\\\d+\\\\.\\\\d+(?:-[0-9A-Za-z.]+)*?)(?:-zero)?(?:\\\\+[0-9A-Za-z.-]+)?(?:\\\\s|$)"\n\n    .line 251\n    .line 252\n    new-instance v0, Lwe1;\n    const-string v1, ""\n\n    .line 293\n    .line 294\n    const-string v2, "version"\n\n    .line 295\n    .line 296\n    invoke-direct {v0, v2, p0, v4, v1}, Lwe1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V\n\n    .line 297\n    .line 298\n    .line 299\n    return-object v0\n',
         },
     }
     fixup_hits = {}

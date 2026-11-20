@@ -516,8 +516,15 @@ def check_singbox_compare_default(output, problems):
     smali = regex.replace('\\', '\\\\')
     if 'const-string p0, "' + smali + '"' not in text:
         problems.append((name, 'sing-box default compare regex not replaced with the hardened pattern'))
-    if text.count(':goto_sing_full') != 2:
-        problems.append((name, 'sing-box default regex does not bypass the shared regex assembly'))
+    if ':goto_sing_full' in text:
+        problems.append((name, 'stale goto_sing_full bypass label left in place'))
+    init_call = ('invoke-direct {v0, v2, p0, v4, v1}, Lwe1;-><init>'
+                 '(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V')
+    if text.count(init_call) != 2:
+        problems.append((name, 'sing-box default regex path must inline exactly one extra we1 <init> (got %d)'
+                         % text.count(init_call)))
+    if text.count('return-object v0') < 2:
+        problems.append((name, 'sing-box default regex path does not return on its own'))
 
 
 def check_176_contracts(output, problems):
