@@ -619,7 +619,7 @@ def patch_method(plan, mapper, old_root, custom_root, out_root, r_old, r_new, au
             '    const-wide/16 p1, 0x1f40',
             '    invoke-static {p1, p2, v0, p0}, Lto5;->f(JLea1;Ljava/lang/String;)Ljava/lang/Object;',
             '    move-result-object p0',
-            '    sget-object p1, Lkf1;->i:Lkf1;',
+            '    sget-object p1, Lof1;->i:Lof1;',
             '    if-ne p0, p1, :cond_3',
             '    return-object p1',
             '    :cond_3',
@@ -2852,6 +2852,19 @@ def main():
         # must take the stock v8 slot. Otherwise the concat receives the
         # vc0 singleton where a String is declared and ART rejects uu0
         # (VerifyError at the invoke) at class verification.
+        # The CfgNav.wrap hooks were hunked in the 171 frame: site 1 passed
+        # the fresh vv5 as the fw5 argument and site 2 passed the vv5 as the
+        # ja2 and the sv5 receiver as the fw5. In the 194 frame the fw5 is
+        # the check-cast v1 right before each site and the ja2 is the sv5
+        # receiver (sv5 implements ja2), which is what both iget-object
+        # v4, v0, Lsv5;->u lines already assume. v14-v16 are dead after
+        # each hook, so overwriting them is safe.
+        'smali/sv5.smali': {
+            'move-object/from16 v14, v0\nmove-object/from16 v15, v7\nmove-object/from16 v16, v4':
+                'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
+            'move-object/from16 v14, v6\nmove-object/from16 v15, v0\nmove-object/from16 v16, v4':
+                'move-object/from16 v14, v0\nmove-object/from16 v15, v1\nmove-object/from16 v16, v4',
+        },
         'smali/uu0.smali': {
             'const-string v12, "\\n            # Match the root service\'s executable path':
                 'const-string v8, "\\n            # Match the root service\'s executable path',
