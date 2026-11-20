@@ -54,12 +54,12 @@ ALLOWED_DIFFERENCES = {
     'Lzu5;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;': {
         'reason': 'the CfgNav.wrap hooks arrive from the 171 frame where '
                   'they wrapped the freshly created scene holder (x65, an '
-                  'l92) and returned it into the same slot before the '
-                  'composer factory; the ported blocks passed the receiver '
-                  'as the ja2 and clobbered v0/v10, and an interim attempt '
-                  'wrapped the yz0 factory result which CfgNav can never '
-                  'be. The hooks now wrap the 194 vv5 holder in place '
-                  '(checked by cfgnav_wrap_narrowing)',
+                  'l92) with a Context read from the typed zu5.l field; '
+                  'the 194 sv5 has no Context field and its Object slot u '
+                  'carries a String, so the hooks take the Context from '
+                  'the stock narrowed registers (v8/v29) instead and wrap '
+                  'the vv5 holder in place (checked by '
+                  'cfgnav_wrap_narrowing)',
         'checks': ['cfgnav_wrap_narrowing'],
     },
     'Lpd1;->d(Ljava/io/File;Lda1;)Ljava/lang/Object;': {
@@ -309,35 +309,34 @@ def check_restore_menu_range_form(custom, migrated, problems, name):
 
 def check_cfgnav_wrap_narrowing(custom, migrated, problems, name):
     """Both CfgNav.wrap hooks must wrap the freshly created vv5 holder and
-    put the result back into the same slot: the stock feeds that slot to
-    Lmm.X as the ra2 argument and ja2 implements ra2, so the static type
-    stays legal. The Context is read from the sv5 receiver (sv5.u is
-    declared Object) into v13, dead after both sites; only v14-v16 and
-    the holder slot are written - never the v0 receiver or the yz0
-    composer slots v41/v42."""
+    return the result into the same slot (ja2 implements ra2, so the
+    factory's ra2 parameter accepts it). The Context must come from the
+    stock's own narrowed registers - check-cast v8 before site 1 and
+    check-cast v29 before site 2 - never from sv5.u, whose Object slot
+    carries a String at runtime and would throw ClassCastException."""
     if migrated.count(
             'invoke-static/range {v14 .. v16}, Lcom/box/app/cfg/CfgNav;->wrap(') != 2:
         problems.append((name, 'expected exactly both CfgNav.wrap hooks'))
     if migrated.count(
             'move-object/from16 v14, v7\nmove-object/from16 v15, v1\n'
-            'move-object/from16 v16, v13\n') != 1:
-        problems.append((name, 'site 1 does not wrap the v7 holder with v1/v13'))
+            'move-object/from16 v16, v8\n') != 1:
+        problems.append((name, 'site 1 does not wrap the v7 holder with v1/v8'))
     if migrated.count(
             'move-object/from16 v14, v6\nmove-object/from16 v15, v1\n'
-            'move-object/from16 v16, v13\n') != 1:
-        problems.append((name, 'site 2 does not wrap the v6 holder with v1/v13'))
-    if migrated.count('check-cast v13, Landroid/content/Context;') != 2:
-        problems.append((name, 'the receiver field read is not narrowed to Context'))
+            'move-object/from16 v16, v29\n') != 1:
+        problems.append((name, 'site 2 does not wrap the v6 holder with v1/v29'))
     for holder in ('v7', 'v6'):
         if ('Lcom/box/app/cfg/CfgNav;->wrap(Lja2;Lfw5;Landroid/content/Context;)Lja2;\n'
                 'move-result-object ' + holder) not in migrated:
             problems.append((name, 'the wrap result does not return to the ' + holder + ' holder slot'))
+    if 'Lsv5;->u:Ljava/lang/Object;\ncheck-cast v13, Landroid/content/Context;' in migrated:
+        problems.append((name, 'the hook still reads the Context from sv5.u (a String slot)'))
     for stale in (
             'move-object/from16 v15, v7\nmove-object/from16 v16, v4',
             'move-object/from16 v14, v6\nmove-object/from16 v15, v0',
             'move-object/from16 v15, v0\nmove-object/from16 v16, v4',
-            'move-result-object v41\niget-object v13',
-            'move-result-object v42\niget-object v13'):
+            'move-result-object v41\nmove-object/from16 v14',
+            'move-result-object v42\nmove-object/from16 v14'):
         if stale in migrated:
             problems.append((name, 'a wrap hook still uses a stale frame'))
 
