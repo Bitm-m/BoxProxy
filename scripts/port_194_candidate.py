@@ -2863,6 +2863,26 @@ def main():
         # 171 probe did: keep every /proc liveness check and skip only the
         # identity gate (p6 null/blank returns true).
         'smali/jn.smali': {
+            # VPN mode: identity is absent, and the core runs under
+            # linker64, so comm/cmdline/exe never equal the core name and
+            # the identity gate below (before :cond_0) would reject the
+            # live process first. When identity is missing/blank, skip the
+            # process-identity gate entirely (the stat/pid checks above it
+            # still run) and let :cond_0 accept the probe; the post-call
+            # /proc re-read still verifies liveness.
+            '    move-object/from16 v2, p4\n':
+                '    if-eqz p6, :cond_0\n'
+                '    invoke-static/range {p6 .. p6}, '
+                'Lbn6;->o1(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;\n'
+                '    move-result-object v8\n'
+                '    invoke-virtual {v8}, Ljava/lang/Object;'
+                '->toString()Ljava/lang/String;\n'
+                '    move-result-object v8\n'
+                '    invoke-static {v8}, Lbn6;->Q0(Ljava/lang/CharSequence;)Z\n'
+                '    move-result v9\n'
+                '    if-nez v9, :cond_0\n'
+                '\n'
+                '    move-object/from16 v2, p4\n',
             '    if-eqz p6, :cond_7\n':
                 '    move/from16 p2, v2\n'
                 '    if-eqz p6, :goto_2\n',

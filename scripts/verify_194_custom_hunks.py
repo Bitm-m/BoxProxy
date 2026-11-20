@@ -418,8 +418,10 @@ def check_vpn_status_identity_tolerance(output, problems):
     require(block, (
         'move/from16 p2, v2',
         'if-eqz p6, :goto_2',
+        'if-eqz p6, :cond_0',
         'Lbn6;->Q0(Ljava/lang/CharSequence;)Z',
         'if-nez v9, :goto_2',
+        'if-nez v9, :cond_0',
     ), 'identity tolerance', problems, 'vpn_status_identity_tolerance')
     forbid(block, ('if-eqz p6, :cond_7',),
            'identity gate', problems, 'vpn_status_identity_tolerance')
