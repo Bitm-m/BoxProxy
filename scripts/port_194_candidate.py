@@ -2836,6 +2836,24 @@ def main():
     # insert translation jumps it to the reused name Llx4; repair the
     # new-instance/array lines inside exactly the two patched files.
     scoped_fixups = {
+        # The assembled root boot script (split across vc0's const-string
+        # segments) execs "$boxctl" bare, but only its /storage/emulated/*
+        # branch chmod's its variant; a stale no-x copy under files/box/bin
+        # makes the exec fail with EACCES even for root (one x bit is still
+        # required), which is how "root mode cannot start" appeared. The
+        # same script mkdir's box/run as root, so the app-uid VPN could not
+        # create box/run/mihomo.log ("VPN mode cannot start"). Chmod the
+        # exec target unconditionally and hand run_dir to the owner of the
+        # app data dir, both computed at boot time inside the script.
+        'smali/vc0.smali': {
+            'mkdir -p \\"$run_dir\\" 2>/dev/null || exit 1\\n              ':
+                'mkdir -p \\"$run_dir\\" 2>/dev/null || exit 1\\n'
+                '              chown \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\" '
+                '2>/dev/null)\\" \\"$run_dir\\" 2>/dev/null || true\\n              ',
+            'esac\\n              \\"$boxctl\\" $_bh':
+                'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true'
+                '\\n              \\"$boxctl\\" $_bh',
+        },
         'smali/k.smali': {
             'new-instance v44, Llx4;': 'new-instance v44, Lnw4;',
             'filled-new-array/range {v44 .. v47}, [Llx4;':

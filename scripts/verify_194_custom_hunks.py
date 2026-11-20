@@ -95,6 +95,18 @@ ALLOWED_DIFFERENCES = {
                   'name',
         'checks': ['entry_filter_prefix'],
     },
+    'Lqc0;->f(Lda1;)Ljava/lang/Object;': {
+        'reason': 'the assembled root boot script execs "$boxctl" bare '
+                  'while only the /storage/emulated/* branch chmod\'d its '
+                  'variant, so a stale no-x files/box/bin/boxctl failed '
+                  'with EACCES even for root; and run_dir was mkdir\'d '
+                  'as root, blocking the app-uid VPN from creating '
+                  'box/run/mihomo.log. The migrated script now chmods '
+                  'the exec target unconditionally and chowns run_dir '
+                  'to the app data dir owner (checked by '
+                  'root_boot_script_hardening)',
+        'checks': ['root_boot_script_hardening'],
+    },
     'Lqc0;->k()Lfc0;': {
         'reason': 'the reviewed 171 diff replaced the private getFilesDir '
                   'base with an unconditional Android/data external base, but '
@@ -341,7 +353,49 @@ def check_cfgnav_wrap_narrowing(custom, migrated, problems, name):
             problems.append((name, 'a wrap hook still uses a stale frame'))
 
 
+def root_boot_script_hardening(custom_text, migrated_text, problems, name):
+    """The migrated root boot script must chmod the bare boxctl exec
+    target (root still needs one x bit; only the /storage/emulated/*
+    variant was chmod'd) and must chown box/run to the app data dir
+    owner (a root mkdir there blocked the app-uid VPN from creating
+    mihomo.log)."""
+    if 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true\\n              \\"$boxctl\\" $_bh' not in migrated_text:
+        problems.append((name, 'root boot execs boxctl without a chmod 755 first'))
+    if 'chown \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\"' not in migrated_text:
+        problems.append((name, 'root boot does not chown run_dir to the app data dir owner'))
+    if 'mkdir -p \\"$run_dir\\" 2>/dev/null || exit 1' not in migrated_text:
+        problems.append((name, 'root boot lost the run_dir mkdir'))
+
+
+def check_root_boot_hardening(output, problems):
+    """The assembled root boot script must chmod its bare boxctl exec
+    target (root still needs one x bit; only the /storage/emulated/*
+    variant was chmod'd) and must hand box/run to the app data dir owner
+    (a root mkdir there blocked the app-uid VPN from creating
+    mihomo.log)."""
+    exec_pat = '$_bh --db \\"$db\\" boot >> '
+    owner = None
+    for p in (output / 'smali').rglob('*.smali'):
+        text = p.read_text(errors='replace')
+        if exec_pat in text:
+            owner = p
+            break
+    if owner is None:
+        problems.append(('root_boot_hardening', 'no root boot script (bare boxctl exec) found'))
+        return
+    text = owner.read_text(errors='replace')
+    if 'esac\\n              chmod 755 \\"$boxctl\\" 2>/dev/null || true\\n              \\"$boxctl\\" $_bh' not in text:
+        problems.append((name_of(owner), 'root boot execs boxctl without a chmod 755 first'))
+    if 'chown \\"$(stat -c %u:%g \\"${boxctl%%/files/*}\\"' not in text:
+        problems.append((name_of(owner), 'root boot does not chown run_dir to the app data dir owner'))
+
+
+def name_of(path):
+    return path.name
+
+
 ALLOWED_CHECKS = {
+    'root_boot_script_hardening': root_boot_script_hardening,
     'cfgnav_wrap_narrowing': check_cfgnav_wrap_narrowing,
     'restore_menu_range_form': check_restore_menu_range_form,
     'core_version_probe': check_core_version_probe,
@@ -822,6 +876,7 @@ def main():
 
     print('checked %d of %d coverage entries' % (checked, len(coverage['completed'])))
     check_176_contracts(args.output, problems)
+    check_root_boot_hardening(args.output, problems)
     for name, detail in problems:
         print('MISMATCH', name)
         if isinstance(detail, dict):
